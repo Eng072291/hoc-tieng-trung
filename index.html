@@ -3,16 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Học tiếng Trung cùng cô Lâm · 5 cấp độ</title>
+<title>Học tiếng Trung cùng cô Lâm · Nền tảng HSK 1</title>
+<meta name="description" content="Học tiếng Trung miễn phí cho người Việt mới bắt đầu: phát âm, thanh điệu, 157 từ nền tảng HSK 1, video bài giảng, tập viết chữ Hán, luyện nghe hội thoại, ôn tập thông minh và 4 trò chơi.">
+<meta name="theme-color" content="#C0392B">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tiếng Trung cùng cô Lâm">
+<meta property="og:title" content="学中文 · Học tiếng Trung vui như chơi!">
+<meta property="og:description" content="Khóa học nền tảng HSK 1 miễn phí cho người Việt: 5 chặng từ Bắc Kinh đến Quế Lâm, video bài giảng, tập viết, luyện nghe và trò chơi.">
+<meta property="og:url" content="https://eng072291.github.io/hoc-tieng-trung/">
+<meta property="og:image" content="https://eng072291.github.io/hoc-tieng-trung/og-image.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:locale" content="vi_VN">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Baloo+2:wght@600;700&display=optional" rel="stylesheet">
 <style>
 :root{
-  --bg:#F6F1EA; --surface:#FFFDF9; --ink:#2E3A3E; --body:#565A59; --muted:#8C8A85;
-  --accent:#C0392B; --accent-soft:#F6E1DD; --gold:#D69A4C; --gold-soft:#FBEBD3; --sage:#7F8461; --sage-soft:#EEF0E6;
+  --bg:#F6F1EA; --surface:#FFFDF9; --ink:#2E3A3E; --body:#565A59; --muted:#6B6762;
+  --accent:#C0392B; --accent-soft:#F6E1DD; --gold:#D69A4C; --sage-ink:#5F6447; --gold-soft:#FBEBD3; --sage:#7F8461; --sage-soft:#EEF0E6;
   --teal:#5C7A78; --line:#E7DED2; --r:20px;
-  --t1:#C0392B; --t2:#D69A4C; --t3:#5C7A78; --t4:#46565B; --t0:#9A958E;
+  --t1:#C0392B; --t2:#9A6A2A; --t3:#5C7A78; --t4:#46565B; --t0:#726E68;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--bg);color:var(--body);line-height:1.6;min-height:100vh}
@@ -57,8 +71,8 @@ header{min-height:78px}
 .icon-btn.done{background:var(--sage);color:#fff}
 .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:12.5px;font-weight:600}
 .pill.lock{background:#ECE7E0;color:var(--muted)}
-.pill.open{background:var(--gold-soft);color:#9A6A2A}
-.pill.done{background:var(--sage-soft);color:var(--sage)}
+.pill.open{background:var(--gold-soft);color:#8A5E22}
+.pill.done{background:var(--sage-soft);color:var(--sage-ink)}
 .bar{height:7px;border-radius:7px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--accent);border-radius:7px;transition:width .4s}
 
@@ -221,7 +235,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 .opt.wrong{border-color:var(--accent);background:var(--accent-soft)}
 .opt:disabled{cursor:default}
 .q-feedback{min-height:26px;margin:14px 0 4px;font-weight:500}
-.q-feedback.ok{color:var(--sage)}
+.q-feedback.ok{color:var(--sage-ink)}
 .q-feedback.no{color:var(--accent)}
 .play-big{width:84px;height:84px;border-radius:50%;background:var(--accent);color:#fff;font-size:32px;display:inline-grid;place-items:center;transition:.2s}
 .play-big:hover{transform:scale(1.05)}
@@ -380,7 +394,7 @@ nav a.on .nav-dot{background:#fff;color:var(--accent)}
 .st-em{font-size:42px}.st-arrow{color:var(--muted);font-size:18px;margin:2px 0}
 .st-ch{font-size:64px;color:var(--ink);line-height:1.1}
 .st-hint{font-size:12px;color:var(--muted);margin-top:6px}
-.story.seen .st-hint{color:var(--sage);font-weight:600}
+.story.seen .st-hint{color:var(--sage-ink);font-weight:600}
 .st-back{background:var(--ink);color:#E6EFE9;transform:rotateY(180deg);font-size:13.5px;overflow:auto}
 .st-top{display:flex;gap:10px;align-items:center;margin-bottom:8px}
 .st-top b{color:#F2D3A6;font-size:15px}
@@ -547,7 +561,7 @@ body.cover-mode header,body.cover-mode nav,body.cover-mode footer{display:none}
 .c-btn{display:inline-flex;align-items:center;gap:10px;padding:17px 30px;border-radius:999px;background:linear-gradient(135deg,#D9473A,#B5321F);color:#fff;text-decoration:none;font-weight:700;font-size:18px;box-shadow:0 14px 30px -10px rgba(192,57,43,.65),inset 0 -4px 0 rgba(0,0,0,.15);animation:cta 2.4s ease-in-out infinite;transition:transform .15s}
 .c-btn:hover{transform:translateY(-3px) scale(1.03)}
 @keyframes cta{0%,100%{box-shadow:0 14px 30px -10px rgba(192,57,43,.65),0 0 0 0 rgba(192,57,43,.35)}50%{box-shadow:0 14px 30px -10px rgba(192,57,43,.65),0 0 0 14px rgba(192,57,43,0)}}
-.c-free,.c-streak{font-size:14px;color:#8C8A85}.c-streak{color:#2E3A3E;font-weight:600}
+.c-free,.c-streak{font-size:14px;color:#6B6762}.c-streak{color:#2E3A3E;font-weight:600}
 .c-stage{position:relative;height:min(520px,70vh);transition:transform .3s ease-out;animation:rise-in 1s .3s both}
 .ground-grass{position:absolute;left:4%;right:4%;bottom:4%;height:34px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(127,132,97,.35),rgba(127,132,97,0) 70%)}
 .panda-wrap{position:absolute;right:6%;bottom:4%;width:min(270px,38vw);cursor:pointer;z-index:3}
@@ -577,7 +591,7 @@ body.cover-mode header,body.cover-mode nav,body.cover-mode footer{display:none}
 .board-mini{position:absolute;left:24%;top:4%;width:min(210px,30vw);aspect-ratio:1.45;border-radius:16px;background:#2F4A3F;border:8px solid #8A6440;color:#FDF8EE;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(34px,4.4vw,56px);box-shadow:0 18px 30px -16px rgba(0,0,0,.45);transform:rotate(-3deg);animation:chalkin 1.2s .8s both}
 .board-mini small{font-size:16px;color:#F2D3A6;font-family:'Be Vietnam Pro'}
 @keyframes chalkin{from{opacity:0;transform:rotate(-3deg) scale(.7)}}
-.c-hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:7;font-size:12.5px;color:#8C8A85;background:rgba(255,255,255,.7);padding:6px 14px;border-radius:999px;white-space:nowrap}
+.c-hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:7;font-size:12.5px;color:#6B6762;background:rgba(255,255,255,.7);padding:6px 14px;border-radius:999px;white-space:nowrap}
 @media (max-width:860px){
   .cover-inner{grid-template-columns:1fr;padding:56px 20px 70px;text-align:center}
   .c-sub{margin:0 auto}.c-chips,.c-cta{justify-content:center}
@@ -599,12 +613,24 @@ body.cover-mode header,body.cover-mode nav,body.cover-mode footer{display:none}
 }
 @media (prefers-reduced-motion:reduce){.cover *{animation-duration:0s!important;animation-iteration-count:1!important}}
 
+:focus-visible{outline:3px solid #2F6FDB;outline-offset:2px;border-radius:8px}
+.opt:focus-visible,.btn:focus-visible,.tile:focus-visible,.cta:focus-visible{outline-offset:3px}
+.skip{position:absolute;left:-999px;top:8px;z-index:100;background:var(--ink);color:#fff;padding:8px 14px;border-radius:10px}
+.skip:focus{left:12px}
+.c-note{font-size:12px;color:#6B6762;margin-top:6px}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.about .card h3{font-size:18px;margin-bottom:8px}.about .card p{font-size:14.5px;margin-bottom:8px}
+.about .wide{grid-column:1/-1}
+.about a{color:var(--accent);font-weight:500}
+@media (max-width:780px){.about{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}}
 </style>
 </head>
 <body>
+<a class="skip" href="#app" onclick="event.preventDefault();document.getElementById('app').focus()">Bỏ qua, tới nội dung chính</a>
 <div class="wrap">
 <header>
-  <a class="brand" href="#home"><div class="seal zh">中</div><div><b>Tiếng Trung cùng cô Lâm</b><small>5 cấp độ · từ Nhập môn đến HSK 2</small></div></a>
+  <a class="brand" href="#home"><div class="seal zh">中</div><div><b>Tiếng Trung cùng cô Lâm</b><small>Nền tảng HSK 1 · 5 chặng học</small></div></a>
   <div class="hud" id="hud"></div>
 </header>
 <nav id="nav">
@@ -616,8 +642,8 @@ body.cover-mode header,body.cover-mode nav,body.cover-mode footer{display:none}
   <a href="#ho-so" data-v="ho-so">🏅 Hồ sơ</a>
 </nav>
 <div class="note-box" id="voiceNote">Thiết bị chưa có giọng đọc tiếng Trung nên phần phát âm có thể im lặng. Chrome, Edge, Safari và điện thoại thường có sẵn giọng zh-CN.<button onclick="this.parentElement.classList.remove('on')" aria-label="Đóng">×</button></div>
-<main id="app"></main>
-<footer>Nội dung bám theo từ vựng HSK 1–2 · Phát âm bằng giọng đọc có sẵn trên thiết bị · Tiến độ lưu trên trình duyệt này<br><a href="#bia" style="color:var(--accent);font-weight:500">✨ Trang bìa</a> · <button id="resetBtn">Xoá tiến độ học</button></footer>
+<main id="app" tabindex="-1"></main>
+<footer>Nội dung xây dựng trên từ vựng nền tảng HSK 1 · Cô Lâm và gấu trúc Bảo Bảo là nhân vật minh họa · Tiến độ lưu trên trình duyệt này<br><a href="#gioi-thieu" style="color:var(--accent);font-weight:500">ℹ️ Giới thiệu & Bản quyền</a> · <a href="#bia" style="color:var(--accent);font-weight:500">✨ Trang bìa</a> · <button id="resetBtn">Xoá tiến độ học</button></footer>
 </div>
 <div class="confetti" id="confetti"></div>
 
@@ -687,7 +713,7 @@ const LEVELS = [
   sents:[['你想吃什么？','Nǐ xiǎng chī shénme?','Bạn muốn ăn gì?'],['我想喝咖啡。','Wǒ xiǎng hē kāfēi.','Tôi muốn uống cà phê.'],['现在几点？','Xiànzài jǐ diǎn?','Bây giờ mấy giờ?'],['现在三点十分。','Xiànzài sān diǎn shí fēn.','Bây giờ là ba giờ mười phút.'],['明天你去哪儿？','Míngtiān nǐ qù nǎr?','Ngày mai bạn đi đâu?'],['我喜欢学习汉语。','Wǒ xǐhuan xuéxí Hànyǔ.','Tôi thích học tiếng Trung.']],
   cloze:[['你想吃___？','什么',['什么','几','谁','多'],'Bạn muốn ăn gì?'],['我___喝咖啡。','想',['想','是','有','的'],'Tôi muốn uống cà phê.'],['现在___点？','几',['几','什么','多','谁'],'Bây giờ mấy giờ?'],['我很好，你___？','呢',['呢','吗','的','了'],'Tôi khỏe, còn bạn?']]
  },
- {n:4, name:'Tiền trung cấp', zh:'准中级', color:'#5C7A78', desc:'Mua sắm, hỏi đường, đi lại và thời tiết',
+ {n:4, name:'Sơ cấp 3', zh:'初级三', color:'#5C7A78', desc:'Mua sắm, hỏi đường, đi lại và thời tiết',
   lessons:[
    {title:'Đi chợ, mua sắm', em:'🛍️',
     words:W('买|mǎi|mua|🛍️;卖|mài|bán|🏷️;钱|qián|tiền|💰;块|kuài|đồng (tiền)|💵;多少|duōshao|bao nhiêu|🔢;贵|guì|đắt|💎;便宜|piányi|rẻ|🪙;衣服|yīfu|quần áo|👕;红色|hóngsè|màu đỏ|🔴;白色|báisè|màu trắng|⚪;黑色|hēisè|màu đen|⚫;这个|zhège|cái này|👇'),
@@ -707,7 +733,7 @@ const LEVELS = [
   sents:[['这个多少钱？','Zhège duōshao qián?','Cái này bao nhiêu tiền?'],['太贵了！便宜一点吧。','Tài guì le! Piányi yìdiǎn ba.','Đắt quá! Rẻ một chút đi.'],['医院在哪儿？','Yīyuàn zài nǎr?','Bệnh viện ở đâu?'],['一直往前走，然后右转。','Yìzhí wǎng qián zǒu, ránhòu yòu zhuǎn.','Đi thẳng, sau đó rẽ phải.'],['我坐出租车去机场。','Wǒ zuò chūzūchē qù jīchǎng.','Tôi đi taxi ra sân bay.'],['今天天气很热。','Jīntiān tiānqì hěn rè.','Hôm nay trời rất nóng.']],
   cloze:[['医院___哪儿？','在',['在','是','有','去'],'Bệnh viện ở đâu?'],['___贵了！','太',['太','很','的','是'],'Đắt quá!'],['我___飞机去北京。','坐',['坐','骑','在','有'],'Tôi đi máy bay đến Bắc Kinh.'],['这件衣服多少___？','钱',['钱','吗','个','岁'],'Cái áo này bao nhiêu tiền?']]
  },
- {n:5, name:'HSK 2', zh:'中级', color:'#46565B', desc:'Cảm xúc, so sánh, trải nghiệm và câu phức',
+ {n:5, name:'Sơ cấp 4', zh:'初级四', color:'#46565B', desc:'Cảm xúc, so sánh, trải nghiệm và câu phức',
   lessons:[
    {title:'Cảm xúc và tính chất', em:'🥳',
     words:W('快乐|kuàilè|vui vẻ|🥳;累|lèi|mệt|😩;忙|máng|bận|🏃;漂亮|piàoliang|xinh đẹp|🌸;有意思|yǒu yìsi|thú vị|🤩;高|gāo|cao|🦒;快|kuài|nhanh|⚡;慢|màn|chậm|🐢;新|xīn|mới|✨;大|dà|to, lớn|🐘;小|xiǎo|nhỏ|🐭'),
@@ -810,6 +836,7 @@ function route(){
   else if(h==='chu-han') renderStories();
   else if(h==='ho-so') renderProfile();
   else if(h==='bia') renderCover();
+  else if(h==='gioi-thieu') renderAbout();
   else if(h==='pinyin') renderPinyin();
   else renderHome();
   window.scrollTo({top:0});
@@ -1141,7 +1168,7 @@ function renderTest(n){
         confetti(120);
         app.innerHTML=`<div class="view">${crumb}<div class="cert"><div class="stamp zh">${n<5?'过':'优'}</div><div class="eyebrow">Chứng nhận</div>
          <h2>${n<5?`Hoàn thành Cấp ${n}`:'Hoàn thành khóa học'}</h2><p style="font-size:15px;margin:8px 0">Em đã vượt qua bài thi <b>${L.name}</b> với số điểm <b style="color:var(--accent)">${s}/${t} (${Math.round(r*100)}%)</b>.</p>
-         <p style="font-size:14.5px">${n<5?(newly?`🎉 <b>Cấp ${n+1} · ${lvl(n+1).name}</b> đã được mở khóa!`:`Cấp ${n+1} đã mở sẵn cho em.`):'Em đã có nền tảng vững để bắt đầu luyện thi HSK 2. Cô rất tự hào về em!'}</p>
+         <p style="font-size:14.5px">${n<5?(newly?`🎉 <b>Cấp ${n+1} · ${lvl(n+1).name}</b> đã được mở khóa!`:`Cấp ${n+1} đã mở sẵn cho em.`):'Em đã hoàn thành chặng nền tảng! Bước tiếp theo: học đủ 300 từ HSK 1 theo chuẩn HSK 3.0 để sẵn sàng đi thi. Cô rất tự hào về em!'}</p>
          <div class="teacher-row" style="justify-content:center;margin:18px 0;text-align:left">${tAva()}<div class="bubble">${pick(['太棒了！Em làm rất tốt. Hãy giữ thói quen học mỗi ngày nhé!','Cô biết em làm được mà! Tiếp tục cố gắng nhé, 加油！','Rất giỏi! Kiến thức cấp này em nắm chắc rồi.'])}</div></div>
          <div class="sign">— 林老师 · Cô Lâm</div>
          <div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">${n<5?`<a class="btn" href="#level-${n+1}">Vào Cấp ${n+1} →</a>`:''}<a class="btn ghost" href="#home">Về lộ trình</a></div></div></div>`;
@@ -1426,7 +1453,7 @@ function srsQuiz(w,ok){if(!w||!WMAP[w.ch])return;if(!ok){P.srs[w.ch]={b:1,due:to
 
 /* ---- onboarding ---- */
 function onboard(){
-  const o=modal(`<div class="onb">${tAva()}<div class="eyebrow" style="margin-top:6px">Chào mừng đến lớp của cô Lâm</div><h2 style="font-size:28px">Em tên là gì nhỉ?</h2>
+  const o=modal(`<div class="onb">${tAva()}<div class="eyebrow" style="margin-top:6px">Chào mừng đến lớp của cô Lâm</div><div style="font-size:11.5px;color:var(--muted)">Cô Lâm là nhân vật minh họa của khóa học</div><h2 style="font-size:28px">Em tên là gì nhỉ?</h2>
    <input id="obName" class="inp" placeholder="Tên của em (ví dụ: Anh)" maxlength="20">
    <p style="font-size:14px;margin:14px 0 8px;color:var(--ink);font-weight:600">Mỗi ngày em muốn học bao nhiêu?</p>
    <div class="goal-pick" id="obGoal">${[[20,'🐢','Thư thả','~5 phút/ngày'],[50,'🐇','Đều đặn','~10–15 phút/ngày'],[100,'🐉','Chăm chỉ','~25 phút/ngày']].map((g,i)=>`<button data-g="${g[0]}" class="${i===1?'on':''}"><span>${g[1]}</span><b>${g[2]}</b><small>${g[0]} XP · ${g[3]}</small></button>`).join('')}</div>
@@ -1633,7 +1660,7 @@ function renderProfile(){
     <div style="font-size:12.5px;color:var(--muted);margin-top:4px">${N?`Còn ${N[0]-P.xp} XP để lên <b>${N[1]} ${N[3]}</b>`:'Đã đạt danh hiệu cao nhất 👑'}</div></div></div>
   <div class="sp"></div><div class="stat-grid">
    <div class="stat"><b>🔥 ${streak()}</b><span>ngày liên tiếp (kỷ lục ${bestStreak()})</span></div>
-   <div class="stat"><b>🧠 ${mastered()}</b><span>từ đã nhớ chắc</span></div>
+   <div class="stat"><b>🧠 ${mastered()}/300</b><span>từ HSK 1 đã nhớ chắc</span></div>
    <div class="stat"><b>🎯 ${acc}%</b><span>trả lời đúng (${P.stats.correct}/${P.stats.answered})</span></div>
    <div class="stat"><b>⚡ ${P.stats.bestCombo}</b><span>combo dài nhất</span></div></div>
   <div class="sp"></div><div class="grid g2"><div class="card"><h3 style="font-size:18px;margin-bottom:10px">📅 5 tuần gần đây</h3>
@@ -1644,11 +1671,13 @@ function renderProfile(){
     <h3 style="font-size:18px;margin:18px 0 10px">🎮 Kỷ lục Sân chơi</h3>${GAMES.map(g=>`<div style="display:flex;justify-content:space-between;font-size:14px;padding:5px 0;border-bottom:1px solid var(--line)"><span>${g[1]} ${g[2]}</span><b>${bestTxt(g[0])}</b></div>`).join('')}</div></div>
   <div class="sp"></div><div class="card"><h3 style="font-size:18px;margin-bottom:4px">🏅 Bộ sưu tập huy hiệu · ${Object.keys(P.badges).length}/${BADGES.length}</h3><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Huy hiệu xám là những thử thách đang chờ em chinh phục.</p>
    <div class="badges">${BADGES.map(b=>`<div class="bdg ${P.badges[b[0]]?'got':''}" title="${b[3]}"><div class="b-ic">${b[1]}</div><b>${b[2]}</b><small>${b[3]}</small></div>`).join('')}</div></div>
+  <div class="sp"></div>${backupCard()}
   <div class="sp"></div><div class="card"><h3 style="font-size:18px;margin-bottom:10px">🪜 Thang danh hiệu</h3><div class="ranks">${RANKS.map((x,i)=>`<div class="rk ${i<=ri?'got':''} ${i===ri?'cur':''}"><span>${x[3]}</span><b>${x[1]}</b><small class="zh">${x[2]}</small><small>${x[0]} XP</small></div>`).join('')}</div>
    <p style="font-size:13px;color:var(--muted);margin-top:10px">Tên các danh hiệu lấy từ các bậc khoa cử thời xưa, từ Tú tài đến Trạng nguyên. Việt Nam cũng từng có các học vị này.</p></div></div>`;
   document.getElementById('pEdit').onclick=()=>{const o=modal(`<h3 style="font-size:22px;margin-bottom:10px">Đổi tên hiển thị</h3><input class="inp" id="nmI" value="${(P.name||'').replace(/"/g,'')}" maxlength="20"><div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" data-close>Huỷ</button><button class="btn" id="nmOk">Lưu</button></div>`,'center');
     o.querySelector('#nmOk').onclick=()=>{P.name=o.querySelector('#nmI').value.trim().slice(0,20);save();o.remove();renderProfile()}};
   document.querySelectorAll('#pGoal button').forEach(b=>b.onclick=()=>{P.goal=+b.dataset.g;save();hud();renderProfile();SFX.flip()});
+  bindBackup();
 }
 
 /* ================= NEW HOME ================= */
@@ -1700,7 +1729,7 @@ function renderHome(){
    <div class="card prov" data-say="${pv[0]}"><div class="eyebrow" style="color:#F2D3A6">🏮 Câu nói hay mỗi ngày</div><div class="zh prov-zh">${pv[0]}</div><div class="prov-py">${pv[1]}</div><div class="prov-vi">“${pv[2]}”</div><small style="opacity:.6">— ${pv[3]} · bấm để nghe</small></div>
   </div>
   <div class="sp"></div>
-  <div class="eyebrow">Hành trình xuyên Trung Hoa</div><h2 class="sec-title" style="margin-bottom:12px">🗺️ 5 chặng, 5 thành phố</h2>
+  <div class="eyebrow">Hành trình xuyên Trung Hoa</div><h2 class="sec-title">🗺️ 5 chặng, 5 thành phố</h2><p class="lead" style="margin-bottom:14px">${ALLW.length} từ vựng nền tảng, khoảng một nửa trong 300 từ HSK 1 theo chuẩn HSK 3.0. Em đã nhớ chắc <b>${mastered()}</b> từ.</p>
   <div class="journey-wrap">${journeySVG()}</div>
   <div class="sp"></div>
   <div class="levels">${LEVELS.map((L,i)=>{const locked=L.n>P.unlocked,dn=testPassed(L.n),pr=lvlProgress(L.n);
@@ -1708,7 +1737,7 @@ function renderHome(){
     return `<a class="lvl ${locked?'locked':''}" href="#level-${L.n}"><div class="badge" style="background:${locked?'#B9B3AA':L.color}">${locked?'🔒':CITIES[i][2]}</div>
      <div><h3>Cấp ${L.n} · ${L.name} <span class="zh" style="font-size:15px;color:var(--muted)">${L.zh}</span></h3><div class="meta">${CITIES[i][1]} · ${L.desc}</div><div class="bar"><i style="width:${pr/L.lessons.length*100}%;background:${L.color}"></i></div></div>
      <div class="right">${st}<span class="meta">${P.tests[L.n]!=null?'Bài thi: '+Math.round(P.tests[L.n]*100)+'%':pr+'/'+L.lessons.length+' bài'}</span></div></a>`}).join('')}</div>
-  <div class="sp"></div><div class="quick"><a href="#chu-han">📜 Chuyện chữ Hán</a><a href="#nghe">🎧 Luyện nghe hội thoại</a><a href="#pinyin">🔤 Bảng pinyin</a><a href="#ho-so">🏅 Huy hiệu của em</a><a href="#bia">✨ Trang bìa</a></div>
+  <div class="sp"></div><div class="quick"><a href="#chu-han">📜 Chuyện chữ Hán</a><a href="#nghe">🎧 Luyện nghe hội thoại</a><a href="#pinyin">🔤 Bảng pinyin</a><a href="#ho-so">🏅 Huy hiệu của em</a><a href="#bia">✨ Trang bìa</a><a href="#gioi-thieu">ℹ️ Giới thiệu</a></div>
   </div>`;
   const jw=document.querySelector('.journey-wrap');if(jw&&jw.scrollWidth>jw.clientWidth){const c=CITIES[Math.min(P.unlocked,5)-1];jw.scrollLeft=c[3]/1000*jw.scrollWidth-jw.clientWidth/2}
 }
@@ -1781,8 +1810,8 @@ function renderCover(){
     <div class="c-title">
      <div class="c-badge">✨ Khóa học tiếng Trung cho người Việt</div>
      <h1><span class="c-zh zh">学中文</span><span class="c-vi">Học tiếng Trung<br>vui như chơi!</span></h1>
-     <p class="c-sub">Cùng <b>cô Lâm</b> và gấu trúc <b>Bảo Bảo</b> đi qua 5 thành phố Trung Hoa, từ Bắc Kinh đến Quế Lâm. Mỗi ngày 10 phút, học mà như chơi.</p>
-     <div class="c-chips"><span>🗺️ 5 cấp độ</span><span>📚 ${total} từ vựng</span><span>🎬 Video bài giảng</span><span>🎮 4 trò chơi</span><span>🎧 10 hội thoại</span></div>
+     <p class="c-sub">Cùng <b>cô Lâm</b> và gấu trúc <b>Bảo Bảo</b> đi qua 5 thành phố Trung Hoa, từ Bắc Kinh đến Quế Lâm. Mỗi ngày 10 phút, học mà như chơi.</p><p class="c-note">Cô Lâm và Bảo Bảo là nhân vật minh họa của khóa học.</p>
+     <div class="c-chips"><span>🎯 Nền tảng HSK 1</span><span>🗺️ 5 chặng</span><span>📚 ${total} từ vựng</span><span>🎬 Video bài giảng</span><span>🎮 4 trò chơi</span><span>🎧 10 hội thoại</span></div>
      <div class="c-cta"><a class="c-btn" href="#home" id="cGo">${back?`Học tiếp thôi, ${P.name||'bạn ơi'}! 🚀`:'Bắt đầu hành trình 🚀'}</a>${back?`<span class="c-streak">🔥 ${s} ngày liên tiếp · ⭐ ${P.xp} XP</span>`:'<span class="c-free">Miễn phí · Không cần đăng ký</span>'}</div>
     </div>
     <div class="c-stage">
@@ -1816,6 +1845,65 @@ function renderCover(){
   cover.addEventListener('mousemove',mv);
   document.getElementById('cGo').onclick=()=>{SFX.up();try{sessionStorage.setItem('zh-cover','1')}catch(e){}};
   cleanup=()=>{clearInterval(iv);clearInterval(pt2);clearTimeout(pt);document.body.classList.remove('cover-mode')};
+}
+
+/* ================= ACCESSIBILITY HELPERS ================= */
+const ICON_LABEL={'🔊':'Nghe phát âm','✓':'Đánh dấu đã thuộc','✏️':'Sửa','⏮':'Cảnh trước','⏭':'Cảnh sau','▶':'Phát','❚❚':'Tạm dừng','↻':'Phát lại','×':'Đóng','🔇':'Bật âm thanh'};
+function a11y(root=document){
+  root.querySelectorAll('button:not([aria-label])').forEach(b=>{const t=b.textContent.trim();if(b.title)b.setAttribute('aria-label',b.title);else if(ICON_LABEL[t])b.setAttribute('aria-label',ICON_LABEL[t])});
+  root.querySelectorAll('.story,.wod,.prov,.panda-wrap,.tone,.line,.fc').forEach(el=>{if(!el.hasAttribute('tabindex')){el.setAttribute('tabindex','0');el.setAttribute('role','button')}});
+}
+new MutationObserver(()=>{clearTimeout(window.__a11yT);window.__a11yT=setTimeout(()=>a11y(),60)}).observe(document.body,{childList:true,subtree:true});
+document.addEventListener('keydown',e=>{const el=document.activeElement;if((e.key==='Enter'||e.key===' ')&&el&&el.getAttribute('role')==='button'&&el.tagName!=='BUTTON'&&el.tagName!=='A'){e.preventDefault();el.click()}});
+
+/* ================= BACKUP / RESTORE ================= */
+function backupCode(){return 'ZH1.'+btoa(unescape(encodeURIComponent(JSON.stringify(P))))}
+function parseBackup(txt){txt=(txt||'').trim();try{if(txt.startsWith('{'))return JSON.parse(txt);if(txt.startsWith('ZH1.'))return JSON.parse(decodeURIComponent(escape(atob(txt.slice(4)))))}catch(e){}return null}
+function restoreFrom(obj){if(!obj||typeof obj!=='object'||!obj.lessons||!obj.unlocked){toast('⚠️ Mã sao lưu không hợp lệ','Em kiểm tra lại mã hoặc file nhé');SFX.bad();return}
+  const o=modal(`<div style="font-size:44px">♻️</div><h3 style="font-size:22px;margin:6px 0">Khôi phục tiến độ?</h3><p style="font-size:14.5px">Bản sao lưu: <b>${obj.name||'Học viên'}</b> · ${obj.xp||0} XP · đã mở Cấp ${obj.unlocked}.<br>Tiến độ hiện tại trên máy này sẽ được <b>thay thế</b>.</p>
+   <div style="margin-top:16px;display:flex;gap:8px;justify-content:center"><button class="btn ghost" data-close>Huỷ</button><button class="btn" id="rsOk">Khôi phục</button></div>`,'center');
+  o.querySelector('#rsOk').onclick=()=>{try{localStorage.setItem(KEY,JSON.stringify(obj))}catch(e){}location.hash='#ho-so';location.reload()}}
+function backupCard(){return `<div class="card" id="bkCard"><h3 style="font-size:18px;margin-bottom:4px">💾 Sao lưu & chuyển máy</h3>
+  <p style="font-size:13.5px;color:var(--muted);margin-bottom:12px">Tiến độ chỉ lưu trên trình duyệt này. Sao lưu định kỳ để không mất XP, chuỗi ngày và hộp ôn tập khi đổi máy hoặc xoá dữ liệu trình duyệt.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="bkCopy">📋 Sao chép mã sao lưu</button><button class="btn ghost" id="bkFile">⬇️ Tải file sao lưu</button><button class="btn ghost" id="bkRestore">♻️ Khôi phục</button></div>
+  <div id="bkArea" hidden style="margin-top:12px"><textarea class="inp" id="bkTxt" rows="3" placeholder="Dán mã sao lưu (bắt đầu bằng ZH1.) vào đây" style="font-family:monospace;font-size:12px"></textarea>
+   <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center"><button class="btn" id="bkGo">Khôi phục từ mã</button><label class="btn ghost" style="cursor:pointer">📂 Chọn file .json<input type="file" id="bkUp" accept=".json,application/json,text/plain" hidden></label></div></div>
+  <p style="font-size:12px;color:var(--muted);margin-top:10px">Gửi mã cho chính mình qua Zalo hoặc email, rồi dán vào máy mới để học tiếp.</p></div>`}
+function bindBackup(){
+  const code=backupCode();
+  document.getElementById('bkCopy').onclick=async e=>{try{await navigator.clipboard.writeText(code);toast('📋 Đã sao chép mã sao lưu','Dán vào ghi chú, Zalo hoặc email để cất giữ');SFX.ok()}catch(err){document.getElementById('bkArea').hidden=false;const t=document.getElementById('bkTxt');t.value=code;t.select();toast('Hãy tự sao chép mã trong ô bên dưới')}};
+  document.getElementById('bkFile').onclick=()=>{try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(P,null,1)],{type:'application/json'}));a.download=`tieng-trung-co-lam-${today()}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);SFX.ok()}catch(e){toast('Trình duyệt không cho tải file','Hãy dùng nút Sao chép mã')}};
+  document.getElementById('bkRestore').onclick=()=>{const a=document.getElementById('bkArea');a.hidden=!a.hidden;if(!a.hidden)document.getElementById('bkTxt').focus()};
+  document.getElementById('bkGo').onclick=()=>restoreFrom(parseBackup(document.getElementById('bkTxt').value));
+  document.getElementById('bkUp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>restoreFrom(parseBackup(r.result));r.readAsText(f)};
+}
+
+/* ================= ABOUT & LICENSE ================= */
+function renderAbout(){
+  app.innerHTML=`<div class="view"><div class="crumb"><a href="#home">Trang chủ</a> / Giới thiệu & Bản quyền</div>
+  <div class="eyebrow">Về khóa học</div><h2 class="sec-title">ℹ️ Giới thiệu & Bản quyền</h2><div class="sp"></div>
+  <div class="about">
+   <div class="card"><h3>🎯 Khóa học này dành cho ai?</h3>
+    <p>Người Việt mới bắt đầu học tiếng Trung, muốn xây <b>nền tảng HSK 1</b>: phát âm chuẩn, thanh điệu, ${ALLW.length} từ vựng cơ bản, 15 điểm ngữ pháp và hội thoại đời thường.</p>
+    <p>Theo đề cương HSK 3.0 công bố tháng 11/2025, HSK 1 yêu cầu <b>300 từ</b> và HSK 2 yêu cầu <b>500 từ</b> (tích lũy). Khóa học hiện bao phủ khoảng một nửa từ vựng HSK 1. Nếu em chuẩn bị đi thi, hãy dùng thêm giáo trình chính thức và kiểm tra lịch thi trên trang Chinese Testing International.</p></div>
+   <div class="card"><h3>👩‍🏫 Nhân vật trong khóa học</h3>
+    <p><b>Cô Lâm</b> và <b>gấu trúc Bảo Bảo</b> là <b>nhân vật minh họa</b>, giúp bài học sinh động và gần gũi. Cô Lâm không phải giáo viên có thật. Lời dặn của cô được biên soạn từ những lỗi người Việt hay gặp khi học tiếng Trung.</p></div>
+   <div class="card"><h3>🧠 Phương pháp</h3>
+    <p>Khóa học kết hợp: <b>ôn tập ngắt quãng</b> (ôn lại đúng lúc sắp quên), <b>chiết tự</b> (học chữ qua câu chuyện hình ảnh), <b>luyện nghe theo ngữ cảnh</b>, và <b>trò chơi hóa</b> (XP, chuỗi ngày, huy hiệu) để duy trì thói quen học mỗi ngày.</p></div>
+   <div class="card"><h3>🔒 Quyền riêng tư</h3>
+    <p>Web <b>không thu thập dữ liệu cá nhân</b>, không yêu cầu đăng ký và không có quảng cáo. Tên, tiến độ, XP chỉ lưu trên trình duyệt của em. Em có thể sao lưu hoặc xoá bất cứ lúc nào trong trang <a href="#ho-so">Hồ sơ</a>.</p>
+    <p>Phát âm dùng giọng đọc có sẵn trên thiết bị của em, nên chất lượng có thể khác nhau giữa các máy.</p></div>
+   <div class="card wide"><h3>📜 Ghi nguồn & giấy phép</h3>
+    <table class="tbl"><tr><th>Thành phần</th><th>Nguồn</th><th>Giấy phép</th></tr>
+     <tr><td>Hoạt họa nét chữ</td><td><a href="https://github.com/chanind/hanzi-writer" target="_blank" rel="noopener">Hanzi Writer</a> (David Chanin)</td><td>MIT</td></tr>
+     <tr><td>Dữ liệu nét chữ Hán</td><td><a href="https://github.com/skishore/makemeahanzi" target="_blank" rel="noopener">Make Me a Hanzi</a> qua gói hanzi-writer-data, dựa trên phông chữ của Arphic Technology</td><td>Arphic Public License</td></tr>
+     <tr><td>Phông chữ</td><td>Be Vietnam Pro, Baloo 2, Noto Sans SC (Google Fonts)</td><td>SIL Open Font License</td></tr>
+     <tr><td>Biểu tượng cảm xúc</td><td>Bộ emoji có sẵn trên thiết bị của người xem</td><td>Theo hệ điều hành</td></tr>
+     <tr><td>Thành ngữ, câu nói cổ</td><td>Lão Tử, Khổng Tử, tục ngữ dân gian</td><td>Phạm vi công cộng</td></tr>
+     <tr><td>Nhân vật, hình minh họa, nội dung bài học</td><td>Biên soạn riêng cho khóa học</td><td>—</td></tr></table>
+    <p style="margin-top:10px;font-size:13px;color:var(--muted)">Một số câu chuyện chiết tự là mẹo nhớ dân gian, không hoàn toàn trùng với nguồn gốc học thuật của chữ.</p></div>
+   <div class="card wide"><h3>💬 Góp ý</h3><p>Phát hiện lỗi hoặc muốn đề xuất bài học mới? Gửi góp ý tại <a href="https://github.com/Eng072291/hoc-tieng-trung/issues" target="_blank" rel="noopener">trang GitHub của dự án</a>.</p></div>
+  </div></div>`;
 }
 
 /* ================= MISC ================= */
