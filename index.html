@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Học tiếng Trung cho người mới bắt đầu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Baloo+2:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F1EA; --surface:#FFFDF9; --ink:#2E3A3E; --body:#565A59; --muted:#8C8A85;
+  --accent:#C0392B; --accent-soft:#F6E1DD; --gold:#D69A4C; --sage:#7F8461; --line:#E7DED2;
+  --t1:#C0392B; --t2:#D69A4C; --t3:#5C7A78; --t4:#46565B; --t0:#9A958E;
+  --r:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--bg);color:var(--body);line-height:1.6;min-height:100vh}
+.zh{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif}
+h1,h2,h3{font-family:'Baloo 2','Be Vietnam Pro',sans-serif;color:var(--ink);line-height:1.2}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+/* header */
+header{padding:28px 0 8px}
+.brand{display:flex;align-items:center;gap:14px}
+.seal{width:48px;height:48px;border-radius:14px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:26px;font-weight:700}
+.brand h1{font-size:26px}
+.brand p{font-size:14px;color:var(--muted)}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:22px 0 6px;padding:6px;background:var(--surface);border-radius:999px;border:1px solid var(--line);width:fit-content}
+nav a{padding:9px 18px;border-radius:999px;text-decoration:none;color:var(--body);font-weight:500;font-size:14.5px;transition:.2s}
+nav a:hover{color:var(--ink)}
+nav a.on{background:var(--ink);color:#fff}
+
+main{padding:22px 0 60px}
+section.view{display:none;animation:fade .3s ease}
+section.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:6px}
+.lead{font-size:16px;max-width:640px}
+.sec-title{font-size:24px;margin-bottom:6px}
+.sp{height:22px}
+
+/* home */
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:stretch}
+.hero .card:first-child h2{font-size:34px;margin-bottom:10px}
+.hero-zh{display:grid;place-items:center;text-align:center;background:var(--ink);color:#fff;border:none}
+.hero-zh .big{font-size:86px;line-height:1;margin-bottom:8px}
+.hero-zh .py{font-size:20px;color:#F2D3A6}
+.hero-zh .vi{font-size:14px;opacity:.8;margin-top:4px}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700}
+.step h3{font-size:18px;margin-bottom:2px}
+.step p{font-size:14px}
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px}
+.stat{flex:1;min-width:120px;padding:14px 16px;border-radius:16px;background:var(--bg)}
+.stat b{display:block;font-size:26px;color:var(--ink);font-family:'Baloo 2'}
+.stat span{font-size:13px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;font-size:14.5px;transition:.2s}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{background:var(--bg)}
+
+/* tones */
+.tones{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.tone{text-align:center;padding:18px 10px;border-radius:18px;background:var(--bg);transition:.2s;cursor:pointer;border:2px solid transparent}
+.tone:hover{border-color:var(--line);transform:translateY(-2px)}
+.tone svg{width:100%;max-width:90px;height:60px}
+.tone .ch{font-size:40px;color:var(--ink)}
+.tone .py{font-size:22px;font-weight:600}
+.tone .nm{font-size:12.5px;color:var(--muted)}
+.tone .vi{font-size:13px}
+.rule{padding:16px 18px;border-radius:16px;background:var(--bg);margin-top:12px}
+.rule b{color:var(--ink)}
+.rule .ex{font-size:15px;margin-top:4px}
+table.py-tbl{width:100%;border-collapse:collapse;font-size:14px}
+.py-tbl td,.py-tbl th{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.py-tbl th{color:var(--ink);font-weight:600;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 11px;border-radius:999px;background:var(--bg);font-size:14px;font-weight:500;color:var(--ink);transition:.15s}
+.chip:hover{background:var(--accent-soft);color:var(--accent)}
+
+/* vocab */
+.topics{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 20px}
+.topic{padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:500;transition:.2s}
+.topic.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.topic small{opacity:.7;margin-left:4px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px}
+.seg button{padding:7px 14px;border-radius:999px;font-size:13.5px;font-weight:500}
+.seg button.on{background:var(--ink);color:#fff}
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.word{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 16px 14px;text-align:center;transition:.2s}
+.word:hover{transform:translateY(-2px);box-shadow:0 8px 24px -14px rgba(46,58,62,.35)}
+.word .ch{font-size:38px;color:var(--ink);line-height:1.2}
+.word .py{font-size:16px;font-weight:600;margin-top:4px}
+.word .vi{font-size:14px;color:var(--body)}
+.word .acts{display:flex;justify-content:center;gap:8px;margin-top:10px}
+.icon-btn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--bg);transition:.15s;font-size:15px}
+.icon-btn:hover{background:var(--accent-soft)}
+.icon-btn.done{background:var(--sage);color:#fff}
+.word.learned::after{content:'✓';position:absolute;top:10px;right:12px;color:var(--sage);font-weight:700}
+
+/* flashcard */
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+.fc{width:min(420px,100%);height:280px;perspective:1200px;cursor:pointer}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+.fc-front{background:var(--surface);border:1px solid var(--line)}
+.fc-front .ch{font-size:84px;color:var(--ink);line-height:1.1}
+.fc-back{background:var(--ink);color:#fff;transform:rotateY(180deg)}
+.fc-back .py{font-size:28px;color:#F2D3A6;font-weight:600}
+.fc-back .vi{font-size:22px;margin-top:6px}
+.fc-back .ch{font-size:34px;opacity:.6;margin-top:8px}
+.fc-hint{font-size:12.5px;color:var(--muted);margin-top:10px}
+.fc-ctrl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+.fc-count{font-size:14px;color:var(--muted);min-width:70px;text-align:center}
+
+/* sentences */
+.sent{display:flex;gap:14px;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
+.sent:last-child{border-bottom:none}
+.sent .t{flex:1}
+.sent .ch{font-size:22px;color:var(--ink)}
+.sent .py{font-size:14.5px;color:var(--accent);font-weight:500}
+.sent .vi{font-size:14.5px}
+.sent .note{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+/* quiz */
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0 20px}
+.mode{text-align:left;padding:16px 18px;border-radius:18px;background:var(--surface);border:2px solid var(--line);transition:.2s}
+.mode:hover{border-color:var(--gold)}
+.mode.on{border-color:var(--accent);background:#FFF8F4}
+.mode b{display:block;color:var(--ink);font-size:15px}
+.mode span{font-size:13px;color:var(--muted)}
+.quiz{max-width:620px;margin:0 auto;text-align:center}
+.q-bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-bottom:18px}
+.q-bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.q-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+.q-prompt{padding:30px 20px;border-radius:22px;background:var(--surface);border:1px solid var(--line);margin-bottom:16px}
+.q-prompt .ch{font-size:64px;color:var(--ink);line-height:1.15}
+.q-prompt .vi{font-size:26px;color:var(--ink);font-weight:600}
+.q-prompt .sub{font-size:14px;color:var(--muted);margin-top:6px}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{padding:16px 14px;border-radius:16px;background:var(--surface);border:2px solid var(--line);font-size:16px;font-weight:500;color:var(--ink);transition:.15s}
+.opt .zh{font-size:26px}
+.opt:hover:not(:disabled){border-color:var(--gold)}
+.opt.right{border-color:var(--sage);background:#EEF0E6}
+.opt.wrong{border-color:var(--accent);background:var(--accent-soft)}
+.opt:disabled{cursor:default}
+.q-feedback{min-height:28px;margin:14px 0 4px;font-weight:500}
+.q-feedback.ok{color:var(--sage)}
+.q-feedback.no{color:var(--accent)}
+.result{padding:34px 20px}
+.result .score{font-family:'Baloo 2';font-size:64px;color:var(--accent);line-height:1}
+.play-big{width:84px;height:84px;border-radius:50%;background:var(--accent);color:#fff;font-size:32px;display:inline-grid;place-items:center;transition:.2s}
+.play-big:hover{transform:scale(1.05)}
+
+.note-box{font-size:13px;color:var(--muted);padding:10px 14px;border-radius:12px;background:#FFF6E8;border:1px solid #F1DDBD;margin-bottom:16px;display:none}
+.note-box.on{display:block}
+footer{text-align:center;font-size:12.5px;color:var(--muted);padding:20px 0 34px}
+
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr}
+  .tones{grid-template-columns:repeat(3,1fr)}
+  .q-opts{grid-template-columns:1fr}
+  .hero .card:first-child h2{font-size:28px}
+  nav a{padding:8px 13px;font-size:13.5px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <div class="seal zh">中</div>
+    <div><h1>Tiếng Trung khởi đầu</h1><p>Pinyin · Thanh điệu · Từ vựng · Mẫu câu · Luyện tập</p></div>
+  </div>
+  <nav id="nav">
+    <a href="#trang-chu" data-v="trang-chu">Trang chủ</a>
+    <a href="#pinyin" data-v="pinyin">Pinyin & thanh điệu</a>
+    <a href="#tu-vung" data-v="tu-vung">Từ vựng</a>
+    <a href="#mau-cau" data-v="mau-cau">Mẫu câu</a>
+    <a href="#luyen-tap" data-v="luyen-tap">Luyện tập</a>
+  </nav>
+</header>
+
+<main>
+<div class="note-box" id="voiceNote">Trình duyệt của bạn chưa có giọng đọc tiếng Trung nên nút 🔊 có thể không phát âm. Trên điện thoại hoặc Chrome/Edge thường có sẵn giọng zh-CN.</div>
+
+<!-- HOME -->
+<section class="view" id="v-trang-chu">
+  <div class="hero">
+    <div class="card">
+      <div class="eyebrow">Lộ trình 4 bước</div>
+      <h2>Học tiếng Trung từ con số 0</h2>
+      <p class="lead">Bắt đầu với âm và thanh điệu, sau đó học khoảng 80 từ cơ bản nhất và 12 mẫu câu giao tiếp. Mỗi từ đều có nút nghe phát âm.</p>
+      <div class="stats">
+        <div class="stat"><b id="stLearned">0</b><span>từ đã thuộc</span></div>
+        <div class="stat"><b id="stTotal">0</b><span>từ trong bài</span></div>
+        <div class="stat"><b id="stBest">–</b><span>điểm luyện tập cao nhất</span></div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn" href="#pinyin">Bắt đầu học →</a>
+        <a class="btn ghost" href="#luyen-tap">Làm bài luyện tập</a>
+      </div>
+    </div>
+    <div class="card hero-zh" id="wordOfDay" style="cursor:pointer">
+      <div>
+        <div class="eyebrow" style="color:#F2D3A6">Từ của hôm nay · bấm để nghe</div>
+        <div class="big zh" id="wodCh">你好</div>
+        <div class="py" id="wodPy">nǐ hǎo</div>
+        <div class="vi" id="wodVi">xin chào</div>
+      </div>
+    </div>
+  </div>
+  <div class="sp"></div>
+  <div class="grid g2">
+    <div class="card step"><div class="n">1</div><div><h3>Pinyin & 4 thanh điệu</h3><p>Pinyin là cách viết chữ Hán bằng chữ Latin. Cùng một âm “ma” nhưng đổi thanh là đổi nghĩa: mẹ, cây gai, con ngựa, mắng.</p></div></div>
+    <div class="card step"><div class="n">2</div><div><h3>Từ vựng theo chủ đề</h3><p>Chào hỏi, số đếm, gia đình, ăn uống, thời gian, mua sắm. Xem dạng lưới hoặc lật thẻ ghi nhớ.</p></div></div>
+    <div class="card step"><div class="n">3</div><div><h3>Mẫu câu giao tiếp</h3><p>Hỏi tên, hỏi quốc tịch, hỏi giá. Kèm ghi chú ngữ pháp ngắn để hiểu cấu trúc.</p></div></div>
+    <div class="card step"><div class="n">4</div><div><h3>Luyện tập 10 câu</h3><p>Nhìn chữ đoán nghĩa, nghe chọn từ, phân biệt thanh điệu. Học tới đâu kiểm tra tới đó.</p></div></div>
+  </div>
+</section>
+
+<!-- PINYIN -->
+<section class="view" id="v-pinyin">
+  <div class="eyebrow">Bài 1</div>
+  <h2 class="sec-title">Pinyin và 4 thanh điệu</h2>
+  <p class="lead">Tiếng Trung phổ thông có 4 thanh và 1 thanh nhẹ. Bấm vào từng ô để nghe, chú ý độ cao giọng thay đổi theo đường kẻ.</p>
+  <div class="sp"></div>
+  <div class="tones" id="tones"></div>
+  <div class="sp"></div>
+  <div class="grid g2">
+    <div class="card">
+      <h3 style="font-size:19px;margin-bottom:8px">Mẹo nhớ cho người Việt</h3>
+      <table class="py-tbl">
+        <tr><th>Thanh</th><th>Gần giống tiếng Việt</th></tr>
+        <tr><td><b style="color:var(--t1)">1 · ā</b></td><td>Thanh ngang, giữ giọng cao và đều (cao hơn “a” bình thường)</td></tr>
+        <tr><td><b style="color:var(--t2)">2 · á</b></td><td>Gần dấu sắc, giọng đi lên từ giữa</td></tr>
+        <tr><td><b style="color:var(--t3)">3 · ǎ</b></td><td>Gần dấu hỏi, xuống thấp rồi lên. Khi nói nhanh thường chỉ hạ thấp</td></tr>
+        <tr><td><b style="color:var(--t4)">4 · à</b></td><td>Gần dấu huyền nhưng rơi mạnh, dứt khoát như dấu nặng</td></tr>
+        <tr><td><b style="color:var(--t0)">nhẹ · a</b></td><td>Đọc ngắn và nhẹ, không dấu</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3 style="font-size:19px;margin-bottom:8px">3 quy tắc biến điệu</h3>
+      <div class="rule"><b>Hai thanh 3 đứng liền:</b> thanh 3 đầu đọc thành thanh 2.<div class="ex zh">你好 nǐ hǎo → <span style="color:var(--t2)">ní</span> hǎo</div></div>
+      <div class="rule"><b>不 bù trước thanh 4:</b> đọc thành bú.<div class="ex zh">不是 bù shì → <span style="color:var(--t2)">bú</span> shì</div></div>
+      <div class="rule"><b>一 yī:</b> trước thanh 4 đọc yí, trước thanh 1/2/3 đọc yì.<div class="ex zh">一个 yí gè · 一天 yì tiān</div></div>
+    </div>
+  </div>
+  <div class="sp"></div>
+  <div class="card">
+    <h3 style="font-size:19px;margin-bottom:4px">Thanh mẫu (phụ âm đầu) cần chú ý</h3>
+    <p style="font-size:14px;margin-bottom:12px">Bấm từng âm để nghe ví dụ. Những âm dưới đây đọc khác hẳn tiếng Việt.</p>
+    <table class="py-tbl" id="initials"></table>
+  </div>
+</section>
+
+<!-- VOCAB -->
+<section class="view" id="v-tu-vung">
+  <div class="eyebrow">Bài 2</div>
+  <h2 class="sec-title">Từ vựng cơ bản</h2>
+  <p class="lead">Bấm 🔊 để nghe, bấm ✓ khi đã thuộc. Tiến độ được lưu trên trình duyệt này.</p>
+  <div class="topics" id="topics"></div>
+  <div class="toolbar">
+    <div class="seg" id="viewSeg"><button data-m="grid" class="on">Dạng lưới</button><button data-m="card">Thẻ ghi nhớ</button></div>
+    <div class="seg" id="hideSeg"><button data-h="none" class="on">Hiện tất cả</button><button data-h="vi">Ẩn nghĩa</button><button data-h="py">Ẩn pinyin</button></div>
+  </div>
+  <div id="vocabBody"></div>
+</section>
+
+<!-- SENTENCES -->
+<section class="view" id="v-mau-cau">
+  <div class="eyebrow">Bài 3</div>
+  <h2 class="sec-title">Mẫu câu giao tiếp</h2>
+  <p class="lead">12 câu đủ để chào hỏi, giới thiệu bản thân và mua đồ. Nghe và đọc theo nhiều lần.</p>
+  <div class="sp"></div>
+  <div class="card" style="padding:8px 8px" id="sentList"></div>
+</section>
+
+<!-- QUIZ -->
+<section class="view" id="v-luyen-tap">
+  <div class="eyebrow">Bài 4</div>
+  <h2 class="sec-title">Luyện tập</h2>
+  <p class="lead">Chọn dạng bài, mỗi lượt 10 câu với từ ngẫu nhiên trong tất cả chủ đề.</p>
+  <div class="modes" id="modes">
+    <button class="mode on" data-q="ch2vi"><b>Nhìn chữ, chọn nghĩa</b><span>汉字 → Tiếng Việt</span></button>
+    <button class="mode" data-q="vi2ch"><b>Nhìn nghĩa, chọn chữ</b><span>Tiếng Việt → 汉字</span></button>
+    <button class="mode" data-q="listen"><b>Nghe, chọn từ</b><span>Luyện tai nghe</span></button>
+    <button class="mode" data-q="tone"><b>Đoán thanh điệu</b><span>Nghe và chọn thanh 1–4</span></button>
+  </div>
+  <div class="quiz" id="quiz"></div>
+</section>
+</main>
+<footer>Nội dung bám theo từ vựng HSK 1 · Phát âm dùng giọng đọc tiếng Trung có sẵn trên thiết bị</footer>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
+const TOPICS = [
+ {id:'chao-hoi', name:'Chào hỏi', words:[
+  ['你好','nǐ hǎo','xin chào'],['谢谢','xièxie','cảm ơn'],['不客气','bú kèqi','không có gì'],
+  ['对不起','duìbuqǐ','xin lỗi'],['没关系','méi guānxi','không sao'],['再见','zàijiàn','tạm biệt'],
+  ['早上好','zǎoshang hǎo','chào buổi sáng'],['请','qǐng','mời, xin'],['是','shì','là, đúng'],['不','bù','không']]},
+ {id:'so-dem', name:'Số đếm', words:[
+  ['一','yī','một (1)'],['二','èr','hai (2)'],['三','sān','ba (3)'],['四','sì','bốn (4)'],['五','wǔ','năm (5)'],
+  ['六','liù','sáu (6)'],['七','qī','bảy (7)'],['八','bā','tám (8)'],['九','jiǔ','chín (9)'],['十','shí','mười (10)'],
+  ['百','bǎi','trăm'],['两','liǎng','hai (khi đếm đồ vật)']]},
+ {id:'gia-dinh', name:'Con người & gia đình', words:[
+  ['我','wǒ','tôi'],['你','nǐ','bạn'],['他','tā','anh ấy'],['她','tā','cô ấy'],['我们','wǒmen','chúng tôi'],
+  ['爸爸','bàba','bố'],['妈妈','māma','mẹ'],['哥哥','gēge','anh trai'],['姐姐','jiějie','chị gái'],
+  ['弟弟','dìdi','em trai'],['妹妹','mèimei','em gái'],['朋友','péngyou','bạn bè'],['老师','lǎoshī','giáo viên']]},
+ {id:'an-uong', name:'Ăn uống', words:[
+  ['吃','chī','ăn'],['喝','hē','uống'],['水','shuǐ','nước'],['茶','chá','trà'],['咖啡','kāfēi','cà phê'],
+  ['米饭','mǐfàn','cơm'],['面条','miàntiáo','mì sợi'],['苹果','píngguǒ','quả táo'],['菜','cài','món ăn, rau'],['饭店','fàndiàn','nhà hàng']]},
+ {id:'thoi-gian', name:'Thời gian', words:[
+  ['今天','jīntiān','hôm nay'],['明天','míngtiān','ngày mai'],['昨天','zuótiān','hôm qua'],['现在','xiànzài','bây giờ'],
+  ['点','diǎn','giờ'],['年','nián','năm'],['月','yuè','tháng'],['星期','xīngqī','tuần, thứ'],['上午','shàngwǔ','buổi sáng'],['下午','xiàwǔ','buổi chiều']]},
+ {id:'mua-sam', name:'Mua sắm & màu sắc', words:[
+  ['买','mǎi','mua'],['钱','qián','tiền'],['多少','duōshao','bao nhiêu'],['贵','guì','đắt'],['便宜','piányi','rẻ'],
+  ['衣服','yīfu','quần áo'],['红色','hóngsè','màu đỏ'],['白色','báisè','màu trắng'],['黑色','hēisè','màu đen'],
+  ['大','dà','to, lớn'],['小','xiǎo','nhỏ'],['这个','zhège','cái này']]},
+ {id:'dong-tu', name:'Động từ thường dùng', words:[
+  ['去','qù','đi'],['来','lái','đến'],['看','kàn','xem, nhìn'],['听','tīng','nghe'],['说','shuō','nói'],
+  ['学习','xuéxí','học tập'],['工作','gōngzuò','làm việc'],['喜欢','xǐhuan','thích'],['有','yǒu','có'],['想','xiǎng','muốn, nghĩ']]}
+];
+const SENTS = [
+ ['你好吗？','Nǐ hǎo ma?','Bạn khỏe không?','吗 ma đặt cuối câu biến câu kể thành câu hỏi có/không.'],
+ ['我很好，谢谢。','Wǒ hěn hǎo, xièxie.','Tôi rất khỏe, cảm ơn.','很 hěn thường đứng trước tính từ, nghĩa nhẹ hơn “rất”.'],
+ ['你叫什么名字？','Nǐ jiào shénme míngzi?','Bạn tên là gì?','什么 shénme = cái gì; vị trí từ hỏi giống câu trả lời.'],
+ ['我叫小安。','Wǒ jiào Xiǎo Ān.','Tôi tên là Tiểu An.','Thay 小安 bằng tên của bạn.'],
+ ['你是哪国人？','Nǐ shì nǎ guó rén?','Bạn là người nước nào?','哪 nǎ = nào; 国 guó = nước; 人 rén = người.'],
+ ['我是越南人。','Wǒ shì Yuènán rén.','Tôi là người Việt Nam.','越南 Yuènán = Việt Nam; 中国 Zhōngguó = Trung Quốc.'],
+ ['认识你很高兴。','Rènshi nǐ hěn gāoxìng.','Rất vui được làm quen với bạn.',''],
+ ['这个多少钱？','Zhège duōshao qián?','Cái này bao nhiêu tiền?','Câu hỏi giá hay dùng nhất khi mua sắm.'],
+ ['太贵了！便宜一点吧。','Tài guì le! Piányi yìdiǎn ba.','Đắt quá! Rẻ một chút đi.','太…了 tài…le = quá…'],
+ ['我听不懂。','Wǒ tīng bu dǒng.','Tôi nghe không hiểu.',''],
+ ['请再说一遍。','Qǐng zài shuō yí biàn.','Xin nói lại một lần nữa.','一 đọc yí vì đứng trước 遍 biàn (thanh 4).'],
+ ['我想喝咖啡。','Wǒ xiǎng hē kāfēi.','Tôi muốn uống cà phê.','想 xiǎng + động từ = muốn làm gì.']
+];
+const TONES = [
+ {n:1,ch:'妈',py:'mā',vi:'mẹ',nm:'Thanh 1 · cao đều',c:'var(--t1)',path:'M10 12 L80 12'},
+ {n:2,ch:'麻',py:'má',vi:'cây gai',nm:'Thanh 2 · đi lên',c:'var(--t2)',path:'M10 34 L80 10'},
+ {n:3,ch:'马',py:'mǎ',vi:'con ngựa',nm:'Thanh 3 · xuống rồi lên',c:'var(--t3)',path:'M10 26 Q35 58 50 50 T80 16'},
+ {n:4,ch:'骂',py:'mà',vi:'mắng',nm:'Thanh 4 · rơi mạnh',c:'var(--t4)',path:'M10 10 L80 50'},
+ {n:0,ch:'吗',py:'ma',vi:'(trợ từ hỏi)',nm:'Thanh nhẹ · ngắn',c:'var(--t0)',path:'M38 36 L52 36'}
+];
+const INITIALS = [
+ ['b · p','b như “p” Việt (không bật hơi); p bật hơi mạnh','八 bā','爬 pá'],
+ ['d · t','d như “t” Việt; t bật hơi mạnh','大 dà','他 tā'],
+ ['g · k','g như “c” Việt; k bật hơi mạnh','哥 gē','看 kàn'],
+ ['j · q · x','j ≈ “ch” nhẹ; q ≈ “ch” bật hơi; x ≈ “x” (lưỡi chạm răng dưới)','几 jǐ','七 qī','西 xī'],
+ ['zh · ch · sh · r','Uốn lưỡi lên vòm miệng: zh ≈ “tr”, ch ≈ “tr” bật hơi, sh ≈ “s” cong lưỡi, r ≈ “r” nhẹ','中 zhōng','吃 chī','是 shì','人 rén'],
+ ['z · c · s','Đầu lưỡi sát răng: z ≈ “ch” bẹt, c ≈ “x” bật hơi, s ≈ “x”','在 zài','菜 cài','三 sān'],
+ ['ü (yu)','Môi tròn chúm như huýt sáo rồi đọc “i”','女 nǚ','鱼 yú']
+];
+const TONE_SETS = [
+ [['妈','mā'],['麻','má'],['马','mǎ'],['骂','mà']],
+ [['八','bā'],['拔','bá'],['把','bǎ'],['爸','bà']],
+ [['衣','yī'],['姨','yí'],['椅','yǐ'],['意','yì']],
+ [['汤','tāng'],['糖','táng'],['躺','tǎng'],['烫','tàng']],
+ [['通','tōng'],['同','tóng'],['统','tǒng'],['痛','tòng']],
+ [['吃','chī'],['池','chí'],['尺','chǐ'],['赤','chì']],
+ [['书','shū'],['熟','shú'],['鼠','shǔ'],['树','shù']]
+];
+
+const ALL = TOPICS.flatMap(t=>t.words.map(w=>({ch:w[0],py:w[1],vi:w[2],topic:t.id})));
+
+/* ---------- STORAGE ---------- */
+const store = {
+  get(k,d){try{const v=localStorage.getItem('zh-'+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('zh-'+k,JSON.stringify(v))}catch(e){}}
+};
+let learned = new Set(store.get('learned',[]));
+let best = store.get('best',null);
+
+/* ---------- SPEECH ---------- */
+let zhVoice=null;
+function pickVoice(){
+  try{
+    const vs=speechSynthesis.getVoices();
+    zhVoice = vs.find(v=>/zh[-_]CN/i.test(v.lang)) || vs.find(v=>/^zh/i.test(v.lang)) || null;
+    if(vs.length && !zhVoice) document.getElementById('voiceNote').classList.add('on');
+  }catch(e){document.getElementById('voiceNote').classList.add('on')}
+}
+try{pickVoice(); speechSynthesis.onvoiceschanged=pickVoice;}catch(e){document.getElementById('voiceNote').classList.add('on')}
+function say(text,rate=.8){
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text.replace(/[…]/g,''));
+    u.lang='zh-CN'; u.rate=rate; if(zhVoice)u.voice=zhVoice;
+    speechSynthesis.speak(u);
+  }catch(e){document.getElementById('voiceNote').classList.add('on')}
+}
+const esc=s=>s.replace(/'/g,"\\'");
+
+/* ---------- ROUTER ---------- */
+const VIEWS=['trang-chu','pinyin','tu-vung','mau-cau','luyen-tap'];
+function route(){
+  const h=(location.hash||'').slice(1); const v=VIEWS.includes(h)?h:'trang-chu';
+  document.querySelectorAll('section.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
+  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===v));
+  if(v==='trang-chu') renderHome();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.addEventListener('hashchange',route);
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  document.getElementById('stLearned').textContent=learned.size;
+  document.getElementById('stTotal').textContent=ALL.length;
+  document.getElementById('stBest').textContent=best==null?'–':best+'/10';
+}
+(function(){
+  const d=new Date(); const idx=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%ALL.length; const w=ALL[idx];
+  wodCh.textContent=w.ch; wodPy.textContent=w.py; wodVi.textContent=w.vi;
+  wordOfDay.onclick=()=>say(w.ch);
+})();
+
+/* ---------- PINYIN ---------- */
+tones.innerHTML=TONES.map(t=>`
+ <div class="tone" onclick="say('${t.ch}',.6)">
+  <svg viewBox="0 0 90 60"><line x1="6" y1="10" x2="84" y2="10" stroke="#E7DED2"/><line x1="6" y1="30" x2="84" y2="30" stroke="#E7DED2"/><line x1="6" y1="50" x2="84" y2="50" stroke="#E7DED2"/>
+  <path d="${t.path}" fill="none" stroke="${t.c}" stroke-width="5" stroke-linecap="round"/></svg>
+  <div class="ch zh">${t.ch}</div><div class="py" style="color:${t.c}">${t.py}</div>
+  <div class="vi">${t.vi}</div><div class="nm">${t.nm}</div>
+ </div>`).join('');
+initials.innerHTML='<tr><th style="width:130px">Âm</th><th>Cách đọc</th><th>Ví dụ</th></tr>'+INITIALS.map(r=>`
+ <tr><td><b style="color:var(--ink)">${r[0]}</b></td><td>${r[1]}</td>
+ <td><div class="chips">${r.slice(2).map(x=>{const [c,p]=x.split(' ');return `<button class="chip zh" onclick="say('${c}',.6)">${c} ${p}</button>`}).join('')}</div></td></tr>`).join('');
+
+/* ---------- VOCAB ---------- */
+let curTopic=TOPICS[0].id, vMode='grid', hideMode='none', fcIdx=0, fcList=[];
+function renderTopics(){
+  topics.innerHTML=TOPICS.map(t=>{
+    const done=t.words.filter(w=>learned.has(w[0])).length;
+    return `<button class="topic ${t.id===curTopic?'on':''}" data-t="${t.id}">${t.name}<small>${done}/${t.words.length}</small></button>`}).join('');
+  topics.querySelectorAll('.topic').forEach(b=>b.onclick=()=>{curTopic=b.dataset.t;fcIdx=0;renderTopics();renderVocab()});
+}
+function toggleLearn(ch){
+  learned.has(ch)?learned.delete(ch):learned.add(ch);
+  store.set('learned',[...learned]); renderTopics(); renderVocab();
+}
+function renderVocab(){
+  const t=TOPICS.find(x=>x.id===curTopic);
+  const words=t.words.map(w=>({ch:w[0],py:w[1],vi:w[2]}));
+  if(vMode==='grid'){
+    vocabBody.innerHTML='<div class="words">'+words.map(w=>`
+     <div class="word ${learned.has(w.ch)?'learned':''}">
+      <div class="ch zh">${w.ch}</div>
+      <div class="py" style="${hideMode==='py'?'visibility:hidden':''}">${w.py}</div>
+      <div class="vi" style="${hideMode==='vi'?'visibility:hidden':''}">${w.vi}</div>
+      <div class="acts">
+       <button class="icon-btn" title="Nghe" onclick="say('${w.ch}')">🔊</button>
+       <button class="icon-btn ${learned.has(w.ch)?'done':''}" title="Đánh dấu đã thuộc" onclick="toggleLearn('${w.ch}')">✓</button>
+      </div></div>`).join('')+'</div>';
+  }else{
+    fcList=words; if(fcIdx>=fcList.length)fcIdx=0; const w=fcList[fcIdx];
+    vocabBody.innerHTML=`<div class="fc-wrap">
+     <div class="fc" id="fc"><div class="fc-in">
+      <div class="fc-face fc-front"><div class="ch zh">${w.ch}</div><div class="fc-hint">Bấm để lật thẻ</div></div>
+      <div class="fc-face fc-back"><div class="py">${w.py}</div><div class="vi">${w.vi}</div><div class="ch zh">${w.ch}</div></div>
+     </div></div>
+     <div class="fc-ctrl">
+      <button class="btn ghost" onclick="fcMove(-1)">←</button>
+      <span class="fc-count">${fcIdx+1} / ${fcList.length}</span>
+      <button class="btn ghost" onclick="fcMove(1)">→</button>
+     </div>
+     <div class="fc-ctrl">
+      <button class="btn ghost" onclick="say('${w.ch}')">🔊 Nghe</button>
+      <button class="btn ${learned.has(w.ch)?'':'ghost'}" style="${learned.has(w.ch)?'background:var(--sage)':''}" onclick="toggleLearn('${w.ch}')">${learned.has(w.ch)?'✓ Đã thuộc':'Đánh dấu đã thuộc'}</button>
+      <button class="btn ghost" onclick="fcShuffle()">⤮ Trộn thẻ</button>
+     </div></div>`;
+    document.getElementById('fc').onclick=e=>e.currentTarget.classList.toggle('flip');
+  }
+}
+function fcMove(d){fcIdx=(fcIdx+d+fcList.length)%fcList.length;renderVocab()}
+function fcShuffle(){const t=TOPICS.find(x=>x.id===curTopic);t.words.sort(()=>Math.random()-.5);fcIdx=0;renderVocab()}
+viewSeg.querySelectorAll('button').forEach(b=>b.onclick=()=>{vMode=b.dataset.m;viewSeg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));renderVocab()});
+hideSeg.querySelectorAll('button').forEach(b=>b.onclick=()=>{hideMode=b.dataset.h;hideSeg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));renderVocab()});
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('v-tu-vung').classList.contains('on')||vMode!=='card')return;
+  if(e.key==='ArrowRight')fcMove(1); if(e.key==='ArrowLeft')fcMove(-1);
+  if(e.key===' '){e.preventDefault();document.getElementById('fc')?.classList.toggle('flip')}
+});
+
+/* ---------- SENTENCES ---------- */
+sentList.innerHTML=SENTS.map(s=>`
+ <div class="sent"><button class="icon-btn" style="width:42px;height:42px;flex:none" onclick="say('${s[0]}',.75)">🔊</button>
+ <div class="t"><div class="ch zh">${s[0]}</div><div class="py">${s[1]}</div><div class="vi">${s[2]}</div>${s[3]?`<div class="note">💡 ${s[3]}</div>`:''}</div></div>`).join('');
+
+/* ---------- QUIZ ---------- */
+let qMode='ch2vi', Q=[], qi=0, score=0;
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+modes.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{qMode=b.dataset.q;modes.querySelectorAll('.mode').forEach(x=>x.classList.toggle('on',x===b));startQuiz()});
+function startQuiz(){
+  qi=0;score=0;
+  if(qMode==='tone'){
+    Q=Array.from({length:10},()=>{const set=TONE_SETS[Math.floor(Math.random()*TONE_SETS.length)];const k=Math.floor(Math.random()*4);return {ch:set[k][0],py:set[k][1],ans:toneOf(set[k][1])}});
+  }else{
+    Q=shuffle(ALL).slice(0,10).map(w=>{
+      const dis=shuffle(ALL.filter(x=>x.ch!==w.ch && x.vi!==w.vi)).slice(0,3);
+      return {w,opts:shuffle([w,...dis])};
+    });
+  }
+  renderQ();
+}
+function toneOf(py){if(/[āēīōūǖ]/.test(py))return 1;if(/[áéíóúǘ]/.test(py))return 2;if(/[ǎěǐǒǔǚ]/.test(py))return 3;if(/[àèìòùǜ]/.test(py))return 4;return 0}
+function renderQ(){
+  if(qi>=Q.length)return renderResult();
+  const q=Q[qi]; let prompt='',opts='';
+  const head=`<div class="q-meta"><span>Câu ${qi+1}/10</span><span>Đúng: ${score}</span></div><div class="q-bar"><i style="width:${qi*10}%"></i></div>`;
+  if(qMode==='ch2vi'){
+    prompt=`<div class="ch zh">${q.w.ch}</div><div class="sub">Nghĩa của từ này là gì?</div>`;
+    opts=q.opts.map(o=>`<button class="opt" data-ok="${o.ch===q.w.ch}">${o.vi}</button>`).join('');
+  }else if(qMode==='vi2ch'){
+    prompt=`<div class="vi">${q.w.vi}</div><div class="sub">Chọn chữ Hán đúng</div>`;
+    opts=q.opts.map(o=>`<button class="opt" data-ok="${o.ch===q.w.ch}"><span class="zh">${o.ch}</span></button>`).join('');
+  }else if(qMode==='listen'){
+    prompt=`<button class="play-big" id="playQ">🔊</button><div class="sub">Bấm để nghe, rồi chọn từ đúng</div>`;
+    opts=q.opts.map(o=>`<button class="opt" data-ok="${o.ch===q.w.ch}"><span class="zh">${o.ch}</span><div style="font-size:13px;color:var(--muted)">${o.vi}</div></button>`).join('');
+  }else{
+    prompt=`<button class="play-big" id="playQ">🔊</button><div class="sub">Âm vừa nghe là thanh mấy?</div>`;
+    opts=[1,2,3,4].map(n=>`<button class="opt" data-ok="${n===q.ans}">Thanh ${n} <span style="color:var(--muted)">${['','ˉ','ˊ','ˇ','ˋ'][n]}</span></button>`).join('');
+  }
+  quiz.innerHTML=head+`<div class="q-prompt">${prompt}</div><div class="q-opts">${opts}</div><div class="q-feedback" id="fb"></div><div id="nextWrap"></div>`;
+  const play=document.getElementById('playQ');
+  if(play){play.onclick=()=>say(qMode==='tone'?q.ch:q.w.ch,.65);}
+  quiz.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(b));
+}
+function answer(b){
+  const q=Q[qi]; const ok=b.dataset.ok==='true';
+  quiz.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(x.dataset.ok==='true')x.classList.add('right')});
+  if(!ok)b.classList.add('wrong'); else score++;
+  const info = qMode==='tone' ? `<span class="zh">${q.ch}</span> ${q.py} · thanh ${q.ans}` : `<span class="zh">${q.w.ch}</span> ${q.w.py} · ${q.w.vi}`;
+  fb.className='q-feedback '+(ok?'ok':'no'); fb.innerHTML=(ok?'Chính xác! ':'Chưa đúng. ')+info;
+  if(qMode!=='listen'&&qMode!=='tone') say(q.w.ch);
+  nextWrap.innerHTML=`<button class="btn" style="margin-top:8px" onclick="qi++;renderQ()">${qi<9?'Câu tiếp →':'Xem kết quả'}</button>`;
+}
+function renderResult(){
+  if(best==null||score>best){best=score;store.set('best',best)}
+  const msg=score>=9?'Xuất sắc! 太棒了！':score>=7?'Tốt lắm, tiếp tục phát huy!':score>=5?'Khá ổn, ôn lại thêm chút nữa nhé.':'Cố lên! Hãy ôn lại phần từ vựng rồi thử lại.';
+  quiz.innerHTML=`<div class="card result"><div class="eyebrow">Kết quả</div><div class="score">${score}/10</div><p style="margin:10px 0 18px;font-size:16px;color:var(--ink)">${msg}</p>
+   <button class="btn" onclick="startQuiz()">Làm lượt mới</button> <a class="btn ghost" href="#tu-vung">Ôn từ vựng</a></div>`;
+}
+
+/* ---------- INIT ---------- */
+renderTopics(); renderVocab(); startQuiz(); route();
+</script>
+</body>
+</html>
