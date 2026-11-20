@@ -18,6 +18,8 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Tiếng Trung">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Baloo+2:wght@600;700&display=optional" rel="stylesheet">
@@ -624,6 +626,21 @@ body.cover-mode header,body.cover-mode nav,body.cover-mode footer{display:none}
 .about a{color:var(--accent);font-weight:500}
 @media (max-width:780px){.about{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}}
+.hv{display:inline-block;margin-top:4px;font-size:11.5px;font-weight:600;color:#5C4A2E;background:#F7E9CF;padding:2px 8px;border-radius:999px;letter-spacing:.02em}
+.hv-inline{font-size:11px;color:#5C4A2E;background:#F7E9CF;padding:1px 6px;border-radius:6px}
+.board .sub{color:#F2D3A6}
+.ord{display:flex;flex-direction:column;gap:12px}
+.ord-ans{min-height:70px;border-radius:18px;border:2px dashed var(--line);background:#fff;padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;transition:.2s}
+.ord-ans.good{border-color:var(--sage);background:var(--sage-soft);border-style:solid}
+.ord-ans.bad{border-color:var(--accent);background:var(--accent-soft);border-style:solid;animation:shake .4s}
+.ord-ans .ph{font-size:13px;color:var(--muted)}
+.ord-bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.otile{padding:10px 16px;border-radius:14px;border:2px solid var(--line);background:#fff;font-size:22px;color:var(--ink);box-shadow:0 3px 0 var(--line);transition:.12s}
+.otile:hover:not(:disabled){transform:translateY(-2px);border-color:var(--gold)}
+.otile.used{opacity:.25;pointer-events:none;box-shadow:none}
+.otile.in{background:var(--gold-soft);border-color:#F1DDBD}
+.ord-act{display:flex;gap:8px;justify-content:center}
+.linkbtn{color:var(--accent);font-weight:600;text-decoration:underline;font-size:13px}
 </style>
 </head>
 <body>
@@ -837,6 +854,7 @@ function route(){
   else if(h==='ho-so') renderProfile();
   else if(h==='bia') renderCover();
   else if(h==='gioi-thieu') renderAbout();
+  else if((m=h.match(/^cau-(\d)$/))) renderOrderPage(+m[1]);
   else if(h==='pinyin') renderPinyin();
   else renderHome();
   window.scrollTo({top:0});
@@ -868,6 +886,8 @@ function renderLevel(n){
      <div class="meta">Bài ${i+1}</div><h3>${x.title}</h3><div class="meta">${x.words.length} từ · video bài giảng · tập viết</div></a>`).join('')}</div>
    <div class="sp"></div>
    <a class="card listen-card" href="#nghe-${n}-1"><span style="font-size:36px">🎧</span><div style="flex:1"><h3 style="font-size:19px">Luyện nghe hội thoại Cấp ${n}</h3><p style="font-size:14px">${DIALOGS[n].map(d=>d.em+' '+d.title).join(' · ')}</p></div><span class="btn ghost">Nghe →</span></a>
+   <div class="sp"></div>
+   <a class="card listen-card" href="#cau-${n}"><span style="font-size:36px">🧱</span><div style="flex:1"><h3 style="font-size:19px">Xếp câu & Chính tả Cấp ${n}</h3><p style="font-size:14px">Xếp khối chữ thành câu đúng, nghe rồi xếp lại câu.${(P.order||{})['cau-'+n]!=null?' Điểm cao nhất: '+Math.round(P.order['cau-'+n]*100)+'%':''}</p></div><span class="btn ghost">Luyện →</span></a>
    <div class="sp"></div>
    <div class="card test-card"><div><h3>📝 Bài thi cuối Cấp ${n}</h3><p>15 câu gồm từ vựng, nghe và ngữ pháp. Đạt từ 12/15 (80%) ${n<5?'để mở Cấp '+(n+1):'để nhận chứng nhận hoàn thành khóa học'}.${P.tests[n]!=null?' Điểm cao nhất của em: '+Math.round(P.tests[n]*100)+'%.':''}</p></div>
     <a class="btn" href="#test-${n}">${testPassed(n)?'Thi lại':'Vào thi'} →</a></div>
@@ -933,7 +953,7 @@ function renderVideo(body,n,i){
     const s=S[idx];let board='';
     if(s.kind==='title') board=`<div class="title">${s.title}</div><div class="sub">${s.sub}</div>`;
     else if(s.kind==='text') board=`<div class="title">${s.title}</div><div class="hz zh" style="font-size:clamp(28px,5vw,54px)">妈 麻 马 骂</div><div class="py">${s.sub}</div>`;
-    else if(s.kind==='word') board=`<div class="em">${s.w.em}</div><div class="hz zh">${s.w.ch}</div><div class="py">${s.w.py}</div><div class="vi">${s.w.vi}</div>`;
+    else if(s.kind==='word') board=`<div class="em">${s.w.em}</div><div class="hz zh">${s.w.ch}</div><div class="py">${s.w.py}</div><div class="vi">${s.w.vi}</div>${hvOf(s.w.ch)?`<div class="sub">Hán Việt: ${hvOf(s.w.ch)}</div>`:''}`;
     else if(s.kind==='gram') board=`<div class="sub">📘 ${s.g.t}</div><div class="title" style="font-size:clamp(16px,2.4vw,24px)">${s.g.f}</div><div class="ex zh" style="margin-top:10px">${s.g.ex[0][0]}</div><div class="py">${s.g.ex[0][1]}</div><div class="vi">${s.g.ex[0][2]}</div>`;
     else board=`<div class="em">💡</div><div class="title" style="font-size:clamp(18px,2.6vw,28px)">Lời cô dặn</div><div class="sub" style="max-width:90%">${s.narr}</div>`;
     screen.innerHTML=`<div class="scene"><div class="t-zone" id="tz">${TEACHER.replace('class="teacher"','class="teacher" style="width:min(170px,22vw);height:min(170px,22vw)"')}</div><div class="board">${board}</div></div>
@@ -973,10 +993,10 @@ const $=s=>document.querySelector(s);
 function renderVocab(body,X){
   let hide='none';
   const draw=()=>{const Ls=learned();
-    body.innerHTML=`<div class="toolbar"><p style="font-size:14px">Bấm 🔊 để nghe, bấm ✓ khi em đã thuộc từ. Thử chế độ <b>Ẩn nghĩa</b> để tự kiểm tra.</p>
+    body.innerHTML=`<div class="toolbar"><p style="font-size:14px">Bấm 🔊 để nghe, bấm ✓ khi em đã thuộc từ. Thử chế độ <b>Ẩn nghĩa</b> để tự kiểm tra.<br><b class="hv-inline">HV</b> là <b>âm Hán Việt</b>: nhiều từ đọc gần giống tiếng Việt, như 学生 = Học Sinh, 中国 = Trung Quốc. Đây là “mẹo nhớ” riêng của người Việt.</p>
      <div class="seg" id="hideSeg">${[['none','Hiện tất cả'],['vi','Ẩn nghĩa'],['py','Ẩn pinyin']].map(h=>`<button data-h="${h[0]}" class="${hide===h[0]?'on':''}">${h[1]}</button>`).join('')}</div></div>
      <div class="words">${X.words.map(w=>`<div class="word ${Ls.has(w.ch)?'learned':''}"><div class="ill">${w.em}</div><div class="ch zh">${w.ch}</div>
-      <div class="py" style="${hide==='py'?'visibility:hidden':''}">${w.py}</div><div class="vi" style="${hide==='vi'?'visibility:hidden':''}">${w.vi}</div>
+      <div class="py" style="${hide==='py'?'visibility:hidden':''}">${w.py}</div><div class="vi" style="${hide==='vi'?'visibility:hidden':''}">${w.vi}</div>${hide==='vi'?'':hvTag(w.ch)}
       <div class="acts"><button class="icon-btn" data-say="${w.ch}" title="Nghe">🔊</button><button class="icon-btn ${Ls.has(w.ch)?'done':''}" data-learn="${w.ch}" title="Đã thuộc">✓</button></div></div>`).join('')}</div>`;
     body.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>{hide=b.dataset.h;draw()});
     body.querySelectorAll('[data-learn]').forEach(b=>b.onclick=()=>{const c=b.dataset.learn;const s=learned();s.has(c)?s.delete(c):s.add(c);P.learned=[...s];save();draw()});
@@ -1000,7 +1020,7 @@ function renderWrite(body,X){
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="hwAnim">▶ Xem cách viết</button><button class="btn dark" id="hwQuiz">✍️ Tự viết</button><button class="btn ghost" id="hwSay">🔊 Nghe</button></div>
     <div class="sp"></div><div id="hwInfo"></div>
     <div class="sp"></div>${tipBox('Quy tắc vàng khi viết chữ Hán: ngang trước sổ sau, phẩy trước mác sau, trên trước dưới sau, trái trước phải sau, ngoài trước trong sau, vào nhà rồi mới đóng cửa. Viết đúng thứ tự thì chữ mới đẹp và tra từ điển viết tay mới nhận ra.')}</div></div>`;
-  const info=()=>{const w=wordOf(cur);put('#hwInfo','innerHTML',w?`<div class="card" style="padding:14px 18px;display:flex;gap:14px;align-items:center"><span style="font-size:34px">${w.em}</span><div><div class="zh" style="font-size:22px;color:var(--ink)">${w.ch} <span style="font-size:15px;color:var(--accent);font-family:'Be Vietnam Pro'">${w.py}</span></div><div style="font-size:14px">${w.vi}</div></div></div>`+(STORY[cur]?`<div class="hw-story">📜 <b>Chuyện chữ ${cur}:</b> ${STORY[cur][4]}</div>`:''):'')};
+  const info=()=>{const w=wordOf(cur);put('#hwInfo','innerHTML',w?`<div class="card" style="padding:14px 18px;display:flex;gap:14px;align-items:center"><span style="font-size:34px">${w.em}</span><div><div class="zh" style="font-size:22px;color:var(--ink)">${w.ch} <span style="font-size:15px;color:var(--accent);font-family:'Be Vietnam Pro'">${w.py}</span></div><div style="font-size:14px">${w.vi}</div>${hvTag(w.ch)}</div></div>`+(STORY[cur]?`<div class="hw-story">📜 <b>Chuyện chữ ${cur}:</b> ${STORY[cur][4]}</div>`:''):'')};
   function make(){
     const el=$('#hw'); if(!el||!document.body.contains(el)) return; el.innerHTML='';
     writer=HanziWriter.create('hw',cur,{width:el.offsetWidth,height:el.offsetHeight,padding:18,strokeColor:'#2E3A3E',radicalColor:'#C0392B',outlineColor:'#EADFD2',drawingColor:'#C0392B',highlightColor:'#D69A4C',strokeAnimationSpeed:1,delayBetweenStrokes:250,showCharacter:true,
@@ -1085,9 +1105,11 @@ function runQuiz(box,Q,onDone){
     else if(q.type==='listen'){prompt=`<button class="play-big" id="pq">🔊</button><div class="sub">Nghe và chọn từ em vừa nghe</div>`;opts=q.opts.map(o=>`<button class="opt" data-ok="${o.ch===q.w.ch}"><span class="zh">${o.ch}</span><div style="font-size:12.5px;color:var(--muted)">${o.em} ${o.vi}</div></button>`).join('')}
     else if(q.type==='tone'){prompt=`<button class="play-big" id="pq">🔊</button><div class="sub">Âm vừa nghe là thanh mấy?</div>`;opts=[1,2,3,4].map(n=>`<button class="opt" data-ok="${n===q.ans}">Thanh ${n} <span style="color:var(--muted)">${['','ˉ','ˊ','ˇ','ˋ'][n]}</span></button>`).join('')}
     else if(q.type==='lq'){prompt=`${q.play?'<button class="play-big" id="pq">🔊</button>':''}<div class="vi" style="font-size:20px;margin-top:${q.play?10:0}px">${q.q}</div>`;opts=q.opts.map(o=>`<button class="opt" data-ok="${o===q.a}">${o.replace(/^([\u4e00-\u9fff！？，。]+)$/,'<span class="zh">$1</span>')}</button>`).join('')}
+    else if(q.type==='order'||q.type==='dict'){prompt='';opts=''}
     else {prompt=`<div class="cloze zh">${q.q.replace('___','<u>&nbsp;?&nbsp;</u>')}</div><div class="sub">${q.vi} · Chọn từ điền vào chỗ trống</div>`;opts=q.opts.map(o=>`<button class="opt" data-ok="${o===q.a}"><span class="zh">${o}</span></button>`).join('')}
     box.innerHTML=`<div class="quiz"><div class="q-meta"><span>Câu ${qi+1}/${Q.length}</span><span>${combo>=2?`<span class="combo">🔥 Combo x${combo}</span>`:`Đúng: ${score}`}</span></div><div class="bar"><i style="width:${qi/Q.length*100}%"></i></div>
      <div class="q-prompt">${prompt}</div><div class="q-opts">${opts}</div><div class="q-feedback" id="fb"></div><div id="nx"></div></div>`;
+    if(q.type==='order'||q.type==='dict'){orderUI(box,q,b=>answer(b,q));return}
     const pq=box.querySelector('#pq'); if(pq){const t=q.type==='tone'?q.ch:q.type==='lq'?q.play:q.w.ch;const sp=()=>{try{speechSynthesis.cancel()}catch(e){}speak(t,'zh',.8,q.pitch)};pq.onclick=sp;setTimeout(sp,350)}
     box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(b,q));
   }
@@ -1103,10 +1125,11 @@ function runQuiz(box,Q,onDone){
     if(q.type==='tone')info=`<span class="zh">${q.ch}</span> ${q.py} · thanh ${q.ans}`;
     else if(q.type==='cloze')info=`<span class="zh">${q.q.replace('___',q.a)}</span>`;
     else if(q.type==='lq')info=q.zh?`<span class="zh">${q.zh}</span> · ${q.a}`:q.a;
-    else info=`<span class="zh">${q.w.ch}</span> ${q.w.py} · ${q.w.vi}`;
+    else if(q.type==='order'||q.type==='dict')info=`<span class="zh">${q.zh}</span><br><small>${q.py} · ${q.vi}</small>`;
+    else info=`<span class="zh">${q.w.ch}</span> ${q.w.py} · ${q.w.vi}${hvOf(q.w.ch)?` · <small>HV: ${hvOf(q.w.ch)}</small>`:''}`;
     const praise=pick(['Giỏi lắm! ','Chính xác! ','很好！','Đúng rồi! ']);
     const fb=box.querySelector('#fb');fb.className='q-feedback '+(ok?'ok':'no');fb.innerHTML=(ok?praise:'Chưa đúng rồi. Đáp án: ')+info;
-    if(q.type==='ch2vi'||q.type==='vi2ch')say(q.w.ch); if(q.type==='cloze')say(q.q.replace('___',q.a));
+    if(q.type==='ch2vi'||q.type==='vi2ch')say(q.w.ch); if(q.type==='cloze')say(q.q.replace('___',q.a)); if(q.type==='order')say(q.zh);
     box.querySelector('#nx').innerHTML=`<button class="btn" style="margin-top:8px">${qi<Q.length-1?'Câu tiếp →':'Xem kết quả'}</button>`;
     box.querySelector('#nx button').onclick=()=>{qi++;render()};
   }
@@ -1393,7 +1416,9 @@ function hud(){const h=document.getElementById('hud');if(!h)return;const s=strea
   <a href="#ho-so" class="hud-item" title="Tổng điểm kinh nghiệm"><span>⭐</span><b>${P.xp}</b></a>
   <a href="#ho-so" class="hud-item" title="Mục tiêu hôm nay: ${P.days[today()]||0}/${P.goal||50} XP">${goalRing(30)}<b class="hide-sm">${P.days[today()]||0}/${P.goal||50}</b></a>
   <a href="#ho-so" class="hud-item rank-chip hide-sm" title="Danh hiệu">${R[3]} ${R[1]}</a>
+  ${(!isStandalone()&&(deferredInstall||isIOS()))?'<button class="hud-item" id="instBtn" title="Cài ứng dụng">📲<b class="hide-sm" style="font-family:inherit;font-size:13px">Cài app</b></button>':''}
   <button class="hud-item" id="sndBtn" title="Bật/tắt âm thanh">${P.sound?'🔊':'🔇'}</button>`;
+  const ib=document.getElementById('instBtn');if(ib)ib.onclick=installApp;
   document.getElementById('sndBtn').onclick=()=>{P.sound=!P.sound;save();hud();SFX.ok()};
   const rv=document.querySelector('#nav a[data-v="on-tap"]');if(rv)rv.innerHTML='🔁 Ôn tập'+(due?` <span class="nav-dot">${due}</span>`:'');
 }
@@ -1542,7 +1567,7 @@ function renderReview(){
     const show=()=>{if(!q.length){addXP(10,box);box.innerHTML=`<div class="card result" style="text-align:center"><div style="font-size:52px">🎉</div><h3 style="font-size:22px">Xong ${done} thẻ!</h3><p>Bộ não của ${nm()} vừa được tập thể dục. Hẹn gặp lại ở lần ôn tiếp theo.</p><div style="margin-top:14px"><a class="btn" href="#home">Về trang chủ</a> <button class="btn ghost" id="rvAgain">Xem lại hộp ôn</button></div></div>`;document.getElementById('rvAgain').onclick=renderReview;confetti(50);SFX.up();return}
       const c=q[0],w=WMAP[c];
       box.innerHTML=`<div class="rv-card"><div class="q-meta"><span>Còn ${q.length} thẻ</span><span>Hộp ${(P.srs[c]||{b:1}).b}</span></div>
-       <div class="rv-face"><div class="ch zh">${c}</div><div id="rvAns" class="rv-ans" hidden><div style="font-size:42px">${w.em}</div><div class="py">${w.py}</div><div class="vi">${w.vi}</div>${STORY[c]?`<div class="rv-story">📜 ${STORY[c][4]}</div>`:''}</div></div>
+       <div class="rv-face"><div class="ch zh">${c}</div><div id="rvAns" class="rv-ans" hidden><div style="font-size:42px">${w.em}</div><div class="py">${w.py}</div><div class="vi">${w.vi}</div>${hvTag(c)}${STORY[c]?`<div class="rv-story">📜 ${STORY[c][4]}</div>`:''}</div></div>
        <div id="rvBtns"><button class="btn dark" id="rvShow" style="width:100%">Hiện đáp án (phím cách)</button></div></div>`;
       const reveal=()=>{document.getElementById('rvAns').hidden=false;say(c);SFX.flip();
         document.getElementById('rvBtns').innerHTML=`<div class="grade"><button data-g="0">😵<b>Quên rồi</b><small>ôn lại ngay</small></button><button data-g="1">🤔<b>Mơ hồ</b><small>mai ôn lại</small></button><button data-g="2">😎<b>Nhớ chắc</b><small>${IV[Math.min((P.srs[c]||{b:1}).b+1,6)]} ngày nữa</small></button></div>`;
@@ -1672,12 +1697,14 @@ function renderProfile(){
   <div class="sp"></div><div class="card"><h3 style="font-size:18px;margin-bottom:4px">🏅 Bộ sưu tập huy hiệu · ${Object.keys(P.badges).length}/${BADGES.length}</h3><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Huy hiệu xám là những thử thách đang chờ em chinh phục.</p>
    <div class="badges">${BADGES.map(b=>`<div class="bdg ${P.badges[b[0]]?'got':''}" title="${b[3]}"><div class="b-ic">${b[1]}</div><b>${b[2]}</b><small>${b[3]}</small></div>`).join('')}</div></div>
   <div class="sp"></div>${backupCard()}
+  ${isStandalone()?'':`<div class="sp"></div><div class="card" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span style="font-size:40px">📲</span><div style="flex:1;min-width:220px"><h3 style="font-size:18px">Cài như ứng dụng, học không cần mạng</h3><p style="font-size:13.5px;color:var(--muted)">Thêm biểu tượng chữ 中 ra màn hình chính. Bài đã mở một lần vẫn học được khi mất mạng.</p></div><button class="btn" id="pInst">Cài ứng dụng</button></div>`}
   <div class="sp"></div><div class="card"><h3 style="font-size:18px;margin-bottom:10px">🪜 Thang danh hiệu</h3><div class="ranks">${RANKS.map((x,i)=>`<div class="rk ${i<=ri?'got':''} ${i===ri?'cur':''}"><span>${x[3]}</span><b>${x[1]}</b><small class="zh">${x[2]}</small><small>${x[0]} XP</small></div>`).join('')}</div>
    <p style="font-size:13px;color:var(--muted);margin-top:10px">Tên các danh hiệu lấy từ các bậc khoa cử thời xưa, từ Tú tài đến Trạng nguyên. Việt Nam cũng từng có các học vị này.</p></div></div>`;
   document.getElementById('pEdit').onclick=()=>{const o=modal(`<h3 style="font-size:22px;margin-bottom:10px">Đổi tên hiển thị</h3><input class="inp" id="nmI" value="${(P.name||'').replace(/"/g,'')}" maxlength="20"><div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" data-close>Huỷ</button><button class="btn" id="nmOk">Lưu</button></div>`,'center');
     o.querySelector('#nmOk').onclick=()=>{P.name=o.querySelector('#nmI').value.trim().slice(0,20);save();o.remove();renderProfile()}};
   document.querySelectorAll('#pGoal button').forEach(b=>b.onclick=()=>{P.goal=+b.dataset.g;save();hud();renderProfile();SFX.flip()});
   bindBackup();
+  const pi=document.getElementById('pInst');if(pi)pi.onclick=installApp;
 }
 
 /* ================= NEW HOME ================= */
@@ -1737,7 +1764,7 @@ function renderHome(){
     return `<a class="lvl ${locked?'locked':''}" href="#level-${L.n}"><div class="badge" style="background:${locked?'#B9B3AA':L.color}">${locked?'🔒':CITIES[i][2]}</div>
      <div><h3>Cấp ${L.n} · ${L.name} <span class="zh" style="font-size:15px;color:var(--muted)">${L.zh}</span></h3><div class="meta">${CITIES[i][1]} · ${L.desc}</div><div class="bar"><i style="width:${pr/L.lessons.length*100}%;background:${L.color}"></i></div></div>
      <div class="right">${st}<span class="meta">${P.tests[L.n]!=null?'Bài thi: '+Math.round(P.tests[L.n]*100)+'%':pr+'/'+L.lessons.length+' bài'}</span></div></a>`}).join('')}</div>
-  <div class="sp"></div><div class="quick"><a href="#chu-han">📜 Chuyện chữ Hán</a><a href="#nghe">🎧 Luyện nghe hội thoại</a><a href="#pinyin">🔤 Bảng pinyin</a><a href="#ho-so">🏅 Huy hiệu của em</a><a href="#bia">✨ Trang bìa</a><a href="#gioi-thieu">ℹ️ Giới thiệu</a></div>
+  <div class="sp"></div><div class="quick"><a href="#chu-han">📜 Chuyện chữ Hán</a><a href="#nghe">🎧 Luyện nghe hội thoại</a><a href="#pinyin">🔤 Bảng pinyin</a><a href="#ho-so">🏅 Huy hiệu của em</a><a href="#bia">✨ Trang bìa</a><a href="#gioi-thieu">ℹ️ Giới thiệu</a><a href="#ho-so" onclick="setTimeout(installApp,300)">📲 Cài ứng dụng</a></div>
   </div>`;
   const jw=document.querySelector('.journey-wrap');if(jw&&jw.scrollWidth>jw.clientWidth){const c=CITIES[Math.min(P.unlocked,5)-1];jw.scrollLeft=c[3]/1000*jw.scrollWidth-jw.clientWidth/2}
 }
@@ -1892,7 +1919,7 @@ function renderAbout(){
     <p>Khóa học kết hợp: <b>ôn tập ngắt quãng</b> (ôn lại đúng lúc sắp quên), <b>chiết tự</b> (học chữ qua câu chuyện hình ảnh), <b>luyện nghe theo ngữ cảnh</b>, và <b>trò chơi hóa</b> (XP, chuỗi ngày, huy hiệu) để duy trì thói quen học mỗi ngày.</p></div>
    <div class="card"><h3>🔒 Quyền riêng tư</h3>
     <p>Web <b>không thu thập dữ liệu cá nhân</b>, không yêu cầu đăng ký và không có quảng cáo. Tên, tiến độ, XP chỉ lưu trên trình duyệt của em. Em có thể sao lưu hoặc xoá bất cứ lúc nào trong trang <a href="#ho-so">Hồ sơ</a>.</p>
-    <p>Phát âm dùng giọng đọc có sẵn trên thiết bị của em, nên chất lượng có thể khác nhau giữa các máy.</p></div>
+    <p>Phát âm dùng giọng đọc có sẵn trên thiết bị của em, nên chất lượng có thể khác nhau giữa các máy.</p><p>Âm Hán Việt (HV) được biên soạn để hỗ trợ ghi nhớ. Một số chữ có nhiều cách đọc, khóa học chọn cách đọc phổ biến nhất theo nghĩa của từ.</p></div>
    <div class="card wide"><h3>📜 Ghi nguồn & giấy phép</h3>
     <table class="tbl"><tr><th>Thành phần</th><th>Nguồn</th><th>Giấy phép</th></tr>
      <tr><td>Hoạt họa nét chữ</td><td><a href="https://github.com/chanind/hanzi-writer" target="_blank" rel="noopener">Hanzi Writer</a> (David Chanin)</td><td>MIT</td></tr>
@@ -1905,6 +1932,90 @@ function renderAbout(){
    <div class="card wide"><h3>💬 Góp ý</h3><p>Phát hiện lỗi hoặc muốn đề xuất bài học mới? Gửi góp ý tại <a href="https://github.com/Eng072291/hoc-tieng-trung/issues" target="_blank" rel="noopener">trang GitHub của dự án</a>.</p></div>
   </div></div>`;
 }
+
+/* ================= HÁN VIỆT ================= */
+const HV_RAW='妈ma 麻ma 马mã 骂mạ 八bát 爸bá 鱼ngư 女nữ 你nễ 好hảo 谢tạ 不bất 客khách 气khí 对đối 起khởi 没một 关quan 系hệ 再tái 见kiến 早tảo 上thượng 晚vãn 老lão 师sư 请thỉnh 零linh 一nhất 二nhị 三tam 四tứ 五ngũ 六lục 七thất 九cửu 十thập 两lưỡng 百bách 我ngã 他tha 她tha 们môn 哥ca 姐tỷ 弟đệ 妹muội 家gia 名danh 字tự 叫khiếu 中trung 国quốc 越việt 南nam 人nhân 学học 生sinh 医y 朋bằng 友hữu 认nhận 识thức 高cao 兴hứng 个cá 口khẩu 几kỷ 有hữu 岁tuế 多đa 大đại 和hòa 的đích 谁thùy 吃ngật 喝hát 水thủy 茶trà 咖ca 啡phi 米mễ 饭phạn 面diện 条điều 苹bình 果quả 菜thái 今kim 天thiên 明minh 昨tạc 现hiện 在tại 点điểm 分phân 钟chung 年niên 月nguyệt 号hiệu 星tinh 期kỳ 去khứ 来lai 看khán 听thính 说thuyết 习tập 工công 作tác 睡thụy 觉giác 喜hỷ 欢hoan 想tưởng 买mãi 卖mại 钱tiền 块khối 少thiểu 贵quý 便tiện 宜nghi 衣y 服phục 红hồng 色sắc 白bạch 黑hắc 这giá 儿nhi 那na 哪na 前tiền 后hậu 左tả 边biên 右hữu 商thương 店điếm 院viện 校hiệu 坐tọa 飞phi 机cơ 出xuất 租tô 车xa 火hỏa 开khai 下hạ 雨vũ 冷lãnh 热nhiệt 远viễn 近cận 快khoái 乐lạc 累lụy 忙mang 漂phiêu 亮lượng 意ý 思tư 慢mạn 新tân 小tiểu 因nhân 为vi 所sở 以dĩ 但đãn 是thị 已dĩ 经kinh 还hoàn 也dã 都đô 可khả 比tỷ 旅lữ 游du 运vận 动động 跑bào 步bộ 唱xướng 歌ca 跳khiêu 舞vũ 泳vịnh 考khảo 试thí 准chuẩn 备bị 帮bang 助trợ 得đắc';
+const HV=Object.fromEntries(HV_RAW.split(' ').map(x=>[x[0],x.slice(1)]));
+const HV_WORD={'面条':'miến điều'};
+const cap=s=>s.replace(/(^|\s)\S/g,m=>m.toUpperCase());
+function hvOf(ch){if(HV_WORD[ch])return cap(HV_WORD[ch]);const parts=[...ch].map(c=>HV[c]);return parts.every(Boolean)?cap(parts.join(' ')):''}
+const hvTag=ch=>{const h=hvOf(ch);return h?`<div class="hv" title="Âm Hán Việt">HV · ${h}</div>`:''};
+
+/* ================= SENTENCE ORDER & DICTATION ================= */
+const PUNCT=/[。！？，、—…\s]/g;
+let VOCAB_SET=null;
+function tokenize(zh){
+  if(!VOCAB_SET){VOCAB_SET=new Set(ALLW.map(w=>w.ch).concat(['什么','哪儿','怎么样','一点','一直','然后','往前','机场','汉语','北京','上海','电话','电影','周末','最近','听力','阅读','进步','半个','小时','中文','美国','我们','你们','一起','已经','还是','可以','下次','每天','小安','小明','大卫','王老师','上海','您','上午','下午']));}
+  const s=zh.replace(PUNCT,'');const out=[];let i=0;
+  while(i<s.length){let hit=1;for(let L=Math.min(4,s.length-i);L>1;L--){if(VOCAB_SET.has(s.substr(i,L))){hit=L;break}}out.push(s.substr(i,hit));i+=hit}
+  // merge to keep 3–7 tiles
+  while(out.length>7){let k=0,best=99;for(let j=0;j<out.length-1;j++){const l=out[j].length+out[j+1].length;if(l<best){best=l;k=j}}out.splice(k,2,out[k]+out[k+1])}
+  return out;
+}
+const ORDER_EXTRA={1:[['我很好。','Wǒ hěn hǎo.','Tôi rất khỏe.'],['我不累。','Wǒ bú lèi.','Tôi không mệt.'],['我不是老师。','Wǒ bú shì lǎoshī.','Tôi không phải là giáo viên.'],['请再说一遍。','Qǐng zài shuō yí biàn.','Xin nói lại một lần nữa.'],['我们明天见。','Wǒmen míngtiān jiàn.','Ngày mai chúng ta gặp nhau.'],['你是老师吗？','Nǐ shì lǎoshī ma?','Bạn là giáo viên à?']]};
+function sentPool(n){const L=lvl(n);const fromLvl=[...L.sents,...(ORDER_EXTRA[n]||[])].map(s=>({zh:s[0],py:s[1],vi:s[2]}));
+  const fromDlg=(DIALOGS[n]||[]).flatMap(D=>D.lines.map(l=>({zh:l[1],py:l[2],vi:l[3]})));
+  const seen=new Set();
+  return [...fromLvl,...fromDlg].filter(s=>{const core=s.zh.replace(/[。！？]+$/,'');if(/[，。！？、—]/.test(core))return false;if((core.match(/[零一二三四五六七八九十]/g)||[]).length>3)return false;
+    if(seen.has(core))return false;seen.add(core);const t=tokenize(s.zh);return t.length>=3&&t.length<=7})}
+const TIMEW=new Set(['今天','明天','昨天','现在','上午','下午','周末','最近','每天']),PRON=new Set(['我','你','他','她','我们','你们','小安','小明','大卫']);
+function orderAccepts(tokens){const ok=new Set([tokens.join('')]);
+  if(tokens.length>1&&TIMEW.has(tokens[0])&&PRON.has(tokens[1])){const t=[...tokens];[t[0],t[1]]=[t[1],t[0]];ok.add(t.join(''))}
+  if(tokens.length>1&&PRON.has(tokens[0])&&TIMEW.has(tokens[1])){const t=[...tokens];[t[0],t[1]]=[t[1],t[0]];ok.add(t.join(''))}
+  const hi=tokens.indexOf('和');if(hi>0&&hi<tokens.length-1){const t=[...tokens];[t[hi-1],t[hi+1]]=[t[hi+1],t[hi-1]];ok.add(t.join(''))}
+  return ok}
+function orderQs(n,k=8){const pool=shuffle(sentPool(n)).slice(0,k);return pool.map((s,i)=>({type:i%2?'dict':'order',zh:s.zh,py:s.py,vi:s.vi,tokens:tokenize(s.zh)}))}
+function renderOrderPage(n){
+  const L=lvl(n);if(!L)return renderHome();if(n>P.unlocked){location.hash='#level-'+n;return}
+  const key='cau-'+n;P.order=P.order||{};
+  const crumb=`<div class="crumb"><a href="#home">Lộ trình</a> / <a href="#level-${n}">Cấp ${n}</a> / Xếp câu & Chính tả</div>`;
+  const intro=()=>{app.innerHTML=`<div class="view">${crumb}<div class="card" style="max-width:680px;margin:0 auto;text-align:center">
+    <div style="font-size:48px">🧱</div><div class="eyebrow" style="color:${L.color}">Cấp ${n} · ${L.name}</div><h2 class="sec-title">Xếp câu & Chính tả</h2>
+    <p style="font-size:14.5px;margin:8px 0 14px">${Math.min(8,sentPool(n).length)} câu lấy từ mẫu câu và hội thoại của cấp này:<br><b>🧩 Xếp câu</b>: đọc nghĩa tiếng Việt, xếp các khối chữ thành câu đúng.<br><b>🎧 Chính tả</b>: chỉ nghe, không xem nghĩa, rồi xếp lại câu vừa nghe.</p>
+    ${P.order[key]!=null?`<p style="font-size:13px;color:var(--muted);margin-bottom:12px">Điểm cao nhất: ${Math.round(P.order[key]*100)}%</p>`:''}
+    <button class="btn" id="go">Bắt đầu</button></div><div class="sp"></div>${tipBox('Trật tự câu tiếng Trung khá giống tiếng Việt: chủ ngữ, động từ, tân ngữ. Khác biệt lớn nhất là thời gian và nơi chốn đứng TRƯỚC động từ: 我明天去 = tôi ngày mai đi. Xếp câu là cách nhanh nhất để quen trật tự này.')}</div>`;document.getElementById('go').onclick=start};
+  const start=()=>{const Q=orderQs(n);app.innerHTML=`<div class="view">${crumb}<div id="ob"></div></div>`;
+    runQuiz(document.getElementById('ob'),Q,(s,t)=>{const r=s/t;const was=(P.order[key]||0)>=PASS;P.order[key]=Math.max(P.order[key]||0,r);save();if(r>=PASS&&!was)setTimeout(()=>addXP(30),300);if(r>=PASS)confetti(40);
+      document.getElementById('ob').innerHTML=`<div class="card result" style="max-width:620px;margin:0 auto"><div class="eyebrow">Kết quả</div><div class="score">${s}/${t}</div>
+      <div class="teacher-row" style="justify-content:center;margin:16px 0;text-align:left">${tAva()}<div class="bubble">${r>=PASS?'Giỏi lắm! Em đã nắm được trật tự câu rồi đấy.':'Chưa đạt rồi. Em xem lại phần Ngữ pháp & mẫu câu của cấp này rồi thử lại nhé!'}</div></div>
+      <button class="btn ghost" id="again">Làm lại</button> <a class="btn" href="#level-${n}">Về Cấp ${n}</a></div>`;document.getElementById('again').onclick=start})};
+  intro();
+}
+function orderUI(box,q,onCheck){
+  window.__lastQ=q;
+  const tiles=shuffle(q.tokens.map((t,i)=>({t,i})));const picked=[];
+  const prompt=q.type==='order'?`<div class="vi" style="font-size:20px">“${q.vi}”</div><div class="sub">Xếp các khối chữ thành câu tiếng Trung đúng nghĩa · <button class="linkbtn" id="pq">🔊 nghe gợi ý</button></div>`
+    :`<button class="play-big" id="pq">🔊</button><div class="sub">Nghe rồi xếp lại câu vừa nghe (bấm loa để nghe lại)</div>`;
+  box.querySelector('.q-prompt').innerHTML=prompt;
+  box.querySelector('.q-opts').outerHTML=`<div class="ord"><div class="ord-ans" id="oa"><span class="ph">Bấm vào các khối chữ bên dưới theo đúng thứ tự…</span></div><div class="ord-bank" id="obk">${tiles.map((x,k)=>`<button class="otile zh" data-k="${k}">${x.t}</button>`).join('')}</div>
+   <div class="ord-act"><button class="btn ghost" id="oClr">↺ Xếp lại</button><button class="btn" id="oChk" disabled>Kiểm tra</button></div></div>`;
+  const oa=box.querySelector('#oa'),bk=box.querySelector('#obk'),chk=box.querySelector('#oChk');
+  const draw=()=>{oa.innerHTML=picked.length?picked.map((k,j)=>`<button class="otile zh in" data-j="${j}">${tiles[k].t}</button>`).join(''):'<span class="ph">Bấm vào các khối chữ bên dưới theo đúng thứ tự…</span>';
+    bk.querySelectorAll('.otile').forEach(b=>b.classList.toggle('used',picked.includes(+b.dataset.k)));chk.disabled=picked.length!==tiles.length;
+    oa.querySelectorAll('.otile').forEach(b=>b.onclick=()=>{picked.splice(+b.dataset.j,1);SFX.tick();draw()})};
+  bk.querySelectorAll('.otile').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;if(picked.includes(k))return;picked.push(k);SFX.tick();draw()});
+  box.querySelector('#oClr').onclick=()=>{picked.length=0;draw()};
+  chk.onclick=()=>{const ans=picked.map(k=>tiles[k].t).join('');const ok=orderAccepts(q.tokens).has(ans);chk.dataset.ok=ok;box.querySelector('#oClr').disabled=true;
+    bk.querySelectorAll('.otile').forEach(b=>b.disabled=true);oa.querySelectorAll('.otile').forEach(b=>b.disabled=true);oa.classList.add(ok?'good':'bad');onCheck(chk)};
+  const pq=box.querySelector('#pq');const sp=()=>{try{speechSynthesis.cancel()}catch(e){}speak(q.zh,'zh',.75)};pq.onclick=sp;if(q.type==='dict')setTimeout(sp,400);
+}
+
+/* ================= PWA ================= */
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;hud()});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;toast('📲 Đã cài ứng dụng!','Mở từ màn hình chính để học nhanh hơn');hud()});
+const isStandalone=()=>window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
+function installApp(){
+  if(deferredInstall){deferredInstall.prompt();deferredInstall.userChoice.finally(()=>{deferredInstall=null;hud()});return}
+  modal(`<div style="font-size:48px">📲</div><h3 style="font-size:22px;margin:6px 0">Cài web như một ứng dụng</h3>
+   ${isIOS()?`<p style="font-size:14.5px;text-align:left">Trên iPhone/iPad (Safari):<br>1. Bấm nút <b>Chia sẻ</b> <span style="font-size:18px">⎋</span> ở thanh dưới.<br>2. Chọn <b>“Thêm vào Màn hình chính”</b>.<br>3. Bấm <b>Thêm</b>.</p>`
+   :`<p style="font-size:14.5px;text-align:left">Trên Chrome/Edge:<br>1. Bấm biểu tượng <b>cài đặt ⊕</b> ở thanh địa chỉ, hoặc mở menu <b>⋮</b>.<br>2. Chọn <b>“Cài đặt ứng dụng”</b> / <b>“Thêm vào màn hình chính”</b>.</p>`}
+   <p style="font-size:13px;color:var(--muted)">Sau khi cài, em mở web từ biểu tượng chữ 中 như một app. Các bài đã mở một lần vẫn học được khi không có mạng.</p>
+   <button class="btn" data-close style="margin-top:10px">Đã hiểu</button>`,'center')}
+if('serviceWorker' in navigator&&window.isSecureContext&&location.protocol!=='file:'){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+window.addEventListener('offline',()=>toast('📴 Đang ngoại tuyến','Các bài đã mở vẫn học được. Tiến độ vẫn được lưu.'));
+window.addEventListener('online',()=>toast('🌐 Đã có mạng trở lại'));
 
 /* ================= MISC ================= */
 function confetti(k){const c=$('#confetti');const cols=['#C0392B','#D69A4C','#7F8461','#5C7A78','#F2D3A6'];
