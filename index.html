@@ -271,6 +271,10 @@ footer button{color:var(--accent);font-weight:500;text-decoration:underline}
 .line.active .wave i:nth-child(2){animation-delay:.1s}.line.active .wave i:nth-child(3){animation-delay:.2s}.line.active .wave i:nth-child(4){animation-delay:.3s}.line.active .wave i:nth-child(5){animation-delay:.15s}
 @keyframes eq{to{height:4px}}
 .wave span{font-size:12.5px;color:var(--muted);margin-left:8px}
+.num-row{display:flex;align-items:center;gap:18px}
+.num-ar{font-family:'Baloo 2';font-size:54px;color:var(--accent);min-width:110px;text-align:center;line-height:1}
+.num-zh{font-size:40px;color:var(--ink);line-height:1.2}
+.num-py{font-size:17px;color:var(--accent);font-weight:600}
 
 @media (max-width:780px){
   .hero,.write-grid,.lvl-head{grid-template-columns:1fr}
@@ -320,9 +324,12 @@ const LEVELS = [
    {title:'Chào hỏi và lịch sự', em:'👋',
     words:W('你好|nǐ hǎo|xin chào|👋;谢谢|xièxie|cảm ơn|🙏;不客气|bú kèqi|không có gì|😊;对不起|duìbuqǐ|xin lỗi|🙇;没关系|méi guānxi|không sao|👌;再见|zàijiàn|tạm biệt|🤚;早上好|zǎoshang hǎo|chào buổi sáng|🌅;晚上好|wǎnshang hǎo|chào buổi tối|🌙;老师|lǎoshī|giáo viên|👩‍🏫;请|qǐng|mời, xin|🤲'),
     tip:'“你好” viết là nǐ hǎo nhưng đọc là ní hǎo vì hai thanh 3 đứng liền nhau. Gặp thầy cô, người Trung hay nói “老师好” thay vì “你好” để thể hiện sự tôn trọng.'},
-   {title:'Số đếm 0 – 100', em:'🔢',
-    words:W('零|líng|số không|0️⃣;一|yī|một|1️⃣;二|èr|hai|2️⃣;三|sān|ba|3️⃣;四|sì|bốn|4️⃣;五|wǔ|năm|5️⃣;六|liù|sáu|6️⃣;七|qī|bảy|7️⃣;九|jiǔ|chín|9️⃣;十|shí|mười|🔟;百|bǎi|trăm|💯'),
-    tip:'Số trong tiếng Trung ghép rất logic: 十一 = 11, 二十 = 20, 二十五 = 25. Em chỉ cần thuộc 0 đến 10 là đếm được tới 99. Mẹo: luyện đọc số điện thoại của mình bằng tiếng Trung mỗi ngày.'}
+   {title:'Số đếm 0 – 100', em:'🔢', nums:true,
+    words:W('零|líng|số không|0️⃣;一|yī|một|1️⃣;二|èr|hai|2️⃣;三|sān|ba|3️⃣;四|sì|bốn|4️⃣;五|wǔ|năm|5️⃣;六|liù|sáu|6️⃣;七|qī|bảy|7️⃣;八|bā|tám|8️⃣;九|jiǔ|chín|9️⃣;十|shí|mười|🔟;两|liǎng|hai (khi đếm số lượng)|✌️;百|bǎi|trăm|💯'),
+    gram:[
+     {t:'Ghép số từ 11 đến 100', f:'十 + số (11–19) · số + 十 + số (20–99) · 一百 (100)', ex:[['十一，二十，二十五，九十九，一百','shíyī, èrshí, èrshíwǔ, jiǔshíjiǔ, yìbǎi','11, 20, 25, 99, 100']], note:'Ghép giống hệt tiếng Việt: “hai mươi lăm” là 二十五. Riêng 100 phải nói 一百, không để 百 đứng một mình.'},
+     {t:'二 èr và 两 liǎng', f:'两 + lượng từ + danh từ', ex:[['两个人','liǎng ge rén','hai người']], note:'Đếm, đọc số và số điện thoại thì dùng 二. Nói số lượng “hai cái gì đó” thì dùng 两.'}],
+    tip:'Số tiếng Trung ghép giống tiếng Việt: 十一 = 11, 二十 = 20, 二十五 = 25, 一百 = 100. Em thuộc 0 đến 10 là đếm được tới 100. Cẩn thận hai cặp dễ nhầm: 四 sì (4) với 十 shí (10), và 七 qī (7) với 一 yī (1). Mẹo: mỗi ngày đọc số điện thoại của mình bằng tiếng Trung.'}
   ],
   grammar:[
    {t:'Câu hỏi với 吗 ma', f:'Câu kể + 吗？', ex:[['你好吗？','Nǐ hǎo ma?','Bạn khỏe không?']], note:'Chỉ cần thêm 吗 vào cuối câu kể là thành câu hỏi có/không.'},
@@ -591,8 +598,8 @@ function buildScenes(L,X,i){
   if(X.extra==='tones'){
     S.push({kind:'text',title:'4 thanh điệu',sub:'mā · má · mǎ · mà',narr:'Tiếng Trung phổ thông có bốn thanh và một thanh nhẹ. Cùng một âm ma, nhưng đổi thanh thì đổi nghĩa hoàn toàn.'});
   }
-  X.words.forEach((w,k)=>S.push({kind:'word',w,narr:k===0?`Từ đầu tiên: ${w.vi}. Các em nghe cô đọc.`:k===X.words.length-1?`Từ cuối cùng: ${w.vi}.`:pick([`Tiếp theo, ${w.vi}.`,`${w.vi[0].toUpperCase()+w.vi.slice(1)}, tiếng Trung nói là.`,`Từ ${w.vi}. Nghe kỹ thanh điệu nhé.`,`Còn ${w.vi} thì sao?`]),zh:w.ch}));
-  const gs=i===1?L.grammar.slice(0,2):[L.grammar[Math.min(i-1,L.grammar.length-1)]];
+  X.words.forEach((w,k)=>S.push({kind:'word',w,narr:k===0?`Từ đầu tiên: ${w.vi}. Các em nghe cô đọc.`:k===X.words.length-1?`Từ cuối cùng: ${w.vi}.`:pick([`Tiếp theo, ${w.vi}.`,`${w.vi[0].toUpperCase()+w.vi.slice(1)} trong tiếng Trung đọc là:`,`Từ ${w.vi}. Nghe kỹ thanh điệu nhé.`,`Còn ${w.vi} thì sao?`]),zh:w.ch}));
+  const gs=X.gram?X.gram:i===1?L.grammar.slice(0,2):[L.grammar[Math.min(i-1,L.grammar.length-1)]];
   gs.forEach(g=>S.push({kind:'gram',g,narr:`Bây giờ là phần ngữ pháp. ${g.note} Các em nghe câu ví dụ.`,zh:g.ex[0][0]}));
   S.push({kind:'tip',narr:X.tip});
   S.push({kind:'title',title:'Hết bài rồi! 加油！',sub:'Chuyển sang tab Từ vựng và Luyện tập để ôn lại nhé',narr:'Bài học hôm nay đến đây là hết. Các em chuyển sang phần luyện tập để kiểm tra lại nhé. Cố lên!'});
@@ -698,11 +705,17 @@ function renderWrite(body,X){
 function renderGrammar(body,L,X,i){
   let html='';
   if(X.extra==='tones') html+=tonesHTML()+'<div class="sp"></div>';
-  html+=`<div class="grid g2"><div class="card"><h3 style="font-size:20px;margin-bottom:14px">📘 Ngữ pháp Cấp ${L.n}</h3>${L.grammar.map(g=>`<div class="gram"><h3>${g.t}</h3><div class="formula zh">${g.f}</div>${g.ex.map(e=>`<div class="ex"><button class="icon-btn" style="display:inline-grid;width:28px;height:28px;font-size:12px;vertical-align:middle" data-say="${e[0]}">🔊</button> <span class="zh">${e[0]}</span><br><small>${e[1]} · ${e[2]}</small></div>`).join('')}<div style="font-size:13.5px;color:var(--muted);margin-top:4px">💡 ${g.note}</div></div>`).join('')}</div>
+  if(X.gram) html+=`<div class="card"><h3 style="font-size:20px;margin-bottom:14px">🎯 Trọng tâm bài ${i}</h3>${X.gram.map(gramHTML).join('')}</div><div class="sp"></div>`;
+  if(X.nums) html+=`<div class="card num-lab"><h3 style="font-size:20px;margin-bottom:4px">🧮 Máy ghép số</h3><p style="font-size:14px;margin-bottom:10px">Kéo thanh trượt để xem cách đọc mọi số từ 0 đến 100, bấm 🔊 để nghe.</p>
+   <div class="num-row"><div class="num-ar" id="nAr">25</div><div style="flex:1"><div class="num-zh zh" id="nZh"></div><div class="num-py" id="nPy"></div></div><button class="icon-btn" id="nSay" style="width:46px;height:46px;font-size:18px">🔊</button></div>
+   <input type="range" min="0" max="100" value="25" id="nRange" style="width:100%;accent-color:var(--accent);margin-top:12px"></div><div class="sp"></div>`;
+  html+=`<div class="grid g2"><div class="card"><h3 style="font-size:20px;margin-bottom:14px">📘 Ngữ pháp Cấp ${L.n}</h3>${L.grammar.map(gramHTML).join('')}</div>
   <div class="card" style="padding:10px"><h3 style="font-size:20px;margin:12px 14px 4px">💬 Mẫu câu giao tiếp</h3>${L.sents.map(s=>`<div class="sent"><button class="icon-btn" data-say="${s[0]}">🔊</button><div><div class="ch zh">${s[0]}</div><div class="py">${s[1]}</div><div class="vi">${s[2]}</div></div></div>`).join('')}</div></div>`;
   body.innerHTML=html;
   bindTones(body);
+  if(X.nums){const r=$('#nRange'),upd=()=>{const n=+r.value,[z,p]=numZh(n);$('#nAr').textContent=n;$('#nZh').textContent=z;$('#nPy').textContent=p};r.oninput=upd;upd();$('#nSay').onclick=()=>say(numZh(+r.value)[0])}
 }
+function gramHTML(g){return `<div class="gram"><h3>${g.t}</h3><div class="formula zh">${g.f}</div>${g.ex.map(e=>`<div class="ex"><button class="icon-btn" style="display:inline-grid;width:28px;height:28px;font-size:12px;vertical-align:middle" data-say="${e[0]}">🔊</button> <span class="zh">${e[0]}</span><br><small>${e[1]} · ${e[2]}</small></div>`).join('')}<div style="font-size:13.5px;color:var(--muted);margin-top:4px">💡 ${g.note}</div></div>`}
 function tonesHTML(){
   return `<div class="tones">${TONES.map(t=>`<div class="tone" data-tone="${t.ch}"><svg viewBox="0 0 90 60"><line x1="6" y1="10" x2="84" y2="10" stroke="#E7DED2"/><line x1="6" y1="30" x2="84" y2="30" stroke="#E7DED2"/><line x1="6" y1="50" x2="84" y2="50" stroke="#E7DED2"/><path d="${t.path}" fill="none" stroke="${t.c}" stroke-width="5" stroke-linecap="round"/><circle class="dot" r="5" fill="#fff" stroke="${t.c}" stroke-width="2.5" style="offset-path:path('${t.path}')"/></svg><div class="ch zh">${t.ch}</div><div class="py" style="color:${t.c}">${t.py}</div><div style="font-size:13px">${t.vi}</div><div class="nm">${t.nm}</div></div>`).join('')}</div>
   <p style="font-size:13px;color:var(--muted);margin-top:8px">Bấm vào từng ô: chấm tròn sẽ chạy theo đường cao độ của giọng.</p>
@@ -730,7 +743,23 @@ function renderPinyin(){
 /* ================= QUIZ ENGINE ================= */
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const toneOf=py=>/[āēīōūǖ]/.test(py)?1:/[áéíóúǘ]/.test(py)?2:/[ǎěǐǒǔǚ]/.test(py)?3:/[àèìòùǜ]/.test(py)?4:0;
-function vocabQ(w,pool,type){const dis=shuffle(pool.filter(x=>x.ch!==w.ch&&x.vi!==w.vi)).slice(0,3);return {type,w,opts:shuffle([w,...dis])}}
+function vocabQ(w,pool,type){
+  const home=(LEVELS.flatMap(l=>l.lessons).find(x=>x.words.includes(w))||{words:[]}).words;
+  const base=v=>v.split(' (')[0];
+  const ok=x=>x.ch!==w.ch&&base(x.vi)!==base(w.vi)&&!(type==='listen'&&x.py.replace(/\s/g,'')===w.py.replace(/\s/g,''));
+  const dis=[];
+  for(const x of [...shuffle(home),...shuffle(pool)]){if(dis.length>=3)break;if(ok(x)&&!dis.some(d=>d.ch===x.ch))dis.push(x)}
+  return {type,w,opts:shuffle([w,...dis])}}
+const DG='零一二三四五六七八九',DP=['líng','yī','èr','sān','sì','wǔ','liù','qī','bā','jiǔ'];
+function numZh(n){if(n===100)return['一百','yìbǎi'];if(n<=10)return n===10?['十','shí']:[DG[n],DP[n]];
+  const t=Math.floor(n/10),u=n%10;let z=(t>1?DG[t]:'')+'十'+(u?DG[u]:''),p=(t>1?DP[t]:'')+'shí'+(u?DP[u]:'');return[z,p]}
+function numQs(k){const Q=[];const rnd=()=>11+Math.floor(Math.random()*89);
+  for(let i=0;i<k;i++){const n=Math.random()<.1?100:rnd();const [z,p]=numZh(n);
+   const near=[...new Set([n%10*10+Math.floor(n/10),n+1,n-1,n+10,n-10])].filter(x=>x!==n&&x>=11&&x<=100);
+   const ds=shuffle(near).slice(0,3);while(ds.length<3){const r=rnd();if(r!==n&&!ds.includes(r))ds.push(r)}
+   if(i%2===0) Q.push({type:'lq',q:`Số <b style="font-size:1.4em;color:var(--accent)">${n}</b> viết bằng chữ Hán là?`,a:z,opts:shuffle([z,...ds.map(d=>numZh(d)[0])]),zh:z+' '+p,play:null});
+   else Q.push({type:'lq',q:'Nghe và chọn số em vừa nghe',play:z,a:String(n),opts:shuffle([String(n),...ds.map(String)]),zh:z+' '+p});
+  }return Q}
 function toneQ(){const set=pick(TONE_SETS),k=Math.floor(Math.random()*4);return {type:'tone',ch:set[k][0],py:set[k][1],ans:toneOf(set[k][1])}}
 function clozeQ(c){return {type:'cloze',q:c[0],a:c[1],opts:shuffle(c[2]),vi:c[3]}}
 function runQuiz(box,Q,onDone){
@@ -775,6 +804,7 @@ function renderPractice(body,n,i){
     const types=['ch2vi','vi2ch','listen'];
     let Q=ws.map((w,k)=>vocabQ(w,pool.length>=4?pool:LEVELS.flatMap(l=>l.lessons.flatMap(x=>x.words)),types[k%3]));
     if(X.extra==='tones') Q=Q.concat([toneQ(),toneQ(),toneQ()]);
+    if(X.nums) Q=Q.slice(0,6).concat(numQs(4));
     Q=shuffle(Q);
     runQuiz(body,Q,(s,t)=>{
       const r=s/t,key=n+'-'+i; P.lessons[key]=Math.max(P.lessons[key]||0,r); save();
@@ -787,7 +817,7 @@ function renderPractice(body,n,i){
     });
   };
   body.innerHTML=`<div class="card" style="max-width:620px;margin:0 auto;text-align:center"><div style="font-size:46px">🎯</div><h3 style="font-size:21px;margin:6px 0">Luyện tập bài ${i}</h3>
-   <p style="font-size:14.5px;margin-bottom:16px">Gồm ${X.extra==='tones'?8:8} câu: nhìn chữ đoán nghĩa, nhìn hình chọn chữ, nghe chọn từ${X.extra==='tones'?' và đoán thanh điệu':''}. Đạt từ 80% là hoàn thành bài.${P.lessons[n+'-'+i]!=null?` Điểm cao nhất: ${Math.round(P.lessons[n+'-'+i]*100)}%.`:''}</p>
+   <p style="font-size:14.5px;margin-bottom:16px">Gồm ${X.nums?10:8} câu: nhìn chữ đoán nghĩa, nhìn hình chọn chữ, nghe chọn từ${X.extra==='tones'?' và đoán thanh điệu':''}${X.nums?', ghép số từ 11 đến 100 và nghe số':''}. Đạt từ 80% là hoàn thành bài.${P.lessons[n+'-'+i]!=null?` Điểm cao nhất: ${Math.round(P.lessons[n+'-'+i]*100)}%.`:''}</p>
    <button class="btn" id="go">Bắt đầu</button></div>`;
   body.querySelector('#go').onclick=start;
 }
