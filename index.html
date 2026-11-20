@@ -336,7 +336,7 @@ const LEVELS = [
    {t:'Phủ định với 不 bù', f:'Chủ ngữ + 不 + động từ/tính từ', ex:[['我不累。','Wǒ bú lèi.','Tôi không mệt.']], note:'不 đứng trước thanh 4 thì đọc thành bú.'}
   ],
   sents:[['你好吗？','Nǐ hǎo ma?','Bạn khỏe không?'],['我很好，谢谢！','Wǒ hěn hǎo, xièxie!','Tôi rất khỏe, cảm ơn!'],['老师好！','Lǎoshī hǎo!','Em chào cô ạ!'],['对不起！—— 没关系。','Duìbuqǐ! — Méi guānxi.','Xin lỗi! — Không sao.'],['明天见！','Míngtiān jiàn!','Mai gặp lại!']],
-  cloze:[['你好___？','吗',['吗','不','的','了'],'Bạn khỏe không?'],['我___累。','不',['不','吗','很','是'],'Tôi không mệt.'],['谢谢！—— 不___。','客气',['客气','关系','好','见'],'Cảm ơn! — Không có gì.'],['对不起！—— 没___。','关系',['关系','客气','有','见'],'Xin lỗi! — Không sao.']]
+  cloze:[['你好___？','吗',['吗','不','的','了'],'Bạn khỏe không?'],['我___累。','不',['不','吗','的','呢'],'Tôi không mệt.'],['谢谢！—— 不___。','客气',['客气','关系','好','见'],'Cảm ơn! — Không có gì.'],['对不起！—— 没___。','关系',['关系','客气','有','见'],'Xin lỗi! — Không sao.']]
  },
  {n:2, name:'Sơ cấp 1', zh:'初级一', color:'#D69A4C', desc:'Giới thiệu bản thân, gia đình, quốc tịch',
   lessons:[
@@ -347,7 +347,7 @@ const LEVELS = [
     words:W('名字|míngzi|tên|📛;叫|jiào|gọi, tên là|🗣️;中国|Zhōngguó|Trung Quốc|🏮;越南|Yuènán|Việt Nam|🪷;人|rén|người|🧍;学生|xuésheng|học sinh|🎒;医生|yīshēng|bác sĩ|🩺;朋友|péngyou|bạn bè|🤝;认识|rènshi|quen biết|🙌;高兴|gāoxìng|vui mừng|😄'),
     tip:'Câu hỏi tiếng Trung giữ nguyên trật tự câu trả lời: “你叫什么名字？” trả lời “我叫…”. Chỉ cần thay từ để hỏi bằng thông tin. Đây là điểm rất dễ với người Việt.'},
    {title:'Có, không có và lượng từ', em:'🧮',
-    words:W('个|gè|cái, chiếc (lượng từ chung)|📦;口|kǒu|miệng; người (trong nhà)|👄;几|jǐ|mấy|❓;有|yǒu|có|✅;没有|méiyǒu|không có|❌;岁|suì|tuổi|🎂;多大|duō dà|bao nhiêu tuổi|🎈;和|hé|và|➕;的|de|của|🔗;谁|shéi|ai|❔'),
+    words:W('个|gè|cái, chiếc (lượng từ chung)|📦;口|kǒu|miệng (lượng từ đếm người trong nhà)|👄;几|jǐ|mấy|❓;有|yǒu|có|✅;没有|méiyǒu|không có|❌;岁|suì|tuổi|🎂;多大|duō dà|bao nhiêu tuổi|🎈;和|hé|và|➕;的|de|của|🔗;谁|shéi|ai|❔'),
     tip:'Giữa số và danh từ luôn phải có lượng từ, giống tiếng Việt: “ba cái ghế”. 三个人 là ba người. Phủ định của 有 luôn là 没有, không bao giờ nói 不有.'}
   ],
   grammar:[
@@ -368,7 +368,7 @@ const LEVELS = [
     tip:'Tiếng Trung nói thời gian từ lớn đến nhỏ: năm, tháng, ngày, giờ. Ví dụ 2026年11月20号. Thứ Hai là 星期一, Chủ nhật là 星期天.'},
    {title:'Một ngày của tôi', em:'🌞',
     words:W('去|qù|đi|➡️;来|lái|đến|⬅️;看|kàn|xem, nhìn|👀;听|tīng|nghe|👂;说|shuō|nói|💬;学习|xuéxí|học tập|📚;工作|gōngzuò|làm việc|💼;睡觉|shuìjiào|ngủ|😴;喜欢|xǐhuan|thích|❤️;想|xiǎng|muốn, nhớ|💭'),
-    tip:'Khác tiếng Việt: thời gian phải đứng TRƯỚC động từ. Tiếng Việt nói “tôi đi học lúc 8 giờ”, tiếng Trung nói “tôi 8 giờ đi học”: 我八点去学习.'}
+    tip:'Khác tiếng Việt: thời gian phải đứng TRƯỚC động từ. Tiếng Việt nói “tôi đi học lúc 8 giờ”, tiếng Trung nói “tôi 8 giờ đến trường”: 我八点去学校.'}
   ],
   grammar:[
    {t:'Vị trí từ chỉ thời gian', f:'Chủ ngữ + thời gian + động từ', ex:[['我明天去北京。','Wǒ míngtiān qù Běijīng.','Ngày mai tôi đi Bắc Kinh.']], note:'Thời gian cũng có thể đứng đầu câu: 明天我去北京.'},
@@ -376,7 +376,7 @@ const LEVELS = [
    {t:'Hỏi ngược lại với 呢 ne', f:'…，你呢？', ex:[['我很好，你呢？','Wǒ hěn hǎo, nǐ ne?','Tôi khỏe, còn bạn?']], note:'Dùng để hỏi lại câu hỏi vừa được hỏi.'}
   ],
   sents:[['你想吃什么？','Nǐ xiǎng chī shénme?','Bạn muốn ăn gì?'],['我想喝咖啡。','Wǒ xiǎng hē kāfēi.','Tôi muốn uống cà phê.'],['现在几点？','Xiànzài jǐ diǎn?','Bây giờ mấy giờ?'],['现在三点十分。','Xiànzài sān diǎn shí fēn.','Bây giờ là ba giờ mười phút.'],['明天你去哪儿？','Míngtiān nǐ qù nǎr?','Ngày mai bạn đi đâu?'],['我喜欢学习汉语。','Wǒ xǐhuan xuéxí Hànyǔ.','Tôi thích học tiếng Trung.']],
-  cloze:[['你想吃___？','什么',['什么','几','谁','吗'],'Bạn muốn ăn gì?'],['我___喝咖啡。','想',['想','是','有','的'],'Tôi muốn uống cà phê.'],['现在___点？','几',['几','什么','多','谁'],'Bây giờ mấy giờ?'],['我很好，你___？','呢',['呢','吗','的','了'],'Tôi khỏe, còn bạn?']]
+  cloze:[['你想吃___？','什么',['什么','几','谁','多'],'Bạn muốn ăn gì?'],['我___喝咖啡。','想',['想','是','有','的'],'Tôi muốn uống cà phê.'],['现在___点？','几',['几','什么','多','谁'],'Bây giờ mấy giờ?'],['我很好，你___？','呢',['呢','吗','的','了'],'Tôi khỏe, còn bạn?']]
  },
  {n:4, name:'Tiền trung cấp', zh:'准中级', color:'#5C7A78', desc:'Mua sắm, hỏi đường, đi lại và thời tiết',
   lessons:[
@@ -396,7 +396,7 @@ const LEVELS = [
    {t:'Phương tiện với 坐', f:'坐 + phương tiện + 去 + nơi', ex:[['我坐飞机去上海。','Wǒ zuò fēijī qù Shànghǎi.','Tôi đi máy bay đến Thượng Hải.']], note:'Phương tiện luôn đứng trước động từ 去.'}
   ],
   sents:[['这个多少钱？','Zhège duōshao qián?','Cái này bao nhiêu tiền?'],['太贵了！便宜一点吧。','Tài guì le! Piányi yìdiǎn ba.','Đắt quá! Rẻ một chút đi.'],['医院在哪儿？','Yīyuàn zài nǎr?','Bệnh viện ở đâu?'],['一直往前走，然后右转。','Yìzhí wǎng qián zǒu, ránhòu yòu zhuǎn.','Đi thẳng, sau đó rẽ phải.'],['我坐出租车去机场。','Wǒ zuò chūzūchē qù jīchǎng.','Tôi đi taxi ra sân bay.'],['今天天气很热。','Jīntiān tiānqì hěn rè.','Hôm nay trời rất nóng.']],
-  cloze:[['医院___哪儿？','在',['在','是','有','去'],'Bệnh viện ở đâu?'],['___贵了！','太',['太','很','不','真'],'Đắt quá!'],['我___飞机去北京。','坐',['坐','开','骑','在'],'Tôi đi máy bay đến Bắc Kinh.'],['这件衣服多少___？','钱',['钱','块','个','岁'],'Cái áo này bao nhiêu tiền?']]
+  cloze:[['医院___哪儿？','在',['在','是','有','去'],'Bệnh viện ở đâu?'],['___贵了！','太',['太','很','的','是'],'Đắt quá!'],['我___飞机去北京。','坐',['坐','骑','在','有'],'Tôi đi máy bay đến Bắc Kinh.'],['这件衣服多少___？','钱',['钱','吗','个','岁'],'Cái áo này bao nhiêu tiền?']]
  },
  {n:5, name:'HSK 2', zh:'中级', color:'#46565B', desc:'Cảm xúc, so sánh, trải nghiệm và câu phức',
   lessons:[
@@ -417,7 +417,7 @@ const LEVELS = [
    {t:'Nhân quả 因为…所以…', f:'因为 + nguyên nhân，所以 + kết quả', ex:[['因为下雨，所以我不去了。','Yīnwèi xià yǔ, suǒyǐ wǒ bú qù le.','Vì trời mưa nên tôi không đi nữa.']], note:'Có thể lược một trong hai từ.'}
   ],
   sents:[['我已经吃饭了。','Wǒ yǐjīng chī fàn le.','Tôi đã ăn cơm rồi.'],['你去过中国吗？','Nǐ qù guo Zhōngguó ma?','Bạn từng đi Trung Quốc chưa?'],['我比我姐姐高。','Wǒ bǐ wǒ jiějie gāo.','Tôi cao hơn chị gái tôi.'],['我们一起去跑步吧！','Wǒmen yìqǐ qù pǎobù ba!','Chúng ta cùng đi chạy bộ đi!'],['我觉得汉语很有意思。','Wǒ juéde Hànyǔ hěn yǒu yìsi.','Tôi thấy tiếng Trung rất thú vị.']],
-  cloze:[['我去___中国。','过',['过','了','的','在'],'Tôi từng đi Trung Quốc.'],['我___他高。','比',['比','很','和','跟'],'Tôi cao hơn anh ấy.'],['___下雨，所以我不去。','因为',['因为','但是','所以','可以'],'Vì trời mưa nên tôi không đi.'],['我已经吃饭___。','了',['了','过','的','吗'],'Tôi đã ăn cơm rồi.']]
+  cloze:[['我去___中国。','过',['过','吗','的','在'],'Tôi đã từng đi Trung Quốc.'],['我___他高。','比',['比','很','和','跟'],'Tôi cao hơn anh ấy.'],['___下雨，所以我不去。','因为',['因为','但是','所以','可以'],'Vì trời mưa nên tôi không đi.'],['我已经吃饭___。','了',['了','过','的','吗'],'Tôi đã ăn cơm rồi.']]
  }
 ];
 const TONES=[
@@ -436,7 +436,7 @@ const INITIALS=[
  ['z · c · s','Đầu lưỡi sát răng: z ≈ “ch” bẹt, c ≈ “x” bật hơi, s ≈ “x”',['在 zài','菜 cài','三 sān']],
  ['ü (yu)','Môi chúm tròn như huýt sáo rồi đọc “i”',['女 nǚ','鱼 yú']]
 ];
-const TONE_SETS=[[['妈','mā'],['麻','má'],['马','mǎ'],['骂','mà']],[['八','bā'],['拔','bá'],['把','bǎ'],['爸','bà']],[['衣','yī'],['姨','yí'],['椅','yǐ'],['意','yì']],[['汤','tāng'],['糖','táng'],['躺','tǎng'],['烫','tàng']],[['书','shū'],['熟','shú'],['鼠','shǔ'],['树','shù']],[['吃','chī'],['池','chí'],['尺','chǐ'],['赤','chì']]];
+const TONE_SETS=[[['妈','mā'],['麻','má'],['马','mǎ'],['骂','mà']],[['八','bā'],['拔','bá'],['把','bǎ'],['爸','bà']],[['衣','yī'],['姨','yí'],['椅','yǐ'],['意','yì']],[['汤','tāng'],['糖','táng'],['躺','tǎng'],['烫','tàng']],[['鸡','jī'],['急','jí'],['几','jǐ'],['记','jì']],[['吃','chī'],['池','chí'],['尺','chǐ'],['赤','chì']]];
 const PASS=0.8;
 
 /* ================= STATE ================= */
@@ -502,7 +502,7 @@ window.addEventListener('hashchange',route);
 function renderHome(){
   const totalLessons=LEVELS.reduce((a,l)=>a+l.lessons.length,0);
   const doneLessons=LEVELS.reduce((a,l)=>a+lvlProgress(l.n),0);
-  const totalWords=LEVELS.reduce((a,l)=>a+l.lessons.reduce((b,x)=>b+x.words.length,0),0);
+  const totalWords=new Set(LEVELS.flatMap(l=>l.lessons.flatMap(x=>x.words.map(w=>w.ch)))).size;
   const cur=Math.min(P.unlocked,5);
   app.innerHTML=`<div class="view">
   <div class="hero">
@@ -675,6 +675,7 @@ function renderVocab(body,X){
 let hwLoad=null;
 function loadHW(){ if(window.HanziWriter) return Promise.resolve(); if(hwLoad) return hwLoad;
   hwLoad=new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.2/dist/hanzi-writer.min.js';s.onload=res;s.onerror=()=>{hwLoad=null;rej()};document.head.appendChild(s)}); return hwLoad; }
+const put=(sel,prop,v)=>{const e=document.querySelector(sel);if(e)e[prop]=v};
 function renderWrite(body,X){
   const chars=[...new Set(X.words.map(w=>w.ch).join('').replace(/[^一-鿿]/g,''))];
   let cur=chars[0],writer=null;
@@ -687,17 +688,17 @@ function renderWrite(body,X){
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="hwAnim">▶ Xem cách viết</button><button class="btn dark" id="hwQuiz">✍️ Tự viết</button><button class="btn ghost" id="hwSay">🔊 Nghe</button></div>
     <div class="sp"></div><div id="hwInfo"></div>
     <div class="sp"></div>${tipBox('Quy tắc vàng khi viết chữ Hán: ngang trước sổ sau, phẩy trước mác sau, trên trước dưới sau, trái trước phải sau, ngoài trước trong sau, vào nhà rồi mới đóng cửa. Viết đúng thứ tự thì chữ mới đẹp và tra từ điển viết tay mới nhận ra.')}</div></div>`;
-  const info=()=>{const w=wordOf(cur);$('#hwInfo').innerHTML=w?`<div class="card" style="padding:14px 18px;display:flex;gap:14px;align-items:center"><span style="font-size:34px">${w.em}</span><div><div class="zh" style="font-size:22px;color:var(--ink)">${w.ch} <span style="font-size:15px;color:var(--accent);font-family:'Be Vietnam Pro'">${w.py}</span></div><div style="font-size:14px">${w.vi}</div></div></div>`:''};
+  const info=()=>{const w=wordOf(cur);put('#hwInfo','innerHTML',w?`<div class="card" style="padding:14px 18px;display:flex;gap:14px;align-items:center"><span style="font-size:34px">${w.em}</span><div><div class="zh" style="font-size:22px;color:var(--ink)">${w.ch} <span style="font-size:15px;color:var(--accent);font-family:'Be Vietnam Pro'">${w.py}</span></div><div style="font-size:14px">${w.vi}</div></div></div>`:'')};
   function make(){
-    const el=$('#hw'); if(!el) return; el.innerHTML='';
+    const el=$('#hw'); if(!el||!document.body.contains(el)) return; el.innerHTML='';
     writer=HanziWriter.create('hw',cur,{width:el.offsetWidth,height:el.offsetHeight,padding:18,strokeColor:'#2E3A3E',radicalColor:'#C0392B',outlineColor:'#EADFD2',drawingColor:'#C0392B',highlightColor:'#D69A4C',strokeAnimationSpeed:1,delayBetweenStrokes:250,showCharacter:true,
-      onLoadCharDataSuccess:()=>{$('#hwMsg').textContent='Nét màu đỏ là bộ thủ của chữ.'},onLoadCharDataError:()=>{$('#hwMsg').textContent='Không tải được dữ liệu nét của chữ này.'}});
+      onLoadCharDataSuccess:()=>{put('#hwMsg','textContent','Nét màu đỏ là bộ thủ của chữ.')},onLoadCharDataError:()=>{put('#hwMsg','textContent','Không tải được dữ liệu nét của chữ này.')}});
     info();
   }
-  loadHW().then(()=>{make();setTimeout(()=>writer&&writer.animateCharacter(),400)}).catch(()=>{$('#hwMsg').textContent='Không tải được thư viện tập viết (cần kết nối mạng).';$('#hw').innerHTML=`<div class="zh" style="display:grid;place-items:center;height:100%;font-size:180px;color:var(--ink)">${cur}</div>`;info()});
-  $('#cp').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;cur=b.dataset.c;$('#cp').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));if(window.HanziWriter){make();setTimeout(()=>writer.animateCharacter(),300)}else{$('#hw').innerHTML=`<div class="zh" style="display:grid;place-items:center;height:100%;font-size:180px;color:var(--ink)">${cur}</div>`;info()}};
+  loadHW().then(()=>{if(!$('#hw'))return;make();setTimeout(()=>writer&&$('#hw')&&writer.animateCharacter(),400)}).catch(()=>{put('#hwMsg','textContent','Không tải được thư viện tập viết (cần kết nối mạng).');put('#hw','innerHTML',`<div class="zh" style="display:grid;place-items:center;height:100%;font-size:180px;color:var(--ink)">${cur}</div>`);info()});
+  $('#cp').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;cur=b.dataset.c;$('#cp').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));if(window.HanziWriter){make();setTimeout(()=>writer.animateCharacter(),300)}else{put('#hw','innerHTML',`<div class="zh" style="display:grid;place-items:center;height:100%;font-size:180px;color:var(--ink)">${cur}</div>`);info()}};
   $('#hwAnim').onclick=()=>{if(writer){writer.cancelQuiz&&writer.cancelQuiz();writer.showCharacter();writer.animateCharacter()}};
-  $('#hwQuiz').onclick=()=>{if(!writer)return;let miss=0;$('#hwMsg').textContent='Em viết từng nét vào ô nhé…';writer.quiz({onMistake:()=>{miss++},onComplete:d=>{$('#hwMsg').innerHTML=d.totalMistakes===0?'🌟 Tuyệt vời! Em viết đúng thứ tự tất cả các nét.':`👍 Hoàn thành! Em sai ${d.totalMistakes} lần, viết thêm vài lượt nữa nhé.`;say(cur)}})};
+  $('#hwQuiz').onclick=()=>{if(!writer)return;let miss=0;put('#hwMsg','textContent','Em viết từng nét vào ô nhé…');writer.quiz({onMistake:()=>{miss++},onComplete:d=>{put('#hwMsg','innerHTML',d.totalMistakes===0?'🌟 Tuyệt vời! Em viết đúng thứ tự tất cả các nét.':`👍 Hoàn thành! Em sai ${d.totalMistakes} lần, viết thêm vài lượt nữa nhé.`);say(cur)}})};
   $('#hwSay').onclick=()=>say(cur);
 }
 
@@ -748,7 +749,7 @@ function vocabQ(w,pool,type){
   const base=v=>v.split(' (')[0];
   const ok=x=>x.ch!==w.ch&&base(x.vi)!==base(w.vi)&&!(type==='listen'&&x.py.replace(/\s/g,'')===w.py.replace(/\s/g,''));
   const dis=[];
-  for(const x of [...shuffle(home),...shuffle(pool)]){if(dis.length>=3)break;if(ok(x)&&!dis.some(d=>d.ch===x.ch))dis.push(x)}
+  for(const x of [...shuffle(home),...shuffle(pool)]){if(dis.length>=3)break;if(ok(x)&&!dis.some(d=>d.ch===x.ch||base(d.vi)===base(x.vi)))dis.push(x)}
   return {type,w,opts:shuffle([w,...dis])}}
 const DG='零一二三四五六七八九',DP=['líng','yī','èr','sān','sì','wǔ','liù','qī','bā','jiǔ'];
 function numZh(n){if(n===100)return['一百','yìbǎi'];if(n<=10)return n===10?['十','shí']:[DG[n],DP[n]];
