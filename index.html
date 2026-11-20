@@ -240,6 +240,36 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14px}
 footer{text-align:center;font-size:12.5px;color:var(--muted);padding:16px 0 34px}
 footer button{color:var(--accent);font-weight:500;text-decoration:underline}
 
+.listen-card{display:flex;gap:16px;align-items:center;text-decoration:none;flex-wrap:wrap;transition:.2s}
+.listen-card:hover{border-color:var(--gold)}
+.dlg-head{display:flex;gap:20px;align-items:center}
+.dlg-scene{flex:none;width:110px;height:110px;border-radius:28px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-size:58px}
+.cast{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.dlg-ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.dlg-ctrl .seg button.on{background:var(--ink);color:#fff}
+.chat{display:flex;flex-direction:column;gap:12px;padding:6px 2px}
+.line{display:flex;gap:10px;align-items:flex-end;cursor:pointer}
+.line.right{flex-direction:row-reverse}
+.line .av{flex:none;width:46px;height:46px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:26px;transition:.2s}
+.line .bub{max-width:78%;background:var(--bg);border:2px solid transparent;border-radius:18px 18px 18px 6px;padding:10px 14px;transition:.2s}
+.line.right .bub{border-radius:18px 18px 6px 18px;background:#F3ECE2}
+.line:hover .bub{border-color:var(--line)}
+.line.active .bub{border-color:var(--gold);background:var(--gold-soft)}
+.line.active .av{animation:bob .5s ease-in-out infinite alternate;background:var(--gold-soft)}
+@keyframes bob{to{transform:translateY(-5px)}}
+.line .who{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:2px}
+.line.right .who{text-align:right}
+.zh-t{font-size:20px;color:var(--ink)}
+.py-t{font-size:14px;color:var(--accent);font-weight:500}
+.vi-t{font-size:14px}
+.wave{display:flex;align-items:center;gap:3px;height:24px}
+.wave i{display:block;width:4px;height:8px;border-radius:2px;background:var(--muted);opacity:.5}
+.wave i:nth-child(2){height:16px}.wave i:nth-child(3){height:22px}.wave i:nth-child(4){height:12px}
+.line.active .wave i{background:var(--accent);opacity:1;animation:eq .5s ease-in-out infinite alternate}
+.line.active .wave i:nth-child(2){animation-delay:.1s}.line.active .wave i:nth-child(3){animation-delay:.2s}.line.active .wave i:nth-child(4){animation-delay:.3s}.line.active .wave i:nth-child(5){animation-delay:.15s}
+@keyframes eq{to{height:4px}}
+.wave span{font-size:12.5px;color:var(--muted);margin-left:8px}
+
 @media (max-width:780px){
   .hero,.write-grid,.lvl-head{grid-template-columns:1fr}
   .tones{grid-template-columns:repeat(3,1fr)}
@@ -252,6 +282,9 @@ footer button{color:var(--accent);font-weight:500;text-decoration:underline}
   .screen .scene{grid-template-columns:30% 70%}
   .controls label span{display:none}
   .hw-box,#hw{width:260px;height:260px}
+  .dlg-scene{width:72px;height:72px;font-size:38px;border-radius:20px}
+  .line .bub{max-width:84%}
+  nav a{padding:7px 11px;font-size:13px}
   .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .tabs button{white-space:nowrap;padding:10px 12px}
 }
@@ -263,6 +296,7 @@ footer button{color:var(--accent);font-weight:500;text-decoration:underline}
   <a class="brand" href="#home"><div class="seal zh">中</div><div><b>Tiếng Trung cùng cô Lâm</b><small>5 cấp độ · từ Nhập môn đến HSK 2</small></div></a>
   <nav id="nav">
     <a href="#home" data-v="home">Lộ trình</a>
+    <a href="#nghe" data-v="nghe">Luyện nghe</a>
     <a href="#pinyin" data-v="pinyin">Bảng pinyin</a>
   </nav>
 </header>
@@ -411,7 +445,7 @@ let zhVoice=null, viVoice=null, ttsOK=true;
 function pickVoices(){try{const vs=speechSynthesis.getVoices();zhVoice=vs.find(v=>/zh[-_]CN/i.test(v.lang))||vs.find(v=>/^zh/i.test(v.lang))||null;viVoice=vs.find(v=>/^vi/i.test(v.lang))||null;if(vs.length&&!zhVoice)voiceNote.classList.add('on')}catch(e){ttsOK=false;voiceNote.classList.add('on')}}
 try{pickVoices();speechSynthesis.onvoiceschanged=pickVoices}catch(e){ttsOK=false}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-function speak(text,lang='zh',rate){
+function speak(text,lang='zh',rate,pitch){
   return new Promise(res=>{
     const est=lang==='zh'?text.length*420+1200:text.length*75+1200;
     let done=false;const fin=()=>{if(!done){done=true;res()}};
@@ -419,7 +453,7 @@ function speak(text,lang='zh',rate){
       if(!ttsOK)throw 0;
       const u=new SpeechSynthesisUtterance(text);
       u.lang=lang==='zh'?'zh-CN':'vi-VN';
-      u.rate=rate||(lang==='zh'?.75:1);
+      u.rate=rate||(lang==='zh'?.75:1);if(pitch)u.pitch=pitch;
       const v=lang==='zh'?zhVoice:viVoice; if(v)u.voice=v;
       u.onend=fin;u.onerror=fin;
       speechSynthesis.speak(u);
@@ -443,10 +477,12 @@ function route(){
   try{speechSynthesis.cancel()}catch(e){}
   const h=(location.hash||'#home').slice(1);
   let m;
-  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===(h==='pinyin'?'pinyin':'home')));
+  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===(h==='pinyin'?'pinyin':h.startsWith('nghe')?'nghe':'home')));
   if((m=h.match(/^level-(\d)$/))) renderLevel(+m[1]);
   else if((m=h.match(/^lesson-(\d)-(\d)$/))) renderLesson(+m[1],+m[2]);
   else if((m=h.match(/^test-(\d)$/))) renderTest(+m[1]);
+  else if((m=h.match(/^nghe-(\d)-(\d)$/))) renderDialog(+m[1],+m[2]);
+  else if(h==='nghe') renderListenList();
   else if(h==='pinyin') renderPinyin();
   else renderHome();
   window.scrollTo({top:0});
@@ -464,13 +500,13 @@ function renderHome(){
    <div class="card">
     <div class="eyebrow">Khóa học tiếng Trung cho người Việt</div>
     <h1>Học đúng từ gốc, nói tự tin từ ngày đầu</h1>
-    <div class="teacher-row" style="margin-top:14px"><div class="bubble">Chào em! Cô là cô Lâm, đã dạy tiếng Trung cho người Việt 10 năm. Khóa này có 5 cấp, mỗi cấp 3 bài kèm video bài giảng, tập viết chữ và luyện tập. Em làm bài thi cuối cấp đạt từ 80% là mở được cấp tiếp theo. Mỗi ngày 15 phút, mình đi chậm mà chắc nhé!</div></div>
+    <div class="teacher-row" style="margin-top:14px"><div class="bubble">Chào em! Cô là cô Lâm, đã dạy tiếng Trung cho người Việt 10 năm. Khóa này có 5 cấp, mỗi cấp 3 bài kèm video bài giảng, tập viết chữ, luyện tập và 2 đoạn hội thoại luyện nghe. Em làm bài thi cuối cấp đạt từ 80% là mở được cấp tiếp theo. Mỗi ngày 15 phút, mình đi chậm mà chắc nhé!</div></div>
     <div class="stats">
      <div class="stat"><b>Cấp ${cur}</b><span>đang học</span></div>
      <div class="stat"><b>${doneLessons}/${totalLessons}</b><span>bài đã hoàn thành</span></div>
      <div class="stat"><b>${P.learned.length}/${totalWords}</b><span>từ đã thuộc</span></div>
     </div>
-    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#level-${cur}">Tiếp tục Cấp ${cur} →</a><a class="btn ghost" href="#pinyin">Bảng pinyin</a></div>
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap"><a class="btn" href="#level-${cur}">Tiếp tục Cấp ${cur} →</a><a class="btn ghost" href="#nghe">🎧 Luyện nghe</a></div>
    </div>
    <div class="card hero-t">${tAva()}<div class="name">Cô Lâm · 林老师</div><div class="role">Giáo viên tiếng Trung · 10 năm kinh nghiệm</div>
     <div class="creds"><span>HSK 1–6</span><span>Phát âm chuẩn</span><span>Dạy người Việt</span></div></div>
@@ -509,6 +545,8 @@ function renderLevel(n){
    <div class="lessons">${L.lessons.map((x,i)=>`<a class="lesson" href="#lesson-${n}-${i+1}">
      <div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="em">${x.em}</span>${lessonDone(n,i+1)?'<span class="pill done">✓ Hoàn thành</span>':P.lessons[n+'-'+(i+1)]!=null?'<span class="pill open">Đang học</span>':''}</div>
      <div class="meta">Bài ${i+1}</div><h3>${x.title}</h3><div class="meta">${x.words.length} từ · video bài giảng · tập viết</div></a>`).join('')}</div>
+   <div class="sp"></div>
+   <a class="card listen-card" href="#nghe-${n}-1"><span style="font-size:36px">🎧</span><div style="flex:1"><h3 style="font-size:19px">Luyện nghe hội thoại Cấp ${n}</h3><p style="font-size:14px">${DIALOGS[n].map(d=>d.em+' '+d.title).join(' · ')}</p></div><span class="btn ghost">Nghe →</span></a>
    <div class="sp"></div>
    <div class="card test-card"><div><h3>📝 Bài thi cuối Cấp ${n}</h3><p>15 câu gồm từ vựng, nghe và ngữ pháp. Đạt từ 12/15 (80%) ${n<5?'để mở Cấp '+(n+1):'để nhận chứng nhận hoàn thành khóa học'}.${P.tests[n]!=null?' Điểm cao nhất của em: '+Math.round(P.tests[n]*100)+'%.':''}</p></div>
     <a class="btn" href="#test-${n}">${testPassed(n)?'Thi lại':'Vào thi'} →</a></div>
@@ -702,10 +740,11 @@ function runQuiz(box,Q,onDone){
     else if(q.type==='vi2ch'){prompt=`<div class="em">${q.w.em}</div><div class="vi">${q.w.vi}</div><div class="sub">Chọn chữ Hán đúng</div>`;opts=q.opts.map(o=>`<button class="opt" data-ok="${o.ch===q.w.ch}"><span class="zh">${o.ch}</span></button>`).join('')}
     else if(q.type==='listen'){prompt=`<button class="play-big" id="pq">🔊</button><div class="sub">Nghe và chọn từ em vừa nghe</div>`;opts=q.opts.map(o=>`<button class="opt" data-ok="${o.ch===q.w.ch}"><span class="zh">${o.ch}</span><div style="font-size:12.5px;color:var(--muted)">${o.em} ${o.vi}</div></button>`).join('')}
     else if(q.type==='tone'){prompt=`<button class="play-big" id="pq">🔊</button><div class="sub">Âm vừa nghe là thanh mấy?</div>`;opts=[1,2,3,4].map(n=>`<button class="opt" data-ok="${n===q.ans}">Thanh ${n} <span style="color:var(--muted)">${['','ˉ','ˊ','ˇ','ˋ'][n]}</span></button>`).join('')}
+    else if(q.type==='lq'){prompt=`${q.play?'<button class="play-big" id="pq">🔊</button>':''}<div class="vi" style="font-size:20px;margin-top:${q.play?10:0}px">${q.q}</div>`;opts=q.opts.map(o=>`<button class="opt" data-ok="${o===q.a}">${o.replace(/^([\u4e00-\u9fff！？，。]+)$/,'<span class="zh">$1</span>')}</button>`).join('')}
     else {prompt=`<div class="cloze zh">${q.q.replace('___','<u>&nbsp;?&nbsp;</u>')}</div><div class="sub">${q.vi} · Chọn từ điền vào chỗ trống</div>`;opts=q.opts.map(o=>`<button class="opt" data-ok="${o===q.a}"><span class="zh">${o}</span></button>`).join('')}
     box.innerHTML=`<div class="quiz"><div class="q-meta"><span>Câu ${qi+1}/${Q.length}</span><span>Đúng: ${score}</span></div><div class="bar"><i style="width:${qi/Q.length*100}%"></i></div>
      <div class="q-prompt">${prompt}</div><div class="q-opts">${opts}</div><div class="q-feedback" id="fb"></div><div id="nx"></div></div>`;
-    const pq=box.querySelector('#pq'); if(pq){const t=q.type==='tone'?q.ch:q.w.ch;pq.onclick=()=>say(t);setTimeout(()=>say(t),350)}
+    const pq=box.querySelector('#pq'); if(pq){const t=q.type==='tone'?q.ch:q.type==='lq'?q.play:q.w.ch;const sp=()=>{try{speechSynthesis.cancel()}catch(e){}speak(t,'zh',.8,q.pitch)};pq.onclick=sp;setTimeout(sp,350)}
     box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(b,q));
   }
   function answer(b,q){
@@ -715,6 +754,7 @@ function runQuiz(box,Q,onDone){
     let info='';
     if(q.type==='tone')info=`<span class="zh">${q.ch}</span> ${q.py} · thanh ${q.ans}`;
     else if(q.type==='cloze')info=`<span class="zh">${q.q.replace('___',q.a)}</span>`;
+    else if(q.type==='lq')info=q.zh?`<span class="zh">${q.zh}</span> · ${q.a}`:q.a;
     else info=`<span class="zh">${q.w.ch}</span> ${q.w.py} · ${q.w.vi}`;
     const praise=pick(['Giỏi lắm! ','Chính xác! ','很好！','Đúng rồi! ']);
     const fb=box.querySelector('#fb');fb.className='q-feedback '+(ok?'ok':'no');fb.innerHTML=(ok?praise:'Chưa đúng rồi. Đáp án: ')+info;
@@ -791,6 +831,168 @@ function renderTest(n){
     });
   };
   intro();
+}
+
+/* ================= LISTENING DIALOGUES ================= */
+const CAST={'小明':{em:'👦',vi:'Tiểu Minh',pitch:.8},'小安':{em:'👧',vi:'Tiểu An',pitch:1.2},'王老师':{em:'👩‍🏫',vi:'Cô Vương',pitch:1.05},'老师':{em:'👩‍🏫',vi:'Cô giáo',pitch:1.05},'大卫':{em:'🧑‍🦱',vi:'Đại Vệ',pitch:.7},'服务员':{em:'🧑‍🍳',vi:'Phục vụ',pitch:.95},'售货员':{em:'🧑‍💼',vi:'Người bán',pitch:1.1},'路人':{em:'🧔',vi:'Người qua đường',pitch:.65}};
+const DL=s=>s.trim().split('\n').map(l=>l.trim().split('|'));
+const DIALOGS={
+1:[{title:'Gặp nhau ở trường',em:'🏫',scene:'Sáng đầu tuần, Tiểu An gặp Tiểu Minh trước cửa lớp.',
+ lines:DL(`小明|你好！|Nǐ hǎo!|Xin chào!
+ 小安|你好！你好吗？|Nǐ hǎo! Nǐ hǎo ma?|Chào bạn! Bạn khỏe không?
+ 小明|我很好，谢谢。你呢？|Wǒ hěn hǎo, xièxie. Nǐ ne?|Mình rất khỏe, cảm ơn. Còn bạn?
+ 小安|我也很好。|Wǒ yě hěn hǎo.|Mình cũng rất khỏe.
+ 小明|老师来了！|Lǎoshī lái le!|Cô giáo đến rồi!
+ 小安|老师好！|Lǎoshī hǎo!|Em chào cô ạ!
+ 王老师|你们好！|Nǐmen hǎo!|Chào các em!`),
+ q:[['Tiểu Minh trả lời thế nào khi được hỏi thăm sức khỏe?',['Rất khỏe','Không khỏe lắm','Hơi mệt','Rất bận']],['Ai vừa đến lớp?',['Cô giáo','Bố của Tiểu An','Một người bạn','Bác sĩ']],['Tiểu An chào cô giáo bằng câu nào?',['老师好！','你好吗？','谢谢！','再见！']]],
+ tip:'Lần đầu, em đừng nhìn chữ, chỉ nghe xem nhận ra được bao nhiêu từ. Nghe lần hai mới bật pinyin. Đây là cách luyện tai nhanh nhất.'},
+ {title:'Xin số điện thoại',em:'📱',scene:'Sau giờ học, Tiểu Minh muốn xin số điện thoại của Tiểu An.',
+ lines:DL(`小明|小安，你的电话是多少？|Xiǎo Ān, nǐ de diànhuà shì duōshao?|Tiểu An, số điện thoại của bạn là bao nhiêu?
+ 小安|零九八六，五三二，七零四。|Líng jiǔ bā liù, wǔ sān èr, qī líng sì.|0986 532 704.
+ 小明|零九八六，五三二，七零四，对吗？|Líng jiǔ bā liù, wǔ sān èr, qī líng sì, duì ma?|0986 532 704, đúng không?
+ 小安|对！谢谢你。|Duì! Xièxie nǐ.|Đúng rồi! Cảm ơn bạn.
+ 小明|不客气。明天见！|Bú kèqi. Míngtiān jiàn!|Không có gì. Mai gặp nhé!
+ 小安|明天见！|Míngtiān jiàn!|Mai gặp nhé!`),
+ q:[['Số điện thoại của Tiểu An là số nào?',['0986 532 704','0968 523 704','0986 532 740','0989 632 704']],['Khi nào hai bạn gặp lại?',['Ngày mai','Tối nay','Tuần sau','Hôm nay']],['“对” trong câu trả lời của Tiểu An nghĩa là gì?',['Đúng rồi','Xin lỗi','Không phải','Cảm ơn']]],
+ tip:'Nghe số là kỹ năng khó nhất với người mới. Em hãy chép số ra giấy trong lúc nghe rồi so lại. Lưu ý 四 sì (4) và 十 shí (10) rất dễ nhầm.'}],
+2:[{title:'Làm quen bạn mới',em:'🤝',scene:'Tiểu An gặp Đại Vệ, một du học sinh, ở thư viện.',
+ lines:DL(`大卫|你好！我叫大卫。你叫什么名字？|Nǐ hǎo! Wǒ jiào Dàwèi. Nǐ jiào shénme míngzi?|Chào bạn! Mình tên là Đại Vệ. Bạn tên là gì?
+ 小安|我叫小安。|Wǒ jiào Xiǎo Ān.|Mình tên là Tiểu An.
+ 大卫|你是中国人吗？|Nǐ shì Zhōngguó rén ma?|Bạn là người Trung Quốc à?
+ 小安|不是，我是越南人。你呢？|Bú shì, wǒ shì Yuènán rén. Nǐ ne?|Không phải, mình là người Việt Nam. Còn bạn?
+ 大卫|我是美国人。我是学生。|Wǒ shì Měiguó rén. Wǒ shì xuésheng.|Mình là người Mỹ. Mình là sinh viên.
+ 小安|我也是学生。认识你很高兴！|Wǒ yě shì xuésheng. Rènshi nǐ hěn gāoxìng!|Mình cũng là sinh viên. Rất vui được làm quen với bạn!
+ 大卫|我也很高兴！|Wǒ yě hěn gāoxìng!|Mình cũng rất vui!`),
+ q:[['Đại Vệ là người nước nào?',['Người Mỹ','Người Trung Quốc','Người Việt Nam','Người Anh']],['Tiểu An là người nước nào?',['Người Việt Nam','Người Trung Quốc','Người Mỹ','Người Hàn Quốc']],['Hai bạn làm nghề gì?',['Cả hai đều là sinh viên','Cả hai đều là giáo viên','Đại Vệ là bác sĩ','Tiểu An là giáo viên']]],
+ tip:'Khi nghe, em để ý các từ khóa trả lời câu hỏi “ai, ở đâu, làm gì”, không cần hiểu từng chữ. Tên nước luôn có 国 hoặc đi kèm 人.'},
+ {title:'Gia đình của Tiểu An',em:'🏠',scene:'Tiểu Minh xem ảnh gia đình trên điện thoại của Tiểu An.',
+ lines:DL(`小明|小安，你家有几口人？|Xiǎo Ān, nǐ jiā yǒu jǐ kǒu rén?|Tiểu An, nhà bạn có mấy người?
+ 小安|我家有五口人：爸爸、妈妈、哥哥、妹妹和我。|Wǒ jiā yǒu wǔ kǒu rén: bàba, māma, gēge, mèimei hé wǒ.|Nhà mình có năm người: bố, mẹ, anh trai, em gái và mình.
+ 小明|你哥哥做什么工作？|Nǐ gēge zuò shénme gōngzuò?|Anh trai bạn làm nghề gì?
+ 小安|他是医生。|Tā shì yīshēng.|Anh ấy là bác sĩ.
+ 小明|你妹妹多大？|Nǐ mèimei duō dà?|Em gái bạn bao nhiêu tuổi?
+ 小安|她八岁。|Tā bā suì.|Em ấy tám tuổi.`),
+ q:[['Nhà Tiểu An có mấy người?',['5 người','4 người','3 người','6 người']],['Anh trai Tiểu An làm nghề gì?',['Bác sĩ','Giáo viên','Sinh viên','Tài xế']],['Em gái Tiểu An bao nhiêu tuổi?',['8 tuổi','10 tuổi','6 tuổi','18 tuổi']]],
+ tip:'八 bā (8) và 十八 shíbā (18) dễ nghe nhầm. Em chú ý xem trước 八 có âm “shí” hay không.'}],
+3:[{title:'Gọi món ở quán ăn',em:'🍜',scene:'Trưa nay Tiểu Minh và Tiểu An đi ăn ở một quán gần trường.',
+ lines:DL(`服务员|你好，你们想吃什么？|Nǐ hǎo, nǐmen xiǎng chī shénme?|Xin chào, hai bạn muốn ăn gì?
+ 小明|我想吃面条。小安，你呢？|Wǒ xiǎng chī miàntiáo. Xiǎo Ān, nǐ ne?|Mình muốn ăn mì. Tiểu An, còn bạn?
+ 小安|我想吃米饭和菜。|Wǒ xiǎng chī mǐfàn hé cài.|Mình muốn ăn cơm và rau.
+ 服务员|你们想喝什么？|Nǐmen xiǎng hē shénme?|Hai bạn muốn uống gì?
+ 小明|两杯茶，谢谢。|Liǎng bēi chá, xièxie.|Hai cốc trà, cảm ơn.
+ 小安|这个菜很好吃！|Zhège cài hěn hǎochī!|Món này ngon quá!`),
+ q:[['Tiểu Minh muốn ăn gì?',['Mì','Cơm','Táo','Không ăn gì']],['Hai bạn gọi đồ uống gì?',['Hai cốc trà','Hai cốc cà phê','Một cốc trà','Hai chai nước']],['Tiểu An nhận xét món ăn thế nào?',['Rất ngon','Hơi mặn','Không ngon','Quá đắt']]],
+ tip:'两 liǎng dùng khi đếm số lượng “hai cái gì đó”: 两杯茶. Em nghe thấy liǎng là biết đang có hai thứ.'},
+ {title:'Hẹn đi xem phim',em:'🎬',scene:'Tiểu An rủ Tiểu Minh đi xem phim vào ngày mai.',
+ lines:DL(`小明|明天你想去哪儿？|Míngtiān nǐ xiǎng qù nǎr?|Ngày mai bạn muốn đi đâu?
+ 小安|我想去看电影。你想去吗？|Wǒ xiǎng qù kàn diànyǐng. Nǐ xiǎng qù ma?|Mình muốn đi xem phim. Bạn có muốn đi không?
+ 小明|想！几点去？|Xiǎng! Jǐ diǎn qù?|Có chứ! Mấy giờ đi?
+ 小安|下午三点，怎么样？|Xiàwǔ sān diǎn, zěnmeyàng?|Ba giờ chiều, được không?
+ 小明|好。明天上午我要工作。|Hǎo. Míngtiān shàngwǔ wǒ yào gōngzuò.|Được. Sáng mai mình phải làm việc.
+ 小安|那我们下午三点见！|Nà wǒmen xiàwǔ sān diǎn jiàn!|Vậy hẹn gặp lúc ba giờ chiều nhé!`),
+ q:[['Tiểu An muốn đi đâu?',['Xem phim','Đi ăn','Đi học','Đi làm']],['Hai bạn hẹn mấy giờ?',['3 giờ chiều','3 giờ sáng','2 giờ chiều','10 giờ sáng']],['Sáng mai Tiểu Minh làm gì?',['Đi làm','Ngủ','Đi học','Xem phim']]],
+ tip:'Nghe giờ hẹn, em chú ý cặp 上午 (sáng) và 下午 (chiều). Chỉ khác một chữ mà lệch nhau nửa ngày!'}],
+4:[{title:'Mặc cả khi mua áo',em:'👕',scene:'Tiểu An đi chợ quần áo và muốn mua một chiếc áo.',
+ lines:DL(`小安|你好，这件衣服多少钱？|Nǐ hǎo, zhè jiàn yīfu duōshao qián?|Chào chị, cái áo này bao nhiêu tiền?
+ 售货员|两百块。|Liǎng bǎi kuài.|Hai trăm tệ.
+ 小安|太贵了！便宜一点吧。|Tài guì le! Piányi yìdiǎn ba.|Đắt quá! Bớt chút đi.
+ 售货员|一百八十块，怎么样？|Yìbǎi bāshí kuài, zěnmeyàng?|Một trăm tám mươi tệ, được không?
+ 小安|一百五，可以吗？|Yìbǎi wǔ, kěyǐ ma?|Một trăm năm mươi, được không ạ?
+ 售货员|好吧。你要红色的还是白色的？|Hǎo ba. Nǐ yào hóngsè de háishi báisè de?|Thôi được. Em lấy màu đỏ hay màu trắng?
+ 小安|我要白色的。|Wǒ yào báisè de.|Em lấy màu trắng.`),
+ q:[['Giá ban đầu của chiếc áo là bao nhiêu?',['200 tệ','180 tệ','150 tệ','100 tệ']],['Cuối cùng Tiểu An mua với giá bao nhiêu?',['150 tệ','180 tệ','200 tệ','105 tệ']],['Tiểu An chọn áo màu gì?',['Màu trắng','Màu đỏ','Màu đen','Chưa chọn']]],
+ tip:'Người Trung nói tắt rất nhiều: 一百五 là 150, không phải 105. Khi mặc cả ở chợ, em sẽ nghe cách nói này suốt.'},
+ {title:'Hỏi đường đến bệnh viện',em:'🧭',scene:'Tiểu An bị lạc và hỏi một người đi đường.',
+ lines:DL(`小安|请问，医院在哪儿？|Qǐngwèn, yīyuàn zài nǎr?|Xin hỏi, bệnh viện ở đâu ạ?
+ 路人|医院在学校后面。|Yīyuàn zài xuéxiào hòumiàn.|Bệnh viện ở phía sau trường học.
+ 小安|远吗？|Yuǎn ma?|Có xa không ạ?
+ 路人|不太远。一直往前走，然后左转。|Bú tài yuǎn. Yìzhí wǎng qián zǒu, ránhòu zuǒ zhuǎn.|Không xa lắm. Cứ đi thẳng, sau đó rẽ trái.
+ 小安|我可以坐出租车去吗？|Wǒ kěyǐ zuò chūzūchē qù ma?|Cháu có thể đi taxi không ạ?
+ 路人|可以，但是走路十分钟就到了。|Kěyǐ, dànshì zǒulù shí fēnzhōng jiù dào le.|Được, nhưng đi bộ mười phút là tới rồi.
+ 小安|谢谢您！|Xièxie nín!|Cháu cảm ơn bác ạ!`),
+ q:[['Bệnh viện ở đâu?',['Phía sau trường học','Phía trước trường học','Bên phải cửa hàng','Cạnh sân bay']],['Đường đi đến bệnh viện thế nào?',['Đi thẳng rồi rẽ trái','Đi thẳng rồi rẽ phải','Quay lại rồi rẽ trái','Đi qua cầu']],['Đi bộ mất bao lâu?',['10 phút','30 phút','5 phút','1 tiếng']]],
+ tip:'您 nín là cách xưng hô lịch sự của 你, dùng với người lớn tuổi hoặc người lạ. Hỏi đường người lớn tuổi, em nhớ dùng 您 nhé.'}],
+5:[{title:'Kể chuyện cuối tuần',em:'🧳',scene:'Thứ Hai, Tiểu Minh hỏi Tiểu An đã làm gì vào cuối tuần.',
+ lines:DL(`小明|周末你做什么了？|Zhōumò nǐ zuò shénme le?|Cuối tuần bạn đã làm gì?
+ 小安|我和朋友一起去旅游了。|Wǒ hé péngyou yìqǐ qù lǚyóu le.|Mình đi du lịch cùng bạn bè.
+ 小明|去哪儿了？|Qù nǎr le?|Đi đâu thế?
+ 小安|去上海了。你去过上海吗？|Qù Shànghǎi le. Nǐ qù guo Shànghǎi ma?|Đi Thượng Hải. Bạn đã từng đến Thượng Hải chưa?
+ 小明|没去过。上海怎么样？|Méi qù guo. Shànghǎi zěnmeyàng?|Chưa từng. Thượng Hải thế nào?
+ 小安|很漂亮，但是人太多了！|Hěn piàoliang, dànshì rén tài duō le!|Rất đẹp, nhưng đông người quá!
+ 小明|我也想去，下次我们一起去吧！|Wǒ yě xiǎng qù, xià cì wǒmen yìqǐ qù ba!|Mình cũng muốn đi, lần sau chúng mình cùng đi nhé!`),
+ q:[['Cuối tuần Tiểu An đã làm gì?',['Đi du lịch với bạn bè','Ở nhà học bài','Đi làm thêm','Đi thăm bố mẹ']],['Tiểu Minh đã từng đến Thượng Hải chưa?',['Chưa từng đến','Đã đến một lần','Đã đến nhiều lần','Đang sống ở đó']],['Tiểu An nhận xét về Thượng Hải thế nào?',['Rất đẹp nhưng quá đông người','Không đẹp lắm','Rất yên tĩnh','Đồ ăn rất đắt']]],
+ tip:'Đoạn này có cả 了 (đã làm) và 过 (từng làm). Em nghe kỹ: “去过” là hỏi về trải nghiệm, còn “去了” là kể việc đã làm.'},
+ {title:'Chuẩn bị đi thi',em:'📝',scene:'Cô giáo hỏi thăm Tiểu An trước kỳ thi HSK.',
+ lines:DL(`老师|小安，你最近怎么样？|Xiǎo Ān, nǐ zuìjìn zěnmeyàng?|Tiểu An, dạo này em thế nào?
+ 小安|很忙，因为下个星期有考试。|Hěn máng, yīnwèi xià ge xīngqī yǒu kǎoshì.|Em rất bận, vì tuần sau có kỳ thi ạ.
+ 老师|你准备得怎么样了？|Nǐ zhǔnbèi de zěnmeyàng le?|Em chuẩn bị đến đâu rồi?
+ 小安|还可以。但是听力比阅读难。|Hái kěyǐ. Dànshì tīnglì bǐ yuèdú nán.|Cũng tạm ạ. Nhưng phần nghe khó hơn phần đọc.
+ 老师|你每天听半个小时中文，就会进步。|Nǐ měitiān tīng bàn ge xiǎoshí Zhōngwén, jiù huì jìnbù.|Mỗi ngày em nghe tiếng Trung nửa tiếng là sẽ tiến bộ.
+ 小安|好的，谢谢老师的帮助！|Hǎo de, xièxie lǎoshī de bāngzhù!|Vâng ạ, cảm ơn cô đã giúp đỡ!`),
+ q:[['Vì sao dạo này Tiểu An bận?',['Tuần sau có kỳ thi','Phải đi làm thêm','Sắp đi du lịch','Nhà có khách']],['Theo Tiểu An, phần nào khó hơn?',['Phần nghe khó hơn phần đọc','Phần đọc khó hơn phần nghe','Phần viết khó nhất','Phần nào cũng dễ']],['Cô giáo khuyên Tiểu An điều gì?',['Mỗi ngày nghe tiếng Trung nửa tiếng','Mỗi ngày đọc sách một tiếng','Đi du học Trung Quốc','Nghỉ ngơi nhiều hơn']]],
+ tip:'Lời khuyên của cô giáo trong đoạn này cũng là lời cô Lâm dặn em: mỗi ngày nghe 30 phút. Nghe đi nghe lại một đoạn quen còn hiệu quả hơn nghe nhiều đoạn mới.'}]
+};
+
+function renderListenList(){
+  P.listen=P.listen||{};
+  app.innerHTML=`<div class="view"><div class="crumb"><a href="#home">Lộ trình</a> / Luyện nghe</div>
+  <div class="eyebrow">Luyện nghe hội thoại</div><h2 class="sec-title">🎧 Nghe người bản xứ nói chuyện</h2>
+  <p class="lead">Mỗi cấp có 2 đoạn hội thoại dùng đúng từ vựng và ngữ pháp của cấp đó. Nghe xong, em làm 5 câu nghe hiểu, đạt từ 4/5 là hoàn thành. Đoạn hội thoại của cấp nào sẽ mở cùng với cấp đó.</p>
+  <div class="sp"></div>${tipBox('Cách luyện nghe cô khuyên: nghe lần 1 không nhìn chữ, nghe lần 2 bật pinyin, nghe lần 3 bật nghĩa. Cuối cùng, em tắt hết và nghe lại xem đã hiểu hết chưa. Muốn nghe kỹ câu nào thì bấm vào câu đó.')}
+  ${LEVELS.map(L=>{const locked=L.n>P.unlocked;return `<div class="sp"></div><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><h3 style="font-size:19px">Cấp ${L.n} · ${L.name}</h3>${locked?'<span class="pill lock">🔒 Chưa mở</span>':''}</div>
+   <div class="lessons">${DIALOGS[L.n].map((D,k)=>{const sc=P.listen[L.n+'-'+(k+1)];return `<a class="lesson" href="${locked?'#level-'+L.n:'#nghe-'+L.n+'-'+(k+1)}" style="${locked?'opacity:.6':''}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="em">${locked?'🔒':D.em}</span>${sc!=null?(sc>=PASS?'<span class="pill done">✓ '+Math.round(sc*100)+'%</span>':'<span class="pill open">'+Math.round(sc*100)+'%</span>'):''}</div>
+    <div class="meta">Hội thoại ${k+1}</div><h3>${D.title}</h3><div class="meta">${D.lines.length} câu · ${[...new Set(D.lines.map(l=>CAST[l[0]].vi))].join(', ')}</div></a>`}).join('')}</div>`}).join('')}</div>`;
+}
+
+function renderDialog(n,k){
+  const D=DIALOGS[n]&&DIALOGS[n][k-1]; if(!D) return renderListenList();
+  if(n>P.unlocked){location.hash='#level-'+n;return}
+  P.listen=P.listen||{};
+  const first=D.lines[0][0];
+  let show={zh:false,py:false,vi:false}, rate=.8, token=0, playing=false, cur=-1;
+  const total=DIALOGS[n].length;
+  const next=k<total?`#nghe-${n}-${k+1}`:(n<5&&DIALOGS[n+1]&&n+1<=P.unlocked?`#nghe-${n+1}-1`:'#nghe');
+  app.innerHTML=`<div class="view"><div class="crumb"><a href="#home">Lộ trình</a> / <a href="#nghe">Luyện nghe</a> / Cấp ${n} · Hội thoại ${k}</div>
+   <div class="dlg-head"><div class="dlg-scene">${D.em}</div><div><div class="eyebrow">Cấp ${n} · Hội thoại ${k}</div><h2 class="sec-title">${D.title}</h2><p style="font-size:14.5px">📍 ${D.scene}</p>
+    <div class="cast">${[...new Set(D.lines.map(l=>l[0]))].map(s=>`<span class="pill" style="background:var(--bg);color:var(--ink)">${CAST[s].em} <span class="zh">${s}</span> · ${CAST[s].vi}</span>`).join('')}</div></div></div>
+   <div class="sp"></div>${tipBox(D.tip)}<div class="sp"></div>
+   <div class="card" style="padding:18px">
+    <div class="dlg-ctrl"><button class="btn" id="dPlay">▶ Nghe cả đoạn</button>
+     <div class="seg" id="dRate">${[[.6,'Chậm'],[.8,'Vừa'],[1,'Tự nhiên']].map(r=>`<button data-r="${r[0]}" class="${r[0]===rate?'on':''}">${r[1]}</button>`).join('')}</div>
+     <div class="seg" id="dShow"><button data-s="zh">汉字</button><button data-s="py">Pinyin</button><button data-s="vi">Nghĩa</button></div></div>
+    <div class="chat" id="chat"></div></div>
+   <div class="sp"></div><div id="dq"><div class="card" style="text-align:center"><div style="font-size:40px">📝</div><h3 style="font-size:20px;margin:4px 0">Bài nghe hiểu</h3><p style="font-size:14.5px;margin-bottom:14px">5 câu: 3 câu hỏi về nội dung và 2 câu nghe rồi chọn nghĩa. Em nên nghe ít nhất 2 lần trước khi làm.${P.listen[n+'-'+k]!=null?' Điểm cao nhất: '+Math.round(P.listen[n+'-'+k]*100)+'%.':''}</p><button class="btn dark" id="dGo">Làm bài nghe hiểu</button></div></div></div>`;
+  const chat=$('#chat');
+  function drawChat(){
+    chat.innerHTML=D.lines.map((l,i)=>{const c=CAST[l[0]];const any=show.zh||show.py||show.vi;return `<div class="line ${l[0]===first?'':'right'} ${i===cur?'active':''}" data-i="${i}">
+     <div class="av">${c.em}</div><div class="bub"><div class="who">${c.vi}</div>
+     ${any?`${show.zh?`<div class="zh-t zh">${l[1]}</div>`:''}${show.py?`<div class="py-t">${l[2]}</div>`:''}${show.vi?`<div class="vi-t">${l[3]}</div>`:''}`:`<div class="wave"><i></i><i></i><i></i><i></i><i></i><span>Bấm để nghe câu ${i+1}</span></div>`}</div></div>`}).join('');
+  }
+  async function playLine(i,t){cur=i;drawChat();const el=chat.querySelector(`[data-i="${i}"]`);el&&el.scrollIntoView({block:'nearest',behavior:'smooth'});
+    const l=D.lines[i];await speak(l[1],'zh',rate,CAST[l[0]].pitch);if(t!==token)return false;return true}
+  async function playAll(){const t=++token;playing=true;$('#dPlay').textContent='❚❚ Dừng';
+    for(let i=0;i<D.lines.length;i++){if(!(await playLine(i,t)))return;await wait(450);if(t!==token)return}
+    playing=false;cur=-1;drawChat();$('#dPlay').textContent='↻ Nghe lại cả đoạn'}
+  function stop(){token++;try{speechSynthesis.cancel()}catch(e){}playing=false;$('#dPlay').textContent='▶ Nghe cả đoạn'}
+  $('#dPlay').onclick=()=>playing?stop():playAll();
+  chat.onclick=e=>{const ln=e.target.closest('.line');if(!ln)return;stop();const t=++token;playLine(+ln.dataset.i,t)};
+  $('#dRate').querySelectorAll('button').forEach(b=>b.onclick=()=>{rate=+b.dataset.r;$('#dRate').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))});
+  $('#dShow').querySelectorAll('button').forEach(b=>b.onclick=()=>{show[b.dataset.s]=!show[b.dataset.s];b.classList.toggle('on',show[b.dataset.s]);drawChat()});
+  drawChat();
+  cleanup=()=>{token++;try{speechSynthesis.cancel()}catch(e){}};
+  $('#dGo').onclick=()=>{
+    stop();
+    const Q=D.q.map(x=>({type:'lq',q:x[0],a:x[1][0],opts:shuffle(x[1])}));
+    shuffle(D.lines.filter(l=>l[1].length>=4)).slice(0,2).forEach(l=>{const others=shuffle(D.lines.filter(o=>o!==l).map(o=>o[3])).slice(0,3);Q.push({type:'lq',q:'Nghe câu sau và chọn nghĩa đúng',play:l[1],pitch:CAST[l[0]].pitch,zh:l[1],a:l[3],opts:shuffle([l[3],...others])})});
+    const box=$('#dq');box.scrollIntoView({behavior:'smooth'});
+    runQuiz(box,Q,(s,t)=>{const r=s/t,key=n+'-'+k;P.listen[key]=Math.max(P.listen[key]||0,r);save();const ok=r>=PASS;if(ok)confetti(r===1?80:30);
+      box.innerHTML=`<div class="card result" style="max-width:620px;margin:0 auto"><div class="eyebrow">Kết quả nghe hiểu</div><div class="score">${s}/${t}</div>
+       <div class="teacher-row" style="justify-content:center;margin:16px 0;text-align:left">${tAva()}<div class="bubble">${ok?pick(['Tai nghe của em tiến bộ rồi đấy! 很好！','Giỏi lắm! Em đã nghe hiểu cả đoạn hội thoại.','Tuyệt vời! Em thử tắt hết chữ và nghe lại một lần nữa xem nhé.']):'Chưa đạt rồi em ơi. Em bật pinyin, nghe lại từng câu một, rồi làm lại nhé. Nghe nhiều là quen!'}</div></div>
+       <button class="btn ghost" id="dAgain">Làm lại</button> <a class="btn" href="${next}">${next==='#nghe'?'Danh sách hội thoại':'Hội thoại tiếp theo →'}</a></div>`;
+      $('#dAgain').onclick=()=>renderDialog(n,k);});
+  };
 }
 
 /* ================= MISC ================= */
