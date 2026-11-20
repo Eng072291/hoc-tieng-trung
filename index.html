@@ -642,6 +642,22 @@ body.cover-mode header,body.cover-mode nav,body.cover-mode footer{display:none}
 .ord-act{display:flex;gap:8px;justify-content:center}
 .linkbtn{color:var(--accent);font-weight:600;text-decoration:underline;font-size:13px}
 .hsk-tag{display:inline-block;margin:4px 0 0 4px;font-size:10.5px;font-weight:700;color:#fff;background:var(--accent);padding:2px 7px;border-radius:999px;letter-spacing:.03em}
+.speak-note{font-size:12.5px;color:var(--muted);margin:8px 0 14px}
+.speak-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.sp-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.sp-main{display:flex;gap:12px;align-items:center}.sp-em{font-size:30px}
+.sp-zh{font-size:26px;color:var(--ink);line-height:1.2}.sp-py{color:var(--accent);font-weight:600;font-size:14px}.sp-vi{font-size:13px}
+.sp-act{display:flex;gap:8px;align-items:center}
+.mic{width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;font-size:22px;box-shadow:0 6px 16px -6px rgba(192,57,43,.6);transition:.2s}
+.mic.rec{animation:recp 1s infinite;background:#E04A3A}
+@keyframes recp{0%{box-shadow:0 0 0 0 rgba(224,74,58,.6)}100%{box-shadow:0 0 0 16px rgba(224,74,58,0)}}
+.sp-res{grid-column:1/-1;text-align:center;min-height:4px}
+.sp-sylls{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.sy{padding:4px 10px;border-radius:10px;font-weight:600;font-size:15px}.sy sup{font-size:10px}
+.sy.ok{background:var(--sage-soft);color:var(--sage-ink)}.sy.tone{background:#FBEBD3;color:#8A5E22}.sy.miss{background:var(--accent-soft);color:#9E2B20}
+.sp-ok{color:var(--sage-ink)}.sp-tone{color:#8A5E22}.sp-miss{color:#9E2B20}
+.sp-score{font-family:'Baloo 2';font-size:20px;margin-top:4px}.sp-score.good{color:var(--sage-ink)}.sp-score.mid{color:#8A5E22}.sp-score.low{color:var(--accent)}
+.sp-heard{font-size:12.5px;color:var(--muted)}.sp-listen{font-size:13px;color:var(--accent);font-weight:600}.sp-err{font-size:13px;color:#9E2B20}.sp-best{font-size:12.5px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -802,7 +818,7 @@ const PASS=0.8;
 /* ================= STATE ================= */
 const KEY='zh-lam-v2';
 let P=(()=>{try{return JSON.parse(localStorage.getItem(KEY))||null}catch(e){return null}})()||{unlocked:1,lessons:{},tests:{},learned:[]};
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}try{schedulePush()}catch(e){}};
 const learned=()=>new Set(P.learned);
 const lvl=n=>LEVELS[n-1];
 const lessonDone=(n,i)=>(P.lessons[n+'-'+i]||0)>=PASS;
@@ -815,6 +831,9 @@ function pickVoices(){try{const vs=speechSynthesis.getVoices();zhVoice=vs.find(v
 try{pickVoices();speechSynthesis.onvoiceschanged=pickVoices}catch(e){ttsOK=false}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function speak(text,lang='zh',rate,pitch){
+  if(lang==='zh'&&typeof playFile==='function'){const pf=playFile(text,rate);if(pf)return pf.then(ok=>ok?undefined:speakTTS(text,lang,rate,pitch))}
+  return speakTTS(text,lang,rate,pitch)}
+function speakTTS(text,lang='zh',rate,pitch){
   return new Promise(res=>{
     const est=lang==='zh'?text.length*420+1200:text.length*75+1200;
     let done=false;const fin=()=>{if(!done){done=true;res()}};
@@ -830,7 +849,7 @@ function speak(text,lang='zh',rate,pitch){
     }catch(e){setTimeout(fin,lang==='zh'?600:est)}
   });
 }
-function say(t){try{speechSynthesis.cancel()}catch(e){}speak(t,'zh')}
+function say(t){try{speechSynthesis.cancel()}catch(e){}if(typeof stopAudio==='function')stopAudio();speak(t,'zh')}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b){e.stopPropagation();say(b.dataset.say)}});
 
 /* ================= TEACHER SVG ================= */
@@ -846,7 +865,7 @@ function route(){
   document.body.classList.remove('cover-mode');
   try{speechSynthesis.cancel()}catch(e){}
   if(!location.hash&&!P.goal){location.replace('#bia');return}
-  const h=(location.hash||'#home').slice(1);
+  let h=(location.hash||'#home').slice(1);if(/access_token=|error_description=/.test(h))h='home';
   let m;
   const sec=h.startsWith('nghe')?'nghe':(h.startsWith('game')||h==='san-choi')?'san-choi':['on-tap','chu-han','ho-so'].includes(h)?h:'home';
   document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.v===sec));
@@ -909,7 +928,7 @@ function renderLesson(n,i){
   const L=lvl(n); const X=L&&L.lessons[i-1];
   if(!X) return renderHome();
   if(n>P.unlocked){location.hash='#level-'+n;return}
-  const tabs=[['video','🎬 Video bài giảng'],['vocab','🖼️ Từ vựng'],['write','✍️ Tập viết'],['grammar','📘 '+(X.extra==='tones'?'Thanh điệu & ngữ pháp':'Ngữ pháp & mẫu câu')],['practice','🎯 Luyện tập']];
+  const tabs=[['video','🎬 Video bài giảng'],['vocab','🖼️ Từ vựng'],['write','✍️ Tập viết'],['grammar','📘 '+(X.extra==='tones'?'Thanh điệu & ngữ pháp':'Ngữ pháp & mẫu câu')],['speak','🎤 Luyện nói'],['practice','🎯 Luyện tập']];
   if(!tabs.some(t=>t[0]===curTab)) curTab='video';
   app.innerHTML=`<div class="view">
    <div class="crumb"><a href="#home">Lộ trình</a> / <a href="#level-${n}">Cấp ${n}</a> / Bài ${i}</div>
@@ -928,6 +947,7 @@ function showTab(n,i){
   else if(curTab==='vocab') renderVocab(body,X);
   else if(curTab==='write') renderWrite(body,X);
   else if(curTab==='grammar') renderGrammar(body,L,X,i);
+  else if(curTab==='speak') renderSpeak(body,n,i);
   else renderPractice(body,n,i);
 }
 
@@ -1425,8 +1445,9 @@ function hud(){const h=document.getElementById('hud');if(!h)return;const s=strea
   <a href="#ho-so" class="hud-item" title="Mục tiêu hôm nay: ${P.days[today()]||0}/${P.goal||50} XP">${goalRing(30)}<b class="hide-sm">${P.days[today()]||0}/${P.goal||50}</b></a>
   <a href="#ho-so" class="hud-item rank-chip hide-sm" title="Danh hiệu">${R[3]} ${R[1]}</a>
   ${(!isStandalone()&&(deferredInstall||isIOS()))?'<button class="hud-item" id="instBtn" title="Cài ứng dụng">📲<b class="hide-sm" style="font-family:inherit;font-size:13px">Cài app</b></button>':''}
+  ${supaUser?'<a href="#ho-so" class="hud-item" id="syncChip" title="Đồng bộ tài khoản">☁️</a>':''}
   <button class="hud-item" id="sndBtn" title="Bật/tắt âm thanh">${P.sound?'🔊':'🔇'}</button>`;
-  const ib=document.getElementById('instBtn');if(ib)ib.onclick=installApp;
+  const ib=document.getElementById('instBtn');if(ib)ib.onclick=installApp;if(typeof hudSync==='function')hudSync();
   document.getElementById('sndBtn').onclick=()=>{P.sound=!P.sound;save();hud();SFX.ok()};
   const rv=document.querySelector('#nav a[data-v="on-tap"]');if(rv)rv.innerHTML='🔁 Ôn tập'+(due?` <span class="nav-dot">${due}</span>`:'');
 }
@@ -1451,6 +1472,7 @@ const BADGES=[
  ['review','🔁','Ôn cũ biết mới','Ôn tập 50 lượt thẻ',()=>(P.stats.reviews||0)>=50],
  ['owl','🦉','Cú đêm','Học sau 22 giờ',()=>!!P.stats.owl],
  ['early','🐓','Chim sớm','Học trước 7 giờ sáng',()=>!!P.stats.early],
+ ['speaker','🎙️','Phát thanh viên','Đọc đạt từ 80% ở 20 lượt luyện nói',()=>(P.stats.spoken||0)>=20],
  ['xp1k','⭐','Ngôi sao sáng','Đạt 1.000 XP',()=>P.xp>=1000],
  ['goal7','🎯','Đúng hẹn','Đạt mục tiêu ngày 7 lần',()=>Object.values(P.days).filter(v=>v>=(P.goal||50)).length>=7]
 ];
@@ -1706,13 +1728,14 @@ function renderProfile(){
   <div class="sp"></div><div class="card"><h3 style="font-size:18px;margin-bottom:4px">🏅 Bộ sưu tập huy hiệu · ${Object.keys(P.badges).length}/${BADGES.length}</h3><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Huy hiệu xám là những thử thách đang chờ em chinh phục.</p>
    <div class="badges">${BADGES.map(b=>`<div class="bdg ${P.badges[b[0]]?'got':''}" title="${b[3]}"><div class="b-ic">${b[1]}</div><b>${b[2]}</b><small>${b[3]}</small></div>`).join('')}</div></div>
   <div class="sp"></div>${backupCard()}
+  <div class="sp"></div>${syncCard()}
   ${isStandalone()?'':`<div class="sp"></div><div class="card" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span style="font-size:40px">📲</span><div style="flex:1;min-width:220px"><h3 style="font-size:18px">Cài như ứng dụng, học không cần mạng</h3><p style="font-size:13.5px;color:var(--muted)">Thêm biểu tượng chữ 中 ra màn hình chính. Bài đã mở một lần vẫn học được khi mất mạng.</p></div><button class="btn" id="pInst">Cài ứng dụng</button></div>`}
   <div class="sp"></div><div class="card"><h3 style="font-size:18px;margin-bottom:10px">🪜 Thang danh hiệu</h3><div class="ranks">${RANKS.map((x,i)=>`<div class="rk ${i<=ri?'got':''} ${i===ri?'cur':''}"><span>${x[3]}</span><b>${x[1]}</b><small class="zh">${x[2]}</small><small>${x[0]} XP</small></div>`).join('')}</div>
    <p style="font-size:13px;color:var(--muted);margin-top:10px">Tên các danh hiệu lấy từ các bậc khoa cử thời xưa, từ Tú tài đến Trạng nguyên. Việt Nam cũng từng có các học vị này.</p></div></div>`;
   document.getElementById('pEdit').onclick=()=>{const o=modal(`<h3 style="font-size:22px;margin-bottom:10px">Đổi tên hiển thị</h3><input class="inp" id="nmI" value="${(P.name||'').replace(/"/g,'')}" maxlength="20"><div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" data-close>Huỷ</button><button class="btn" id="nmOk">Lưu</button></div>`,'center');
     o.querySelector('#nmOk').onclick=()=>{P.name=o.querySelector('#nmI').value.trim().slice(0,20);save();o.remove();renderProfile()}};
   document.querySelectorAll('#pGoal button').forEach(b=>b.onclick=()=>{P.goal=+b.dataset.g;save();hud();renderProfile();SFX.flip()});
-  bindBackup();
+  bindBackup();bindSync();
   const pi=document.getElementById('pInst');if(pi)pi.onclick=installApp;
 }
 
@@ -1927,12 +1950,15 @@ function renderAbout(){
    <div class="card"><h3>🧠 Phương pháp</h3>
     <p>Khóa học kết hợp: <b>ôn tập ngắt quãng</b> (ôn lại đúng lúc sắp quên), <b>chiết tự</b> (học chữ qua câu chuyện hình ảnh), <b>luyện nghe theo ngữ cảnh</b>, và <b>trò chơi hóa</b> (XP, chuỗi ngày, huy hiệu) để duy trì thói quen học mỗi ngày.</p></div>
    <div class="card"><h3>🔒 Quyền riêng tư</h3>
-    <p>Web <b>không thu thập dữ liệu cá nhân</b>, không yêu cầu đăng ký và không có quảng cáo. Tên, tiến độ, XP chỉ lưu trên trình duyệt của em. Em có thể sao lưu hoặc xoá bất cứ lúc nào trong trang <a href="#ho-so">Hồ sơ</a>.</p>
-    <p>Phát âm dùng giọng đọc có sẵn trên thiết bị của em, nên chất lượng có thể khác nhau giữa các máy.</p><p>Âm Hán Việt (HV) được biên soạn để hỗ trợ ghi nhớ. Một số chữ có nhiều cách đọc, khóa học chọn cách đọc phổ biến nhất theo nghĩa của từ.</p></div>
+    <p>Web <b>không thu thập dữ liệu cá nhân</b>, không bắt buộc đăng ký và không có quảng cáo. Tên, tiến độ, XP chỉ lưu trên trình duyệt của em. Em có thể sao lưu hoặc xoá bất cứ lúc nào trong trang <a href="#ho-so">Hồ sơ</a>.</p>
+    <p>Hầu hết từ ghép, câu và hội thoại dùng <b>file âm thanh giọng máy chất lượng cao</b> đã được kiểm tra tự động. Chữ đơn lẻ và các nội dung còn lại dùng giọng đọc có sẵn trên thiết bị.</p><p><b>Luyện nói:</b> khi em bấm 🎤, trình duyệt gửi giọng nói tới dịch vụ nhận dạng của trình duyệt (Google với Chrome, Apple với Safari) để chuyển thành chữ. Web không lưu bản ghi âm.</p><p><b>Tài khoản đồng bộ</b> (nếu em đăng nhập): chỉ lưu email và tiến độ học trên máy chủ Supabase để đồng bộ giữa các thiết bị.</p><p>Âm Hán Việt (HV) được biên soạn để hỗ trợ ghi nhớ. Một số chữ có nhiều cách đọc, khóa học chọn cách đọc phổ biến nhất theo nghĩa của từ.</p></div>
    <div class="card wide"><h3>📜 Ghi nguồn & giấy phép</h3>
     <table class="tbl"><tr><th>Thành phần</th><th>Nguồn</th><th>Giấy phép</th></tr>
      <tr><td>Hoạt họa nét chữ</td><td><a href="https://github.com/chanind/hanzi-writer" target="_blank" rel="noopener">Hanzi Writer</a> (David Chanin)</td><td>MIT</td></tr>
      <tr><td>Dữ liệu nét chữ Hán</td><td><a href="https://github.com/skishore/makemeahanzi" target="_blank" rel="noopener">Make Me a Hanzi</a> qua gói hanzi-writer-data, dựa trên phông chữ của Arphic Technology</td><td>Arphic Public License</td></tr>
+     <tr><td>Giọng đọc tiếng Trung (file âm thanh)</td><td>Tạo bằng <a href="https://github.com/myshell-ai/MeloTTS" target="_blank" rel="noopener">MeloTTS</a> (MyShell.ai) và <a href="https://huggingface.co/hexgrad/Kokoro-82M" target="_blank" rel="noopener">Kokoro-82M</a>, chạy qua sherpa-onnx</td><td>MIT · Apache 2.0</td></tr>
+     <tr><td>Chấm điểm phát âm</td><td><a href="https://github.com/zh-lx/pinyin-pro" target="_blank" rel="noopener">pinyin-pro</a> và bộ nhận dạng giọng nói của trình duyệt</td><td>MIT</td></tr>
+     <tr><td>Đồng bộ tài khoản</td><td>supabase-js</td><td>MIT</td></tr>
      <tr><td>Phông chữ</td><td>Be Vietnam Pro, Baloo 2, Noto Sans SC (Google Fonts)</td><td>SIL Open Font License</td></tr>
      <tr><td>Biểu tượng cảm xúc</td><td>Bộ emoji có sẵn trên thiết bị của người xem</td><td>Theo hệ điều hành</td></tr>
      <tr><td>Thành ngữ, câu nói cổ</td><td>Lão Tử, Khổng Tử, tục ngữ dân gian</td><td>Phạm vi công cộng</td></tr>
@@ -2026,6 +2052,115 @@ if('serviceWorker' in navigator&&window.isSecureContext&&location.protocol!=='fi
 window.addEventListener('offline',()=>toast('📴 Đang ngoại tuyến','Các bài đã mở vẫn học được. Tiến độ vẫn được lưu.'));
 window.addEventListener('online',()=>toast('🌐 Đã có mạng trở lại'));
 
+/* ================= HIGH-QUALITY AUDIO (pre-generated) ================= */
+const AUDIO_KEY=t=>(t||'').replace(/[^一-鿿0-9A-Za-z]/g,'');
+function fnv(s){let h=2166136261;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,16777619)>>>0}return h.toString(16).padStart(8,'0')}
+let curAudio=null;
+function stopAudio(){if(curAudio){try{curAudio.pause()}catch(e){}curAudio=null}}
+function playFile(text,rate){const k=AUDIO_KEY(text);if(!k)return null;const h=fnv(k);if(!AUDIO_SET.has(h))return null;
+  return new Promise(res=>{let done=false;const fin=()=>{if(!done){done=true;res(true)}};
+    try{stopAudio();const a=new Audio('audio/'+h+'.mp3');curAudio=a;a.playbackRate=Math.max(.6,Math.min(1.2,(rate||.8)/.8));a.preservesPitch=true;
+      a.onended=fin;a.onerror=()=>{done=true;res(false)};const p=a.play();if(p&&p.catch)p.catch(()=>{done=true;res(false)});setTimeout(fin,12000)}catch(e){res(false)}})}
+
+/* ================= SPEAKING PRACTICE ================= */
+let pyLoad=null;
+function loadPinyin(){if(window.pinyinPro)return Promise.resolve();if(pyLoad)return pyLoad;
+  pyLoad=new Promise((res,rej)=>{const s=document.createElement('script');s.src='vendor/pinyin-pro.js';s.onload=res;s.onerror=()=>{pyLoad=null;rej()};document.head.appendChild(s)});return pyLoad}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+function sylls(t){const h=(t||'').replace(/[^一-鿿]/g,'');if(!h)return[];return pinyinPro.pinyin(h,{type:'array',toneType:'num'}).map(x=>({b:x.replace(/\d/,''),t:+(x.match(/\d/)||[0])[0]}))}
+function gradeSpeech(target,heard){
+  const A=sylls(target),B=sylls(heard),n=A.length,m=B.length;
+  const D=Array.from({length:n+1},(_,i)=>Array(m+1).fill(0));for(let i=0;i<=n;i++)D[i][0]=i;for(let j=0;j<=m;j++)D[0][j]=j;
+  const cost=(a,b)=>a.b===b.b?(a.t===b.t||a.t===0||b.t===0?0:.5):1;
+  for(let i=1;i<=n;i++)for(let j=1;j<=m;j++)D[i][j]=Math.min(D[i-1][j]+1,D[i][j-1]+1,D[i-1][j-1]+cost(A[i-1],B[j-1]));
+  const res=Array(n).fill('miss');let i=n,j=m;
+  while(i>0&&j>0){const c=cost(A[i-1],B[j-1]);if(D[i][j]===D[i-1][j-1]+c){res[i-1]=c===0?'ok':c===.5?'tone':'miss';i--;j--}else if(D[i][j]===D[i-1][j]+1)i--;else j--}
+  const pts=res.reduce((s,r)=>s+(r==='ok'?1:r==='tone'?.5:0),0);const disp=pinyinPro.pinyin((target||'').replace(/[^\u4e00-\u9fff]/g,''),{type:'array'});return{score:n?Math.round(pts/n*100):0,res,A,disp}}
+function speakItems(L,X){const items=X.words.map(w=>({zh:w.ch,py:w.py,vi:w.vi,em:w.em}));
+  const sents=L.sents.slice(0,3).map(s=>({zh:s[0],py:s[1],vi:s[2],em:'💬'}));return [...items,...sents]}
+function renderSpeak(body,n,i){
+  const L=lvl(n),X=L.lessons[i-1],items=speakItems(L,X);P.speak=P.speak||{};
+  const support=!!SR;
+  body.innerHTML=`<div class="speak-head">${tipBox(support?'Bấm 🔊 nghe mẫu, rồi bấm 🎤 và đọc to, rõ ràng. Máy sẽ nghe và chấm từng âm tiết: <b class="sp-ok">xanh</b> là đúng, <b class="sp-tone">vàng</b> là đúng âm nhưng sai thanh, <b class="sp-miss">đỏ</b> là máy chưa nghe ra. Đạt từ 80% là được 1 ⭐.':'Trình duyệt này chưa hỗ trợ nhận dạng giọng nói. Em mở web bằng <b>Chrome</b> hoặc <b>Edge</b> (máy tính, Android), hoặc <b>Safari</b> (iPhone) để được chấm điểm. Trong lúc đó em vẫn có thể ghi âm và tự so sánh với giọng mẫu.')}
+   <p class="speak-note">Chấm điểm dựa trên những chữ máy nghe được (cần có mạng, trình duyệt xin quyền dùng micro). Máy có thể nghe nhầm khi phòng ồn, em đọc lại là được.</p></div>
+   <div class="speak-list">${items.map((it,k)=>{const best=P.speak[it.zh];return `<div class="sp-card" data-k="${k}">
+    <div class="sp-main"><span class="sp-em">${it.em}</span><div><div class="zh sp-zh">${it.zh}</div><div class="sp-py">${it.py}</div><div class="sp-vi">${it.vi}</div></div></div>
+    <div class="sp-act"><button class="icon-btn" data-say="${it.zh}" aria-label="Nghe giọng mẫu">🔊</button><button class="mic" data-k="${k}" aria-label="Bấm để nói">🎤</button></div>
+    <div class="sp-res" id="spr${k}">${best!=null?`<span class="sp-best">${best>=80?'⭐':'☆'} Tốt nhất: ${best}%</span>`:''}</div></div>`}).join('')}</div>`;
+  const listen=(k,btn)=>{
+    const it=items[k],out=document.getElementById('spr'+k);
+    if(!SR){recordFallback(it,out,btn);return}
+    loadPinyin().then(()=>{
+      try{speechSynthesis.cancel()}catch(e){}stopAudio();
+      const r=new SR();r.lang='zh-CN';r.interimResults=false;r.maxAlternatives=5;r.continuous=false;
+      btn.classList.add('rec');out.innerHTML='<span class="sp-listen">🎙️ Đang nghe… em đọc đi</span>';let got=false;
+      r.onresult=e=>{got=true;const alts=[...e.results[0]].map(a=>a.transcript);let best=null;
+        alts.forEach(t=>{const g=gradeSpeech(it.zh,t);if(!best||g.score>best.g.score)best={t,g}});
+        const g=best.g;P.speak[it.zh]=Math.max(P.speak[it.zh]||0,g.score);P.stats.spoken=(P.stats.spoken||0)+(g.score>=80?1:0);save();
+        out.innerHTML=`<div class="sp-sylls">${g.A.map((s,i)=>`<span class="sy ${g.res[i]}">${g.disp[i]||s.b}</span>`).join('')}</div>
+          <div class="sp-score ${g.score>=80?'good':g.score>=50?'mid':'low'}">${g.score}% ${g.score>=80?'⭐ Tuyệt!':g.score>=50?'Khá rồi, thử lại nhé':'Đọc lại chậm hơn nhé'}</div>
+          <div class="sp-heard">Máy nghe được: <span class="zh">${best.t||'(không rõ)'}</span></div>`;
+        if(g.score>=80){SFX.ok();addXP(5,btn);bump('ans')}else SFX.bad();checkBadges()};
+      r.onerror=e=>{btn.classList.remove('rec');const m={'not-allowed':'Em cần cho phép dùng micro (biểu tượng 🔒 trên thanh địa chỉ).','service-not-allowed':'Trình duyệt chặn nhận dạng giọng nói.','no-speech':'Máy chưa nghe thấy gì, em thử nói to hơn nhé.','network':'Cần kết nối mạng để chấm điểm.','audio-capture':'Không tìm thấy micro.'};out.innerHTML=`<span class="sp-err">⚠️ ${m[e.error]||'Không nhận dạng được, em thử lại nhé.'}</span>`};
+      r.onend=()=>{btn.classList.remove('rec');if(!got&&out.querySelector('.sp-listen'))out.innerHTML='<span class="sp-err">Máy chưa nghe rõ, em bấm 🎤 và thử lại nhé.</span>'};
+      r.start()}).catch(()=>{out.innerHTML='<span class="sp-err">Không tải được bộ chấm điểm.</span>'})};
+  body.querySelectorAll('.mic').forEach(b=>b.onclick=()=>listen(+b.dataset.k,b));
+}
+function recordFallback(it,out,btn){
+  if(!navigator.mediaDevices||!window.MediaRecorder){out.innerHTML='<span class="sp-err">Thiết bị không hỗ trợ ghi âm.</span>';return}
+  navigator.mediaDevices.getUserMedia({audio:true}).then(st=>{const rec=new MediaRecorder(st),ch=[];btn.classList.add('rec');out.innerHTML='<span class="sp-listen">🎙️ Đang ghi âm 3 giây…</span>';
+    rec.ondataavailable=e=>ch.push(e.data);rec.onstop=()=>{st.getTracks().forEach(t=>t.stop());btn.classList.remove('rec');const url=URL.createObjectURL(new Blob(ch));
+      out.innerHTML=`<div class="sp-heard">Nghe lại giọng em rồi so với mẫu:</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px"><button class="btn ghost" id="pm">🔊 Mẫu</button><button class="btn" id="pu">▶ Giọng em</button></div>`;
+      out.querySelector('#pm').onclick=()=>say(it.zh);out.querySelector('#pu').onclick=()=>new Audio(url).play()};
+    rec.start();setTimeout(()=>rec.state!=='inactive'&&rec.stop(),3000)}).catch(()=>{out.innerHTML='<span class="sp-err">Em cần cho phép dùng micro.</span>'})}
+
+/* ================= CLOUD SYNC (Supabase) ================= */
+const SUPA_URL='';   // ví dụ: https://abcd1234.supabase.co
+const SUPA_KEY='';   // khóa "anon public" của dự án Supabase (an toàn để công khai khi đã bật RLS)
+let supa=null,supaUser=null,syncT=null,syncState='off';
+function syncReady(){return !!(SUPA_URL&&SUPA_KEY)}
+let supaLoad=null;
+function loadSupa(){if(window.supabase)return Promise.resolve();if(supaLoad)return supaLoad;supaLoad=new Promise((res,rej)=>{const s=document.createElement('script');s.src='vendor/supabase.js';s.onload=res;s.onerror=()=>{supaLoad=null;rej()};document.head.appendChild(s)});return supaLoad}
+function mergeProgress(a,b){ // a: local, b: remote — lấy phần tốt nhất của cả hai, không mất dữ liệu
+  const mx=(x,y)=>{const o={...(x||{})};for(const k in (y||{}))o[k]=Math.max(o[k]??-Infinity,y[k]);return o};
+  const out={...b,...a};
+  out.unlocked=Math.max(a.unlocked||1,b.unlocked||1);out.xp=Math.max(a.xp||0,b.xp||0);
+  ['lessons','tests','listen','order','speak','days'].forEach(k=>out[k]=mx(a[k],b[k]));
+  out.learned=[...new Set([...(a.learned||[]),...(b.learned||[])])];
+  out.badges={...(b.badges||{}),...(a.badges||{})};
+  const srs={...(b.srs||{})};for(const c in (a.srs||{})){const x=a.srs[c],y=srs[c];srs[c]=!y||x.b>y.b||(x.b===y.b&&x.due>y.due)?x:y}out.srs=srs;
+  const g={...(b.games||{})};for(const id in (a.games||{})){const x=a.games[id],y=g[id];if(!y){g[id]=x;continue}const lower=id==='match'||id==='memory';g[id]={plays:Math.max(x.plays||0,y.plays||0),best:x.best==null?y.best:y.best==null?x.best:lower?Math.min(x.best,y.best):Math.max(x.best,y.best)}}out.games=g;
+  const st={...(b.stats||{}),...(a.stats||{})};['answered','correct','bestCombo','written','reviews','spoken'].forEach(k=>st[k]=Math.max((a.stats||{})[k]||0,(b.stats||{})[k]||0));st.stories=[...new Set([...((a.stats||{}).stories||[]),...((b.stats||{}).stories||[])])];st.owl=(a.stats||{}).owl||(b.stats||{}).owl;st.early=(a.stats||{}).early||(b.stats||{}).early;out.stats=st;
+  out.name=a.name||b.name;out.goal=a.goal||b.goal;return out}
+async function initSync(){if(!syncReady())return;try{await loadSupa();supa=supa||window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{flowType:'implicit',detectSessionInUrl:true,persistSession:true}});
+  const {data}=await supa.auth.getSession();supaUser=data.session&&data.session.user;
+  supa.auth.onAuthStateChange((ev,ses)=>{const was=supaUser;supaUser=ses&&ses.user;if(supaUser&&!was)pullAndMerge();hudSync()});
+  if(supaUser)await pullAndMerge();hudSync()}catch(e){syncState='error';hudSync()}}
+async function pullAndMerge(){if(!supa||!supaUser)return;syncState='syncing';hudSync();
+  try{const {data,error}=await supa.from('progress').select('data').eq('user_id',supaUser.id).maybeSingle();if(error)throw error;
+    if(data&&data.data){P=mergeProgress(P,data.data);try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+    await pushNow();route();toast('☁️ Đã đồng bộ tiến độ','Tài khoản: '+supaUser.email)}catch(e){syncState='error';hudSync()}}
+async function pushNow(){if(!supa||!supaUser)return;syncState='syncing';hudSync();
+  try{const {error}=await supa.from('progress').upsert({user_id:supaUser.id,data:P,updated_at:new Date().toISOString()});if(error)throw error;syncState='ok'}catch(e){syncState='error'}hudSync()}
+function schedulePush(){if(!supaUser)return;clearTimeout(syncT);syncT=setTimeout(pushNow,4000)}
+function hudSync(){const el=document.getElementById('syncChip');if(el)el.textContent=syncState==='ok'?'☁️✓':syncState==='syncing'?'☁️…':syncState==='error'?'☁️⚠️':'☁️'}
+function syncCard(){
+  if(!syncReady())return `<div class="card"><h3 style="font-size:18px;margin-bottom:4px">☁️ Tài khoản đồng bộ</h3><p style="font-size:13.5px;color:var(--muted)">Tính năng đăng nhập để đồng bộ nhiều thiết bị <b>đang chờ quản trị viên kích hoạt</b>. Trong lúc chờ, em dùng mục <b>Sao lưu & chuyển máy</b> ở trên nhé.</p></div>`;
+  if(supaUser)return `<div class="card"><h3 style="font-size:18px;margin-bottom:4px">☁️ Đã đăng nhập</h3><p style="font-size:14px">${supaUser.email}<br><span style="color:var(--muted);font-size:13px">Tiến độ tự đồng bộ giữa các thiết bị đăng nhập cùng email.</span></p>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn" id="syNow">Đồng bộ ngay</button><button class="btn ghost" id="syOut">Đăng xuất</button></div></div>`;
+  return `<div class="card"><h3 style="font-size:18px;margin-bottom:4px">☁️ Đăng nhập để đồng bộ</h3><p style="font-size:13.5px;color:var(--muted);margin-bottom:10px">Nhập email, em sẽ nhận một đường link đăng nhập (không cần mật khẩu). Học trên điện thoại và máy tính đều chung một tiến độ.</p>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><input class="inp" id="syMail" type="email" placeholder="email@vidu.com" style="margin:0;flex:1;min-width:200px"><button class="btn" id="syGo">Gửi link đăng nhập</button></div><p id="syMsg" style="font-size:13px;margin-top:8px"></p></div>`}
+function bindSync(){
+  const go=document.getElementById('syGo');if(go)go.onclick=async()=>{const m=document.getElementById('syMail').value.trim();const msg=document.getElementById('syMsg');
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m)){msg.textContent='Email chưa đúng định dạng.';return}
+    go.disabled=true;msg.textContent='Đang gửi…';try{await loadSupa();supa=supa||window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{flowType:'implicit',detectSessionInUrl:true,persistSession:true}});
+      const {error}=await supa.auth.signInWithOtp({email:m,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;
+      msg.innerHTML='📬 Đã gửi! Em mở email và bấm vào đường link để đăng nhập.'}catch(e){msg.textContent='Không gửi được: '+(e.message||'lỗi kết nối');go.disabled=false}};
+  const now=document.getElementById('syNow');if(now)now.onclick=()=>pullAndMerge();
+  const out=document.getElementById('syOut');if(out)out.onclick=async()=>{await supa.auth.signOut();supaUser=null;syncState='off';renderProfile()};
+}
+
+const AUDIO_SET=new Set(/*AUDIO_LIST*/["006e6b0a", "010ab886", "01b9a747", "01c7fe65", "01e9cf50", "0225d101", "038300f1", "049b2cc4", "053adca8", "05d4cc6d", "0616c36d", "070ac1f8", "0748d205", "07a25661", "07b82298", "07d383b4", "08af3294", "090fd35b", "0917292b", "0a0ac6b1", "0cb60a42", "0d66fb1b", "0dea22fa", "0e2ef0e3", "0e77aa07", "0ed8fa33", "0f0b91ec", "0fc7aed3", "1045c164", "12263e9a", "13043c3e", "134385e2", "136f7024", "137ae075", "1500ffbe", "1705defe", "173ffef0", "1769072e", "1853c5ae", "1905e224", "1a0fc3b4", "1cd2051d", "1cf56175", "1db515f6", "1df2bfd3", "1e025023", "1ed0c661", "1ed76401", "1eef7e5a", "1f0251b6", "1f062ec0", "1f468910", "1f73ca60", "1fc01c8b", "21819ae8", "22192bb9", "224d1c8e", "22cc5049", "242d3c5f", "24a24524", "24e479ea", "25025b28", "25063832", "25ca4dde", "25ecaa4a", "26f1fbbc", "271a0938", "273fae71", "27f190f6", "297d00ad", "2a7899c0", "2acdbb34", "2b7a8bb1", "2b9b15a0", "2bbe2cd5", "2bd52d9b", "2ecb45e5", "2f978135", "3243027f", "3330c416", "33b79e8d", "36fc04db", "39a58757", "39c9b98b", "3a4dbc49", "3e5244b5", "3efb3ad1", "3f991ead", "40796cc8", "40c8ca51", "42c8cd77", "4388786e", "44524e27", "452c9fdf", "45524fba", "459bdd71", "45d3d3ca", "46284589", "463f2006", "46fdd7ae", "47d34bb0", "4852877a", "48a38e83", "48e1f8b4", "48fddad4", "493546a8", "49e340e5", "4c5c5de0", "4cdbb5f0", "5132b5ad", "537f7221", "5412fc6c", "550b3cc2", "56cac9d2", "56e2761f", "56f3c59e", "571c25a9", "57de17f2", "581e2d5c", "5851c6e2", "58a459c0", "5902ad04", "59b5dbae", "5adde7c2", "5d0b4114", "5d20f4ee", "5dc1b2d8", "5e5e85fa", "6073cacc", "61247480", "61c236a1", "6312b2a6", "64af3d08", "64baf121", "651b02ed", "65e0f290", "65f321d3", "66a38bd1", "66d8e273", "678dc9f4", "67fafdc2", "68dff7a9", "69cdc2c2", "69df1865", "6a016277", "6a070c50", "6a2482ab", "6a5289f9", "6a61476f", "6b03781e", "6b24843e", "6b9dbd5c", "6bb2561d", "6c2ae1fd", "6c847dd6", "6d62cd58", "6e8480fc", "6ec92aab", "6f409f23", "70a47f88", "70f070e1", "71316770", "71b9ae4e", "72f369f6", "72fe4aa2", "735ab7f5", "73774a87", "742aee95", "7452c3ff", "7531b3c6", "75ea9737", "777d7832", "783c176d", "79e0b2d7", "7ab0b288", "7b61f00e", "7c9c3406", "7dde36e0", "7ef9af9d", "7f432e99", "81e0bf6f", "8485de13", "8494baf1", "860b89e5", "87740831", "877a66df", "89fc4fa8", "8b23ea1b", "8bf0c864", "8d4a3759", "8e53d524", "8e843e5a", "8e961323", "8f3da6a3", "9074f6bb", "9098e9fc", "90a18988", "90cc33ab", "9171405b", "91e23114", "920306bf", "9208842f", "92646ba3", "92745004", "92d2a332", "95c25061", "9873fcd1", "9a0757e0", "9a5ab489", "9af0b2ff", "9c0d7184", "9c523230", "9c5ab7af", "9c62f6ed", "9c863fad", "9d37c720", "9dac5266", "9e0bafad", "9fc7ca41", "a11fddbb", "a2076ced", "a20982b2", "a3035e15", "a37b81e4", "a3a0fbda", "a3cf337f", "a3d4744b", "a49048a2", "a5149d26", "a58fda85", "a5a6957f", "a5b82ecc", "a62c88be", "a730fff1", "a813bb1d", "a848765c", "a8bc7710", "a9a4d943", "aa032c87", "aa291f2b", "aa40c6f0", "abf43dc3", "ac7ff02e", "acac5b2f", "acbcadc4", "ae6c7125", "aedadc61", "af35a192", "b012e2d8", "b11bc638", "b15166be", "b3572a3a", "b4e3d30e", "b4e69f7a", "b524f8bc", "b6342a60", "b74d81c2", "b8183ca8", "b84d33f3", "b8b60087", "b90fc877", "b91bf1d5", "b949ee4a", "b98d5573", "ba767db0", "bd820e1a", "bdfbdc13", "be87945f", "be92363d", "bf5ef681", "c0061a59", "c3394d9c", "c33985c6", "c3e48589", "c4466574", "c4641155", "c53988ec", "c650a77b", "c68ca2ef", "c706f40e", "c7eeb502", "cb13f18f", "cb323bfb", "cbd1859a", "ccc669cf", "cd40e04b", "cde747b5", "cdee990e", "ce4214d7", "ceff64d0", "cfad68cc", "d09cb842", "d1247a05", "d1fffb4e", "d2d299f0", "d2e9db1b", "d32a9c52", "d3a688ae", "d3b73733", "d496126a", "d592b809", "d67024f1", "d69cc1b4", "d6f6db5e", "d7801ea1", "d7bc7166", "d7d9cbd2", "d86a2529", "d8f3a4e2", "d9393bec", "d99cc66d", "d9c9df11", "dc687cbe", "dd039f31", "dd50a8cb", "dd55c40a", "dda52b1f", "de470c6e", "de987ea8", "debf1b6c", "df0374ce", "dfe76c0e", "e014e242", "e0fe39b8", "e20d59ff", "e26d63e0", "e4a53624", "e508c018", "e50e3cfe", "e623b2df", "e7a53add", "eb30c1f5", "eb433202", "eb4d4dad", "ec2037bc", "ec2b36bb", "ec5e5b9f", "ec74d7b0", "ed91503d", "ede16973", "eee16b06", "ef2bb036", "eff64afa", "f00be4a7", "f0302704", "f1079561", "f1c2c962", "f3e5a4c9", "f40e7ff7", "f4e17478", "f52bb9a8", "f5414c20", "f5a25cd6", "f6181138", "f62c35a5", "f6a83ef7", "f7162f66", "f82bbe61", "f8912aa1", "f8e7b639", "f92a46bb", "fa78345a", "fb3a03f5", "fe04c789", "fe23d8a7", "fe59b066", "fe8ed5ac", "fec5ade5", "ff1da773", "ff96c610"]);
 /* ================= MISC ================= */
 function confetti(k){const c=$('#confetti');const cols=['#C0392B','#D69A4C','#7F8461','#5C7A78','#F2D3A6'];
   for(let i=0;i<k;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'vw';e.style.background=pick(cols);e.style.animationDuration=(2+Math.random()*2.5)+'s';e.style.animationDelay=Math.random()*.6+'s';c.appendChild(e)}
@@ -2035,6 +2170,7 @@ $('#resetBtn').onclick=e=>{if(!resetArm){resetArm=true;e.target.textContent='B�
   try{localStorage.removeItem(KEY)}catch(x){}location.hash='#home';location.reload()};
 route();
 setTimeout(checkBadges,800);
+initSync();
 </script>
 </body>
 </html>
