@@ -580,7 +580,7 @@ body.cover-mode header,body.cover-mode nav,body.cover-mode footer{display:none}
 @keyframes breathe{50%{transform:translateY(-4px) scale(1.01)}}
 @keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-46px) rotate(-6deg)}70%{transform:translateY(0) scaleY(.92)}100%{transform:none}}
 .panda-svg{position:relative;z-index:1}
-.p-bubble{position:absolute;z-index:3;left:-58%;top:-8%;background:#fff;border-radius:20px;padding:12px 16px;box-shadow:0 14px 34px -14px rgba(0,0,0,.3);opacity:0;transform:scale(.6) translateY(10px);transform-origin:bottom right;transition:.35s cubic-bezier(.3,1.5,.5,1);min-width:170px;max-width:230px}
+.p-bubble{position:absolute;z-index:3;left:-34%;top:-16%;background:#fff;border-radius:20px;padding:12px 16px;box-shadow:0 14px 34px -14px rgba(0,0,0,.3);opacity:0;transform:scale(.6) translateY(10px);transform-origin:bottom right;transition:.35s cubic-bezier(.3,1.5,.5,1);min-width:170px;max-width:230px}
 .p-bubble::after{content:'';position:absolute;right:20px;bottom:-9px;width:18px;height:18px;background:#fff;transform:rotate(45deg)}
 .p-bubble.show{opacity:1;transform:none}
 .p-bubble b{display:block;font-size:24px;color:#C0392B}.p-bubble small{font-size:12.5px;color:#565A59;display:block;line-height:1.35}
@@ -853,7 +853,24 @@ function say(t){try{speechSynthesis.cancel()}catch(e){}if(typeof stopAudio==='fu
 document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b){e.stopPropagation();say(b.dataset.say)}});
 
 /* ================= TEACHER SVG ================= */
-const TEACHER=`<svg class="teacher" viewBox="0 0 120 120"><circle cx="60" cy="60" r="58" fill="#F6E1DD"/><circle cx="60" cy="22" r="13" fill="#2E2A28"/><rect x="56" y="10" width="8" height="3" rx="1.5" fill="#C0392B" transform="rotate(-20 60 12)"/><path d="M27 66 Q26 30 60 30 Q94 30 93 66 L93 86 Q60 74 27 86Z" fill="#2E2A28"/><ellipse cx="60" cy="66" rx="25" ry="28" fill="#F3D2B8"/><path d="M34 54 Q44 36 70 40 Q86 44 87 58 Q70 47 34 54Z" fill="#2E2A28"/><circle cx="50" cy="66" r="7.5" fill="#fff" fill-opacity=".35" stroke="#46565B" stroke-width="2"/><circle cx="70" cy="66" r="7.5" fill="#fff" fill-opacity=".35" stroke="#46565B" stroke-width="2"/><line x1="57.5" y1="66" x2="62.5" y2="66" stroke="#46565B" stroke-width="2"/><circle cx="50" cy="66" r="2.2" fill="#2E3A3E"/><circle cx="70" cy="66" r="2.2" fill="#2E3A3E"/><circle cx="42" cy="76" r="4" fill="#E9A99A" opacity=".6"/><circle cx="78" cy="76" r="4" fill="#E9A99A" opacity=".6"/><ellipse class="mouth" cx="60" cy="82" rx="6" ry="2.4" fill="#B3402F"/><path d="M28 120 Q30 96 60 94 Q90 96 92 120Z" fill="#C0392B"/><path d="M52 94 L60 104 L68 94" fill="none" stroke="#FDF8EE" stroke-width="2.5"/></svg>`;
+const TEACHER=`<svg class="teacher" viewBox="0 0 120 120"><circle cx="60" cy="60" r="58" fill="#F6E1DD"/>
+<g stroke="#4B3A33" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+<path d="M26 118 C26 98 40 90 60 90 C80 90 94 98 94 118Z" fill="#F4867B"/>
+<path d="M50 91 L60 103 L70 91" fill="#FFF3E6"/><circle cx="60" cy="109" r="2.4" fill="#FFD27A" stroke-width="1.6"/>
+<circle cx="60" cy="19" r="12" fill="#5A403A"/>
+<path d="M68 12 l10 -7" stroke="#F4867B" stroke-width="3.5"/><circle cx="79" cy="5" r="3.2" fill="#FFD27A" stroke-width="1.8"/>
+<path d="M24 64 C22 36 40 26 60 26 C80 26 98 36 96 64 C96 80 92 90 88 94 L32 94 C28 90 24 80 24 64Z" fill="#5A403A"/>
+<path d="M32 62 C32 44 44 36 60 36 C76 36 88 44 88 62 C88 80 76 90 60 90 C44 90 32 80 32 62Z" fill="#FFE6D6"/>
+<path d="M31 58 C32 40 46 32 60 33 C66 33 70 38 72 44 C66 42 62 48 54 48 C46 48 40 52 31 58Z" fill="#5A403A"/>
+<path d="M72 44 C78 42 86 48 89 58 C84 52 78 50 72 44Z" fill="#5A403A"/>
+<g fill="none" stroke-width="2"><circle cx="48" cy="64" r="8.5" fill="#fff" fill-opacity=".25"/><circle cx="72" cy="64" r="8.5" fill="#fff" fill-opacity=".25"/><path d="M56.5 64 Q60 61.5 63.5 64"/></g>
+</g>
+<ellipse cx="48" cy="65" rx="3.2" ry="4" fill="#2B2220"/><ellipse cx="72" cy="65" rx="3.2" ry="4" fill="#2B2220"/>
+<circle cx="49.3" cy="63.3" r="1.3" fill="#fff"/><circle cx="73.3" cy="63.3" r="1.3" fill="#fff"/>
+<ellipse cx="40" cy="76" rx="5.5" ry="3.4" fill="#FF9E9E" opacity=".6"/><ellipse cx="80" cy="76" rx="5.5" ry="3.4" fill="#FF9E9E" opacity=".6"/>
+<path d="M56 78 Q60 81 64 78" fill="none" stroke="#4B3A33" stroke-width="2" stroke-linecap="round"/>
+<ellipse class="mouth" cx="60" cy="80.5" rx="3.6" ry="1.4" fill="#E2685A"/>
+</svg>`;
 const tAva=(cls='')=>`<div class="t-ava ${cls}">${TEACHER}</div>`;
 const tipBox=t=>`<div class="tip">${tAva()}<div><b>Lời cô dặn</b><p>${t}</p></div></div>`;
 
@@ -1803,52 +1820,72 @@ function renderHome(){
 
 /* ================= COVER / SPLASH ================= */
 const PANDA=`<svg viewBox="0 0 220 240" class="panda-svg" aria-label="Gấu trúc Bảo Bảo">
- <ellipse cx="110" cy="232" rx="70" ry="8" fill="#000" opacity=".12" class="p-shadow"/>
- <g class="p-body">
-  <ellipse cx="72" cy="214" rx="26" ry="18" fill="#2B2B2E"/><ellipse cx="148" cy="214" rx="26" ry="18" fill="#2B2B2E"/>
-  <ellipse cx="72" cy="216" rx="12" ry="8" fill="#F3C9C0"/><ellipse cx="148" cy="216" rx="12" ry="8" fill="#F3C9C0"/>
-  <ellipse cx="110" cy="168" rx="66" ry="58" fill="#FFFFFF"/>
-  <ellipse cx="110" cy="176" rx="40" ry="36" fill="#F6F1EA"/>
-  <g class="p-arm-l"><ellipse cx="54" cy="162" rx="20" ry="32" fill="#2B2B2E" transform="rotate(22 54 162)"/></g>
-  <g class="p-arm-r"><ellipse cx="170" cy="128" rx="19" ry="31" fill="#2B2B2E" transform="rotate(-28 170 128)"/><ellipse cx="180" cy="104" rx="9" ry="7" fill="#F3C9C0"/></g>
-  <path d="M68 124 Q110 146 152 124 L148 138 Q110 158 72 138Z" fill="#C0392B"/><circle cx="110" cy="146" r="12" fill="#D69A4C"/><text x="110" y="151" text-anchor="middle" font-size="13" fill="#fff" font-family="Noto Sans SC" font-weight="700">中</text>
+ <ellipse cx="110" cy="230" rx="74" ry="9" fill="#7A5C4F" opacity=".14" class="p-shadow"/>
+ <g class="p-body" stroke="#4B3A33" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+  <ellipse cx="74" cy="214" rx="25" ry="17" fill="#4A4443"/><ellipse cx="146" cy="214" rx="25" ry="17" fill="#4A4443"/>
+  <path d="M46 176 C44 128 78 112 110 112 C142 112 176 128 174 176 C172 214 146 222 110 222 C74 222 48 214 46 176Z" fill="#FFFDF8"/>
+  <ellipse cx="110" cy="182" rx="36" ry="30" fill="#FFF3E6" stroke="none"/>
+  <g class="p-arm-l"><path d="M58 150 C40 162 40 192 58 198 C70 200 74 186 72 170 C71 156 66 146 58 150Z" fill="#4A4443"/></g>
+  <g class="p-arm-r"><path d="M160 140 C170 120 182 104 194 108 C204 112 200 128 190 142 C182 154 168 160 160 154Z" fill="#4A4443"/><ellipse cx="192" cy="114" rx="6" ry="5" fill="#F7B7B0" stroke="none"/></g>
+  <path d="M72 132 Q110 152 148 132 L146 146 Q110 166 74 146Z" fill="#F4867B"/>
+  <circle cx="110" cy="152" r="12" fill="#FFD27A"/>
+  <text x="110" y="157" text-anchor="middle" font-size="12" fill="#B5321F" stroke="none" font-family="Noto Sans SC" font-weight="700">中</text>
  </g>
- <g class="p-head">
-  <circle cx="58" cy="40" r="22" fill="#2B2B2E"/><circle cx="162" cy="40" r="22" fill="#2B2B2E"/>
-  <circle cx="58" cy="42" r="10" fill="#4A4A50"/><circle cx="162" cy="42" r="10" fill="#4A4A50"/>
-  <ellipse cx="110" cy="84" rx="66" ry="58" fill="#FFFFFF"/>
-  <ellipse cx="82" cy="84" rx="18" ry="23" fill="#2B2B2E" transform="rotate(-25 82 84)"/><ellipse cx="138" cy="84" rx="18" ry="23" fill="#2B2B2E" transform="rotate(25 138 84)"/>
-  <g class="p-eyes"><circle cx="84" cy="84" r="9" fill="#fff"/><circle cx="136" cy="84" r="9" fill="#fff"/><circle cx="86" cy="85" r="5.5" fill="#1B1B1E" class="pupil"/><circle cx="134" cy="85" r="5.5" fill="#1B1B1E" class="pupil"/><circle cx="88" cy="82" r="2" fill="#fff"/><circle cx="136" cy="82" r="2" fill="#fff"/></g>
-  <ellipse cx="110" cy="104" rx="9" ry="6" fill="#2B2B2E"/><path d="M100 113 Q105 120 110 113 Q115 120 120 113" fill="none" stroke="#2B2B2E" stroke-width="3" stroke-linecap="round"/>
-  <ellipse cx="68" cy="110" rx="10" ry="6" fill="#F4A7A0" opacity=".7"/><ellipse cx="152" cy="110" rx="10" ry="6" fill="#F4A7A0" opacity=".7"/>
-  <g transform="translate(150 28) rotate(18)"><path d="M0 0 Q-14 -12 -4 -20 Q6 -12 0 0 Q14 -12 4 -20" fill="#C0392B"/><circle cx="0" cy="-2" r="4" fill="#D69A4C"/></g>
- </g>
-</svg>`;
-const DRAGON=`<svg viewBox="0 0 220 110" class="dragon-svg" aria-hidden="true">
- <path d="M30 70 C55 40, 75 95, 100 62 S145 38, 160 58" fill="none" stroke="#C0392B" stroke-width="22" stroke-linecap="round"/>
- <path d="M30 70 C55 40, 75 95, 100 62 S145 38, 160 58" fill="none" stroke="#F2B544" stroke-width="7" stroke-linecap="round" stroke-dasharray="3 9" transform="translate(0 5)"/>
- <path d="M48 52 l-6 -14 l12 8 M78 70 l-4 -14 l10 9 M110 50 l-4 -14 l10 8 M138 44 l-2 -14 l9 10" fill="#F2B544"/>
- <path d="M30 70 Q10 62 6 74 Q14 72 18 84 Q22 74 30 76Z" fill="#F2B544" class="d-tail"/>
- <g class="d-head" transform="translate(170 54)">
-  <path d="M-6 -6 Q-2 -34 18 -30 L14 -20 Q30 -26 34 -12 Q46 -8 44 6 Q40 20 22 18 Q4 22 -8 10Z" fill="#C0392B"/>
-  <path d="M8 -24 Q2 -40 -6 -44 M18 -26 Q18 -42 12 -48" stroke="#F2B544" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <circle cx="20" cy="-6" r="8" fill="#fff"/><circle cx="22" cy="-5" r="4.5" fill="#1B1B1E"/><circle cx="23.5" cy="-7" r="1.6" fill="#fff"/>
-  <path d="M36 4 Q44 10 40 14" stroke="#7a1f16" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <path d="M42 0 Q58 -6 64 4 M42 6 Q56 12 60 22" stroke="#F2B544" stroke-width="2.5" fill="none" stroke-linecap="round" class="d-whisk"/>
-  <ellipse cx="8" cy="6" rx="5" ry="3" fill="#F4A7A0" opacity=".8"/>
+ <g class="p-head" stroke="#4B3A33" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+  <circle cx="54" cy="44" r="21" fill="#4A4443"/><circle cx="166" cy="44" r="21" fill="#4A4443"/>
+  <circle cx="54" cy="46" r="9" fill="#7A6E6B" stroke="none"/><circle cx="166" cy="46" r="9" fill="#7A6E6B" stroke="none"/>
+  <path d="M40 96 C38 54 70 30 110 30 C150 30 182 54 180 96 C178 132 150 150 110 150 C70 150 42 132 40 96Z" fill="#FFFDF8"/>
+  <g stroke="none"><path d="M64 92 C62 74 80 66 92 74 C102 82 100 100 88 106 C76 112 66 104 64 92Z" fill="#4A4443"/><path d="M156 92 C158 74 140 66 128 74 C118 82 120 100 132 106 C144 112 154 104 156 92Z" fill="#4A4443"/></g>
+  <g class="p-eyes" stroke="none"><circle cx="84" cy="89" r="8" fill="#fff"/><circle cx="136" cy="89" r="8" fill="#fff"/>
+   <circle cx="85" cy="90" r="5.6" fill="#2B2220" class="pupil"/><circle cx="135" cy="90" r="5.6" fill="#2B2220" class="pupil"/>
+   <circle cx="87.5" cy="87" r="2.2" fill="#fff"/><circle cx="137.5" cy="87" r="2.2" fill="#fff"/></g>
+  <path d="M104 106 Q110 102 116 106 Q113 112 110 112 Q107 112 104 106Z" fill="#4B3A33" stroke-width="2.5"/>
+  <path d="M100 118 Q105 124 110 118 Q115 124 120 118" fill="none" stroke-width="3"/>
+  <g stroke="none"><ellipse cx="66" cy="114" rx="11" ry="7" fill="#FF9E9E" opacity=".55"/><ellipse cx="154" cy="114" rx="11" ry="7" fill="#FF9E9E" opacity=".55"/>
+   <path d="M60 112 l4 4 M66 111 l4 4" stroke="#fff" stroke-width="2" opacity=".8"/><path d="M148 112 l4 4 M154 111 l4 4" stroke="#fff" stroke-width="2" opacity=".8"/></g>
+  <g transform="translate(150 30) rotate(16)" stroke-width="3"><path d="M0 0 C-10 -14 -22 -6 -16 4 C-12 10 -4 6 0 0Z M0 0 C10 -14 22 -6 16 4 C12 10 4 6 0 0Z" fill="#F4867B"/><circle cx="0" cy="1" r="4" fill="#FFD27A"/></g>
  </g>
 </svg>`;
-const LANTERN=`<svg viewBox="0 0 60 120" class="lantern-svg" aria-hidden="true"><line x1="30" y1="0" x2="30" y2="18" stroke="#7a5a3a" stroke-width="2"/><rect x="20" y="16" width="20" height="8" rx="2" fill="#D69A4C"/>
- <ellipse cx="30" cy="52" rx="26" ry="30" fill="#C0392B"/><path d="M30 22 Q14 52 30 82 M30 22 Q46 52 30 82 M30 22 Q2 52 30 82 M30 22 Q58 52 30 82" stroke="#9E2B20" stroke-width="1.6" fill="none"/>
- <text x="30" y="60" text-anchor="middle" font-size="20" fill="#F7D58B" font-family="Noto Sans SC" font-weight="700">福</text>
- <rect x="20" y="80" width="20" height="7" rx="2" fill="#D69A4C"/><path d="M26 87 L24 112 M30 87 L30 116 M34 87 L36 112" stroke="#D69A4C" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+const DRAGON=`<svg viewBox="0 0 230 120" class="dragon-svg" aria-hidden="true">
+ <g stroke-linecap="round" stroke-linejoin="round">
+ <path d="M26 74 C50 46, 72 98, 100 66 S146 44, 162 62" fill="none" stroke="#4B3A33" stroke-width="28"/>
+ <path d="M26 74 C50 46, 72 98, 100 66 S146 44, 162 62" fill="none" stroke="#F4867B" stroke-width="21"/>
+ <path d="M28 80 C52 54, 72 104, 100 73 S146 51, 160 68" fill="none" stroke="#FFE2A8" stroke-width="6" stroke-dasharray="1 10"/>
+ <g fill="#FFD27A" stroke="#4B3A33" stroke-width="3"><path d="M46 56 q-2 -12 8 -14 q2 8 -2 14z"/><path d="M78 74 q-2 -12 8 -13 q2 8 -2 13z"/><path d="M112 54 q-1 -12 9 -12 q1 8 -3 13z"/><path d="M140 48 q0 -12 10 -11 q0 8 -4 12z"/></g>
+ <g class="d-tail"><path d="M24 74 C10 66 2 74 6 82 C12 78 16 82 14 90 C22 88 26 82 26 76Z" fill="#FFD27A" stroke="#4B3A33" stroke-width="3.5"/></g>
+ <g class="d-head" transform="translate(172 56)">
+  <path d="M10 -26 Q4 -44 -6 -42 Q-4 -34 2 -26" fill="#FFD27A" stroke="#4B3A33" stroke-width="3"/>
+  <path d="M24 -28 Q26 -46 16 -48 Q12 -40 16 -28" fill="#FFD27A" stroke="#4B3A33" stroke-width="3"/>
+  <path d="M-14 -4 C-16 -26 4 -34 20 -30 C38 -28 50 -14 48 4 C46 20 30 26 14 24 C-2 22 -12 12 -14 -4Z" fill="#F4867B" stroke="#4B3A33" stroke-width="4"/>
+  <ellipse cx="34" cy="8" rx="13" ry="10" fill="#FFE2D6" stroke="#4B3A33" stroke-width="3"/>
+  <circle cx="31" cy="6" r="1.8" fill="#4B3A33"/><circle cx="39" cy="6" r="1.8" fill="#4B3A33"/>
+  <circle cx="14" cy="-6" r="7.5" fill="#2B2220"/><circle cx="16.5" cy="-8.5" r="2.6" fill="#fff"/><circle cx="12" cy="-3" r="1.2" fill="#fff"/>
+  <ellipse cx="6" cy="10" rx="7" ry="4.5" fill="#FF9E9E" opacity=".7"/>
+  <path d="M28 16 Q33 20 38 16" fill="none" stroke="#4B3A33" stroke-width="2.5"/>
+  <path class="d-whisk" d="M46 0 Q60 -8 64 2 M46 8 Q58 14 58 24" fill="none" stroke="#4B3A33" stroke-width="2.5"/>
+ </g></g>
+</svg>`;
+const LANTERN=`<svg viewBox="0 0 60 120" class="lantern-svg" aria-hidden="true"><g stroke="#4B3A33" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"><line x1="30" y1="0" x2="30" y2="18"/><rect x="19" y="15" width="22" height="9" rx="4" fill="#FFD27A"/>
+ <ellipse cx="30" cy="52" rx="26" ry="29" fill="#F26B5B"/><path d="M30 24 Q16 52 30 80 M30 24 Q44 52 30 80" fill="none" stroke="#C94A3C" stroke-width="2"/>
+ <ellipse cx="20" cy="40" rx="5" ry="9" fill="#fff" opacity=".35" stroke="none"/>
+ <rect x="19" y="79" width="22" height="9" rx="4" fill="#FFD27A"/><path d="M25 88 L24 110 M30 88 L30 114 M35 88 L36 110" stroke="#F4A94A" stroke-width="3"/></g>
+ <text x="30" y="59" text-anchor="middle" font-size="18" fill="#FFE9B0" font-family="Noto Sans SC" font-weight="700">福</text></svg>`;
 function teacherFull(){return `<svg viewBox="0 0 160 260" class="teacher-full" aria-label="Cô Lâm">
- <ellipse cx="80" cy="254" rx="46" ry="6" fill="#000" opacity=".12"/>
- <g class="tf-body"><path d="M44 250 L54 150 Q80 138 106 150 L116 250Z" fill="#C0392B"/><path d="M80 150 L80 250" stroke="#9E2B20" stroke-width="2"/><path d="M62 150 Q80 170 98 150" fill="none" stroke="#F7D58B" stroke-width="3"/>
-  <circle cx="74" cy="182" r="3" fill="#F7D58B"/><circle cx="74" cy="200" r="3" fill="#F7D58B"/>
-  <path d="M56 156 Q40 190 46 214" stroke="#C0392B" stroke-width="16" stroke-linecap="round" fill="none"/><circle cx="47" cy="216" r="8" fill="#F3D2B8"/></g>
- <g class="tf-arm"><path d="M104 156 Q128 140 132 112" stroke="#C0392B" stroke-width="15" stroke-linecap="round" fill="none"/><circle cx="133" cy="108" r="8" fill="#F3D2B8"/><line x1="134" y1="104" x2="150" y2="62" stroke="#8A6440" stroke-width="4" stroke-linecap="round"/><circle cx="151" cy="60" r="4" fill="#D69A4C"/></g>
- <g transform="translate(20 32)">${TEACHER.replace('class="teacher"','class="teacher tf-head" width="120" height="120"').replace('<circle cx="60" cy="60" r="58" fill="#F6E1DD"/>','')}</g>
+ <ellipse cx="80" cy="254" rx="44" ry="6" fill="#7A5C4F" opacity=".14"/>
+ <g transform="translate(0 50) scale(1 .8)"><g class="tf-body" stroke="#4B3A33" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+  <ellipse cx="64" cy="246" rx="12" ry="7" fill="#5A403A"/><ellipse cx="96" cy="246" rx="12" ry="7" fill="#5A403A"/>
+  <path d="M50 242 C44 214 48 172 58 152 C66 146 94 146 102 152 C112 172 116 214 110 242 C96 248 64 248 50 242Z" fill="#F4867B"/>
+  <path d="M80 152 L80 244" stroke="#E2685A" stroke-width="2.5"/>
+  <path d="M66 152 Q80 166 94 152" fill="none" stroke="#FFD27A" stroke-width="3"/>
+  <circle cx="72" cy="182" r="3" fill="#FFD27A" stroke-width="2"/><circle cx="72" cy="200" r="3" fill="#FFD27A" stroke-width="2"/>
+  <path d="M58 160 C46 178 44 196 50 210" fill="none" stroke="#4B3A33" stroke-width="17"/><path d="M58 160 C46 178 44 196 50 210" fill="none" stroke="#F4867B" stroke-width="11"/>
+  <circle cx="51" cy="213" r="8" fill="#FFE6D6"/></g></g>
+ <g transform="translate(0 50) scale(1 .8)"><g class="tf-arm" stroke="#4B3A33" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M102 160 Q124 146 130 116" fill="none" stroke-width="17"/><path d="M102 160 Q124 146 130 116" fill="none" stroke="#F4867B" stroke-width="11"/>
+  <circle cx="131" cy="111" r="8" fill="#FFE6D6" stroke-width="3.5"/>
+  <line x1="133" y1="106" x2="150" y2="64" stroke="#8A6440" stroke-width="5"/><line x1="133" y1="106" x2="150" y2="64" stroke="#C9955E" stroke-width="2.5"/>
+  <circle cx="151" cy="61" r="5" fill="#FFD27A" stroke-width="2.5"/></g></g>
+ <g transform="translate(-2 16)">${TEACHER.replace('class="teacher"','class="teacher tf-head" width="160" height="160"').replace('<circle cx="60" cy="60" r="58" fill="#F6E1DD"/>','')}</g>
 </svg>`}
 const COVER_WORDS=[['你好','nǐ hǎo','xin chào'],['谢谢','xièxie','cảm ơn'],['爱','ài','yêu'],['中文','Zhōngwén','tiếng Trung'],['朋友','péngyou','bạn bè'],['加油','jiāyóu','cố lên'],['快乐','kuàilè','vui vẻ'],['学习','xuéxí','học tập'],['熊猫','xióngmāo','gấu trúc'],['老师','lǎoshī','giáo viên']];
 const PANDA_LINES=[['你好！','Xin chào! Tớ là gấu trúc Bảo Bảo'],['一起学中文吧！','Cùng học tiếng Trung nhé!'],['加油！','Cố lên!'],['我爱你们！','Tớ yêu các bạn!'],['太棒了！','Tuyệt quá!']];
