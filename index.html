@@ -693,6 +693,17 @@ body.cover-mode header,body.cover-mode nav,body.cover-mode footer{display:none}
 .btn:active,.opt:active:not(:disabled),.tile:active,.otile:active,.mic:active{transform:scale(.95)}
 @media (max-width:780px){#buddy{width:70px;right:8px;bottom:8px}.bb-body{width:70px;height:74px}.bb-bubble{right:40px;bottom:66px;min-width:130px;max-width:190px}.bb-x{opacity:.8}}
 @media (prefers-reduced-motion:reduce){.bb-svg,.bb-svg *{animation:none!important}}
+
+.mus-btn{cursor:pointer}
+.mus-btn .eq{display:inline-flex;align-items:flex-end;gap:2px;height:16px;width:18px;justify-content:center}
+.mus-btn .eq i{display:block;width:3px;border-radius:2px;background:currentColor;animation:eqb .9s ease-in-out infinite}
+.mus-btn .eq i:nth-child(1){height:60%;animation-delay:-.3s}.mus-btn .eq i:nth-child(2){height:100%;animation-delay:-.6s}.mus-btn .eq i:nth-child(3){height:45%}
+.mus-btn.on{color:#e0567a}
+@keyframes eqb{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+.c-mus{position:absolute;bottom:18px;right:18px;z-index:30;width:46px;height:46px;border-radius:50%;border:2px solid #fff;background:rgba(255,255,255,.85);box-shadow:0 4px 14px rgba(224,86,122,.25);font-size:20px;display:grid;place-items:center;backdrop-filter:blur(6px)}
+.c-mus.on{animation:mpulse 2s ease-in-out infinite}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(224,86,122,.35)}50%{box-shadow:0 0 0 10px rgba(224,86,122,0)}}
+@media (prefers-reduced-motion:reduce){.mus-btn .eq i,.c-mus.on{animation:none}}
 </style>
 </head>
 <body>
@@ -865,7 +876,7 @@ let zhVoice=null, viVoice=null, ttsOK=true;
 function pickVoices(){try{const vs=speechSynthesis.getVoices();zhVoice=vs.find(v=>/zh[-_]CN/i.test(v.lang))||vs.find(v=>/^zh/i.test(v.lang))||null;viVoice=vs.find(v=>/^vi/i.test(v.lang))||null;if(vs.length&&!zhVoice)voiceNote.classList.add('on')}catch(e){ttsOK=false;voiceNote.classList.add('on')}}
 try{pickVoices();speechSynthesis.onvoiceschanged=pickVoices}catch(e){ttsOK=false}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
-function speak(text,lang='zh',rate,pitch){
+function speak(text,lang='zh',rate,pitch){try{if(typeof MUS!=='undefined'&&MUS.playing)musicDuck()}catch(e){}
   if(lang==='zh'&&typeof playFile==='function'){const pf=playFile(text,rate);if(pf)return pf.then(ok=>ok?undefined:speakTTS(text,lang,rate,pitch))}
   return speakTTS(text,lang,rate,pitch)}
 function speakTTS(text,lang='zh',rate,pitch){
@@ -884,7 +895,7 @@ function speakTTS(text,lang='zh',rate,pitch){
     }catch(e){setTimeout(fin,lang==='zh'?600:est)}
   });
 }
-function say(t){try{speechSynthesis.cancel()}catch(e){}if(typeof stopAudio==='function')stopAudio();speak(t,'zh')}
+function say(t){try{musicDuck()}catch(e){}try{speechSynthesis.cancel()}catch(e){}if(typeof stopAudio==='function')stopAudio();speak(t,'zh')}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b){e.stopPropagation();say(b.dataset.say)}});
 
 /* ================= TEACHER SVG ================= */
@@ -940,6 +951,7 @@ function route(){
   hud();
   if(P.pendingRank!=null&&!busy())setTimeout(()=>{if(P.pendingRank!=null)rankUp(P.pendingRank)},500);
   try{buddyRoute(h)}catch(e){}
+  try{musicRoute()}catch(e){}
 }
 window.addEventListener('hashchange',route);
 
@@ -1500,9 +1512,11 @@ function hud(){const h=document.getElementById('hud');if(!h)return;const s=strea
   <a href="#ho-so" class="hud-item rank-chip hide-sm" title="Danh hiệu">${R[3]} ${R[1]}</a>
   ${(!isStandalone()&&(deferredInstall||isIOS()))?'<button class="hud-item" id="instBtn" title="Cài ứng dụng">📲<b class="hide-sm" style="font-family:inherit;font-size:13px">Cài app</b></button>':''}
   ${supaUser?'<a href="#ho-so" class="hud-item" id="syncChip" title="Đồng bộ tài khoản">☁️</a>':''}
+  <button class="hud-item mus-btn" id="musBtn" title="Nhạc chào mừng">🎵</button>
   <button class="hud-item" id="sndBtn" title="Bật/tắt âm thanh">${P.sound?'🔊':'🔇'}</button>`;
   const ib=document.getElementById('instBtn');if(ib)ib.onclick=installApp;if(typeof hudSync==='function')hudSync();
   document.getElementById('sndBtn').onclick=()=>{P.sound=!P.sound;save();hud();SFX.ok()};
+  const mb=document.getElementById('musBtn');if(mb){mb.onclick=musicToggle;musUI()}
   const rv=document.querySelector('#nav a[data-v="on-tap"]');if(rv)rv.innerHTML='🔁 Ôn tập'+(due?` <span class="nav-dot">${due}</span>`:'');
 }
 
@@ -1954,9 +1968,11 @@ function renderCover(){
      <div class="ground-grass"></div>
     </div>
    </div>
-   <div class="c-hint">Bấm vào các chữ Hán đang bay hoặc gấu trúc để nghe phát âm 🔊</div>
+   <div class="c-hint">Bấm vào các chữ Hán đang bay hoặc gấu trúc để nghe phát âm 🔊 · Chạm bất kỳ đâu để nghe nhạc 🎵</div>
+   <button class="mus-btn c-mus" id="cMus" title="Nhạc chào mừng">🎵</button>
   </section>`;
   const cover=document.getElementById('cover');
+  const cm=document.getElementById('cMus');if(cm){cm.onclick=e=>{e.stopPropagation();e.preventDefault();musicToggle()};musUI()}
   // petals
   const pet=document.getElementById('petals');for(let i=0;i<18;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.animationDuration=(7+Math.random()*7)+'s';e.style.animationDelay=(-Math.random()*12)+'s';e.style.setProperty('--sw',(Math.random()*120-60)+'px');e.style.transform=`scale(${.6+Math.random()*.7})`;pet.appendChild(e)}
   // floating hanzi bubbles
@@ -2312,6 +2328,47 @@ function hearts(el,ch){if(!el||matchMedia('(prefers-reduced-motion: reduce)').ma
     document.body.appendChild(h);setTimeout(()=>h.remove(),1200)}}
 function buddyRoute(h){const b=buddyEl();const off=h==='bia'||(!P.goal);b.classList.toggle('off',off);if(bbHidden)b.classList.add('gone');
   if(!off&&!bbHidden){b.classList.add('peek');if(h==='home'&&!b.dataset.greeted){b.dataset.greeted='1';setTimeout(()=>{if((location.hash||'#home')==='#home')buddy('wink',pick(BB_LINES.idle),3200)},1400)}}}
+
+/* ================= WELCOME MUSIC (original, synthesized live with Web Audio) ================= */
+// Nhạc tự soạn: thang ngũ cung Rê (D E F# A B), tiếng đàn tranh gảy + bass + mõ gỗ + chuông nhỏ. Không dùng file, không bản quyền.
+const MUS={ctx:null,master:null,timer:null,playing:false,step:0,next:0,gestured:false};
+const BPM=100,EIGHTH=60/BPM/2;
+const MEL=[69,0,71,69,66,0,64,0, 62,0,64,66,69,0,0,0, 71,0,74,71,69,0,66,0, 64,66,69,0,64,0,0,0,
+           69,0,71,74,76,0,74,0, 71,69,66,0,69,0,0,0, 66,69,71,0,69,66,64,0, 62,0,0,0,74,0,0,0];
+const ROOTS=[38,38,43,45,38,35,43,45];
+const hz=m=>440*Math.pow(2,(m-69)/12);
+function musCtx(){if(!MUS.ctx){AC=AC||new (window.AudioContext||window.webkitAudioContext)();MUS.ctx=AC;MUS.master=AC.createGain();MUS.master.gain.value=0;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=5200;MUS.master.connect(lp);lp.connect(AC.destination)}return MUS.ctx}
+function env(t,g,peak,dur,att=.006){g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(peak,t+att);g.gain.exponentialRampToValueAtTime(0.0001,t+dur)}
+function pluck(t,m,vol=.2,dur=1.3){const c=MUS.ctx,f=hz(m);
+  [[ 'triangle',1,1],['sine',2,.35],['sine',3,.12]].forEach(([type,mul,v])=>{const o=c.createOscillator(),g=c.createGain();o.type=type;
+    o.frequency.setValueAtTime(f*mul*1.012,t);o.frequency.exponentialRampToValueAtTime(f*mul,t+.06);env(t,g,vol*v,dur/(mul*.8));o.connect(g);g.connect(MUS.master);o.start(t);o.stop(t+dur+.1)})}
+function bass(t,m,dur){const c=MUS.ctx,o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=hz(m);env(t,g,.16,dur,.02);o.connect(g);g.connect(MUS.master);o.start(t);o.stop(t+dur+.05)}
+function pad(t,m,dur){const c=MUS.ctx;[0,7,12].forEach((iv,k)=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=hz(m+24+iv);o.detune.value=k*4-4;
+  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(.022,t+.35);g.gain.linearRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(MUS.master);o.start(t);o.stop(t+dur+.05)})}
+function wood(t,hi){const c=MUS.ctx,o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(hi?1500:1100,t);o.frequency.exponentialRampToValueAtTime(hi?1000:750,t+.04);env(t,g,.09,.07,.002);o.connect(g);g.connect(MUS.master);o.start(t);o.stop(t+.1)}
+function bell(t){const c=MUS.ctx;[2093,3136,4186].forEach((f,k)=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;env(t,g,[.035,.018,.008][k],1.8,.003);o.connect(g);g.connect(MUS.master);o.start(t);o.stop(t+1.9)})}
+function schedule(){const c=MUS.ctx;while(MUS.next<c.currentTime+.15){const s=MUS.step%64,bar=Math.floor(s/8),b=s%8,t=MUS.next;
+  if(MEL[s])pluck(t,MEL[s],.2,b%2?1.0:1.4);
+  if(b===0){bass(t,ROOTS[bar],EIGHTH*3.6);pad(t,ROOTS[bar],EIGHTH*8)}
+  if(b===4)bass(t,ROOTS[bar]+7,EIGHTH*3.2);
+  if(b===2||b===6)wood(t,b===6);
+  if(s===0||s===32)bell(t);
+  if(s===60)[74,78,81].forEach((m,k)=>pluck(t+k*EIGHTH*.5,m,.11,1.6));
+  MUS.next+=EIGHTH;MUS.step++}}
+function musicStart(){if(MUS.playing||P.music===false)return;try{const c=musCtx();if(c.state==='suspended')c.resume();
+  MUS.playing=true;MUS.step=0;MUS.next=c.currentTime+.1;MUS.master.gain.cancelScheduledValues(c.currentTime);MUS.master.gain.setValueAtTime(MUS.master.gain.value||0.0001,c.currentTime);MUS.master.gain.linearRampToValueAtTime(.55,c.currentTime+2.2);
+  schedule();MUS.timer=setInterval(schedule,40);musUI()}catch(e){}}
+function musicStop(fast){if(!MUS.playing)return;const c=MUS.ctx;MUS.playing=false;try{MUS.master.gain.cancelScheduledValues(c.currentTime);MUS.master.gain.setValueAtTime(MUS.master.gain.value,c.currentTime);MUS.master.gain.linearRampToValueAtTime(0.0001,c.currentTime+(fast?.25:1.2))}catch(e){}
+  const tm=MUS.timer;setTimeout(()=>clearInterval(tm),fast?300:1250);musUI()}
+function musicDuck(){if(!MUS.playing)return;const c=MUS.ctx,g=MUS.master.gain;try{g.cancelScheduledValues(c.currentTime);g.setValueAtTime(g.value,c.currentTime);g.linearRampToValueAtTime(.12,c.currentTime+.15);g.linearRampToValueAtTime(.55,c.currentTime+2.4)}catch(e){}}
+const musicPage=()=>{const h=(location.hash||'#home').slice(1);return h==='home'||h==='bia'};
+function musicToggle(){if(P.music!==false&&!MUS.playing&&musicPage()){MUS.gestured=true;musicStart();toast('🎵 Nhạc chào mừng','Bấm lần nữa để tắt');return}P.music=P.music===false?true:false;save();if(P.music===false)musicStop();else{MUS.gestured=true;if(musicPage())musicStart()}musUI();
+  toast(P.music===false?'🔕 Đã tắt nhạc chào mừng':'🎵 Đã bật nhạc chào mừng',P.music===false?'Bật lại bằng nút 🎵 bất cứ lúc nào':'Nhạc chỉ phát ở trang bìa và trang chủ')}
+function musUI(){document.querySelectorAll('.mus-btn').forEach(b=>{const on=P.music!==false;b.classList.toggle('on',on&&MUS.playing);b.innerHTML=on?(MUS.playing?'<span class="eq"><i></i><i></i><i></i></span>':'🎵'):'🔕';b.title=on?(MUS.playing?'Tắt nhạc chào mừng':'Bật nhạc chào mừng'):'Nhạc đang tắt, bấm để bật';b.setAttribute('aria-label',b.title)})}
+function musicRoute(){if(musicPage()){if(MUS.gestured&&P.music!==false)musicStart()}else musicStop()}
+document.addEventListener('pointerdown',e=>{if(MUS.gestured)return;MUS.gestured=true;if(e.target.closest('.mus-btn'))return;if(musicPage()&&P.music!==false)musicStart()},{capture:true});
+document.addEventListener('visibilitychange',()=>{if(!MUS.ctx)return;if(document.hidden){if(MUS.playing)MUS.ctx.suspend()}else if(MUS.playing)MUS.ctx.resume()});
 
 /* ================= MISC ================= */
 function confetti(k){const c=$('#confetti');const cols=['#C0392B','#D69A4C','#7F8461','#5C7A78','#F2D3A6'];
