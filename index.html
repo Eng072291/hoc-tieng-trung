@@ -658,6 +658,41 @@ body.cover-mode header,body.cover-mode nav,body.cover-mode footer{display:none}
 .sp-ok{color:var(--sage-ink)}.sp-tone{color:#8A5E22}.sp-miss{color:#9E2B20}
 .sp-score{font-family:'Baloo 2';font-size:20px;margin-top:4px}.sp-score.good{color:var(--sage-ink)}.sp-score.mid{color:#8A5E22}.sp-score.low{color:var(--accent)}
 .sp-heard{font-size:12.5px;color:var(--muted)}.sp-listen{font-size:13px;color:var(--accent);font-weight:600}.sp-err{font-size:13px;color:#9E2B20}.sp-best{font-size:12.5px;color:var(--muted)}
+#buddy{position:fixed;right:14px;bottom:14px;z-index:60;width:92px;transition:transform .45s cubic-bezier(.3,1.4,.5,1)}
+#buddy.off,#buddy.gone{display:none}
+#buddy.peek{transform:translateX(42%) rotate(-10deg)}
+#buddy.peek:hover,#buddy.peek:focus-within{transform:translateX(0) rotate(0)}
+.bb-body{display:block;width:92px;height:96px;padding:0;background:none;cursor:pointer;filter:drop-shadow(0 8px 14px rgba(75,58,51,.25))}
+.bb-svg{width:100%;height:100%;overflow:visible;animation:bbBreath 3s ease-in-out infinite}
+#buddy.react .bb-svg{animation:bbHop .6s cubic-bezier(.3,1.6,.5,1)}
+#buddy.react .mood-cheer{animation:bbDance .5s ease-in-out 3}
+#buddy.sad .bb-svg{animation:bbSad .5s ease-in-out}
+@keyframes bbBreath{50%{transform:translateY(-2px) scale(1.015)}}
+@keyframes bbHop{0%{transform:translateY(0)}40%{transform:translateY(-26px) rotate(-6deg)}70%{transform:translateY(0) scaleY(.92)}100%{transform:none}}
+@keyframes bbDance{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg) translateY(-6px)}75%{transform:rotate(10deg) translateY(-6px)}}
+@keyframes bbSad{30%{transform:translateY(4px) scaleY(.95)}100%{transform:none}}
+.bb-svg .wave-arm{transform-box:fill-box;transform-origin:20% 10%;animation:bbWave 1.6s ease-in-out infinite}
+@keyframes bbWave{0%,60%,100%{transform:rotate(0)}70%,90%{transform:rotate(-24deg)}80%{transform:rotate(-8deg)}}
+.bb-svg .arm-up{transform-box:fill-box;transform-origin:80% 90%;animation:bbArm .4s ease-in-out infinite alternate}
+.bb-svg .arm-up.r{transform-origin:20% 90%;animation-direction:alternate-reverse}
+@keyframes bbArm{to{transform:rotate(14deg)}}
+.bb-svg .float-h{animation:bbFloat 1.4s ease-in-out infinite}.bb-svg .d2{animation-delay:.4s}
+@keyframes bbFloat{0%{opacity:0;transform:translateY(6px)}50%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+.bb-svg .zzz{animation:bbFloat 2s ease-in-out infinite}
+.bb-svg .tear{animation:bbTear 1.2s ease-in infinite}
+@keyframes bbTear{0%{transform:translateY(-3px);opacity:0}30%{opacity:1}100%{transform:translateY(8px);opacity:0}}
+.bb-bubble{position:absolute;right:58px;bottom:84px;min-width:150px;max-width:220px;background:#fff;border-radius:18px;padding:9px 13px;box-shadow:0 12px 30px -12px rgba(75,58,51,.4);border:2px solid #F3DDD3;opacity:0;transform:scale(.6) translateY(10px);transform-origin:bottom right;transition:.3s cubic-bezier(.3,1.5,.5,1);pointer-events:none;text-align:left}
+.bb-bubble.show{opacity:1;transform:none}
+.bb-bubble::after{content:'';position:absolute;right:14px;bottom:-9px;width:14px;height:14px;background:#fff;border-right:2px solid #F3DDD3;border-bottom:2px solid #F3DDD3;transform:rotate(45deg)}
+.bb-bubble b{display:block;font-size:19px;color:var(--accent);line-height:1.25}.bb-bubble small{display:block;font-size:12.5px;color:var(--body);line-height:1.35}
+.bb-x{position:absolute;left:-4px;top:-2px;width:22px;height:22px;border-radius:50%;background:#fff;border:1.5px solid var(--line);font-size:13px;line-height:1;color:var(--muted);opacity:0;transition:.2s}
+#buddy:hover .bb-x,#buddy:focus-within .bb-x{opacity:1}
+.heart-pop{position:fixed;z-index:85;pointer-events:none;font-size:18px;transform:translate(-50%,-50%);animation:heartPop 1s ease-out forwards}
+@keyframes heartPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}20%{opacity:1;transform:translate(calc(-50% + var(--dx)*.3),calc(-50% + var(--dy)*.3)) scale(1.2)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.8)}}
+.btn,.opt,.tile,.otile,.cta,.chip,.quick a{transition:transform .18s cubic-bezier(.3,1.6,.5,1),background .2s,border-color .2s,box-shadow .2s}
+.btn:active,.opt:active:not(:disabled),.tile:active,.otile:active,.mic:active{transform:scale(.95)}
+@media (max-width:780px){#buddy{width:70px;right:8px;bottom:8px}.bb-body{width:70px;height:74px}.bb-bubble{right:40px;bottom:66px;min-width:130px;max-width:190px}.bb-x{opacity:.8}}
+@media (prefers-reduced-motion:reduce){.bb-svg,.bb-svg *{animation:none!important}}
 </style>
 </head>
 <body>
@@ -904,6 +939,7 @@ function route(){
   window.scrollTo({top:0});
   hud();
   if(P.pendingRank!=null&&!busy())setTimeout(()=>{if(P.pendingRank!=null)rankUp(P.pendingRank)},500);
+  try{buddyRoute(h)}catch(e){}
 }
 window.addEventListener('hashchange',route);
 
@@ -1143,7 +1179,7 @@ function clozeQ(c){return {type:'cloze',q:c[0],a:c[1],opts:shuffle(c[2]),vi:c[3]
 function runQuiz(box,Q,onDone){
   let qi=0,score=0,combo=0;
   function render(){
-    if(qi>=Q.length) return onDone(score,Q.length);
+    if(qi>=Q.length){try{score/Q.length>=PASS?buddy('cheer',pick(BB_LINES.done),3600):buddy('sad',['没关系！','Ôn lại rồi làm lại nhé, tớ tin cậu!'],3600)}catch(e){}return onDone(score,Q.length)}
     const q=Q[qi];let prompt='',opts='';
     if(q.type==='ch2vi'){prompt=`<div class="ch zh">${q.w.ch}</div><div class="sub">Từ này nghĩa là gì?</div>`;opts=q.opts.map(o=>`<button class="opt" data-ok="${o.ch===q.w.ch}">${o.vi}</button>`).join('')}
     else if(q.type==='vi2ch'){prompt=`<div class="em">${q.w.em}</div><div class="vi">${q.w.vi}</div><div class="sub">Chọn chữ Hán đúng</div>`;opts=q.opts.map(o=>`<button class="opt" data-ok="${o.ch===q.w.ch}"><span class="zh">${o.ch}</span></button>`).join('')}
@@ -1173,6 +1209,7 @@ function runQuiz(box,Q,onDone){
     else if(q.type==='order'||q.type==='dict')info=`<span class="zh">${q.zh}</span><br><small>${q.py} · ${q.vi}</small>`;
     else info=`<span class="zh">${q.w.ch}</span> ${q.w.py} · ${q.w.vi}${hvOf(q.w.ch)?` · <small>HV: ${hvOf(q.w.ch)}</small>`:''}`;
     const praise=pick(['Giỏi lắm! ','Chính xác! ','很好！','Đúng rồi! ']);
+    try{if(ok){combo>=3?buddy('cheer',pick(BB_LINES.combo),1800):buddy(pick(['happy','love','wink']),pick(BB_LINES.ok),1600);hearts(b)}else buddy('sad',pick(BB_LINES.bad),2000)}catch(e){}
     const fb=box.querySelector('#fb');fb.className='q-feedback '+(ok?'ok':'no');fb.innerHTML=(ok?praise:'Chưa đúng rồi. Đáp án: ')+info;
     if(q.type==='ch2vi'||q.type==='vi2ch')say(q.w.ch); if(q.type==='cloze')say(q.q.replace('___',q.a)); if(q.type==='order')say(q.zh);
     box.querySelector('#nx').innerHTML=`<button class="btn" style="margin-top:8px">${qi<Q.length-1?'Câu tiếp →':'Xem kết quả'}</button>`;
@@ -1590,7 +1627,7 @@ function renderStories(){
    <div class="st-back"><div class="st-top"><span class="zh" style="font-size:40px;color:#fff">${s[0]}</span><div><b>${s[1]}</b><div>${s[2]}</div></div><button class="icon-btn" data-say="${s[0]}" style="margin-left:auto;background:rgba(255,255,255,.15)">🔊</button></div>
     ${s[5].length?`<div class="st-parts">${s[5].map(p=>`<span class="zh">${p}</span>`).join('<i>+</i>')}<i>=</i><span class="zh">${s[0]}</span></div>`:''}<p>${s[4]}</p></div></div></div>`).join('')}</div></div>`;
   app.querySelectorAll('.story').forEach(el=>el.onclick=e=>{if(e.target.closest('[data-say]'))return;el.classList.toggle('flip');SFX.flip();const c=el.dataset.ch;
-    if(el.classList.contains('flip')){say(c);if(!P.stats.stories.includes(c)){P.stats.stories.push(c);save();el.classList.add('seen');document.getElementById('stCount').textContent=P.stats.stories.length;bump('story');addXP(5,el)}}});
+    if(el.classList.contains('flip')){say(c);hearts(el,'🌸');if(!P.stats.stories.includes(c)){P.stats.stories.push(c);save();el.classList.add('seen');document.getElementById('stCount').textContent=P.stats.stories.length;bump('story');addXP(5,el)}}});
 }
 
 /* ================= REVIEW (SRS) ================= */
@@ -1612,7 +1649,7 @@ function renderReview(){
    <p style="font-size:13px;color:var(--muted);margin-top:10px">Từ ở hộp 4 trở lên được tính là <b>đã nhớ chắc</b>: hiện có ${mastered()} từ.</p></div></div>
   <div class="sp"></div><div id="rvBox"></div></div>`;
   const run=list=>{let q=[...list],done=0,again=new Set();const box=document.getElementById('rvBox');box.scrollIntoView({behavior:'smooth'});
-    const show=()=>{if(!q.length){addXP(10,box);box.innerHTML=`<div class="card result" style="text-align:center"><div style="font-size:52px">🎉</div><h3 style="font-size:22px">Xong ${done} thẻ!</h3><p>Bộ não của ${nm()} vừa được tập thể dục. Hẹn gặp lại ở lần ôn tiếp theo.</p><div style="margin-top:14px"><a class="btn" href="#home">Về trang chủ</a> <button class="btn ghost" id="rvAgain">Xem lại hộp ôn</button></div></div>`;document.getElementById('rvAgain').onclick=renderReview;confetti(50);SFX.up();return}
+    const show=()=>{if(!q.length){addXP(10,box);buddy('cheer',pick(BB_LINES.done),3200);box.innerHTML=`<div class="card result" style="text-align:center"><div style="font-size:52px">🎉</div><h3 style="font-size:22px">Xong ${done} thẻ!</h3><p>Bộ não của ${nm()} vừa được tập thể dục. Hẹn gặp lại ở lần ôn tiếp theo.</p><div style="margin-top:14px"><a class="btn" href="#home">Về trang chủ</a> <button class="btn ghost" id="rvAgain">Xem lại hộp ôn</button></div></div>`;document.getElementById('rvAgain').onclick=renderReview;confetti(50);SFX.up();return}
       const c=q[0],w=WMAP[c];
       box.innerHTML=`<div class="rv-card"><div class="q-meta"><span>Còn ${q.length} thẻ</span><span>Hộp ${(P.srs[c]||{b:1}).b}</span></div>
        <div class="rv-face"><div class="ch zh">${c}</div><div id="rvAns" class="rv-ans" hidden><div style="font-size:42px">${w.em}</div><div class="py">${w.py}</div><div class="vi">${w.vi}</div>${hvTag(c)}${STORY[c]?`<div class="rv-story">📜 ${STORY[c][4]}</div>`:''}</div></div>
@@ -1651,7 +1688,7 @@ function gameShell(id,inner){const g=GAMES.find(x=>x[0]===id);
   app.innerHTML=`<div class="view"><div class="crumb"><a href="#home">Trang chủ</a> / <a href="#san-choi">Sân chơi</a> / ${g[2]}</div>
   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h2 class="sec-title">${g[1]} ${g[2]}</h2><span class="pill open">${bestTxt(id)}</span></div>
   <div class="game-box" id="gb">${inner}</div></div>`;return document.getElementById('gb')}
-function gameOver(id,val,label,lower,extra=''){const nb=saveGame(id,val,lower);const xp=15+(nb&&P.games[id].plays>1?15:0);
+function gameOver(id,val,label,lower,extra=''){const nb=saveGame(id,val,lower);try{buddy('cheer',nb&&P.games[id].plays>1?['新纪录！','Kỷ lục mới! Đỉnh quá!']:pick(BB_LINES.done),3400)}catch(e){}const xp=15+(nb&&P.games[id].plays>1?15:0);
   if(nb&&P.games[id].plays>1){confetti(80);SFX.up()}
   document.getElementById('gb').innerHTML=`<div class="g-over"><div style="font-size:56px">${nb?'🏆':'🎉'}</div><div class="eyebrow">${nb?(P.games[id].plays>1?'Kỷ lục mới!':'Lượt chơi đầu tiên'):'Kết thúc'}</div>
    <div class="score">${label}</div>${extra}<p style="margin:8px 0 16px">${bestTxt(id)}</p><button class="btn" id="again">Chơi lại ↻</button> <a class="btn ghost" href="#san-choi">Trò khác</a></div>`;
@@ -2137,7 +2174,7 @@ function renderSpeak(body,n,i){
         out.innerHTML=`<div class="sp-sylls">${g.A.map((s,i)=>`<span class="sy ${g.res[i]}">${g.disp[i]||s.b}</span>`).join('')}</div>
           <div class="sp-score ${g.score>=80?'good':g.score>=50?'mid':'low'}">${g.score}% ${g.score>=80?'⭐ Tuyệt!':g.score>=50?'Khá rồi, thử lại nhé':'Đọc lại chậm hơn nhé'}</div>
           <div class="sp-heard">Máy nghe được: <span class="zh">${best.t||'(không rõ)'}</span></div>`;
-        if(g.score>=80){SFX.ok();addXP(5,btn);bump('ans')}else SFX.bad();checkBadges()};
+        if(g.score>=80){SFX.ok();addXP(5,btn);bump('ans');buddy('love',['说得好！','Phát âm chuẩn quá!']);hearts(btn)}else{SFX.bad();buddy('wow',['再说一遍？','Mình nói lại lần nữa nhé?'])}checkBadges()};
       r.onerror=e=>{btn.classList.remove('rec');const m={'not-allowed':'Em cần cho phép dùng micro (biểu tượng 🔒 trên thanh địa chỉ).','service-not-allowed':'Trình duyệt chặn nhận dạng giọng nói.','no-speech':'Máy chưa nghe thấy gì, em thử nói to hơn nhé.','network':'Cần kết nối mạng để chấm điểm.','audio-capture':'Không tìm thấy micro.'};out.innerHTML=`<span class="sp-err">⚠️ ${m[e.error]||'Không nhận dạng được, em thử lại nhé.'}</span>`};
       r.onend=()=>{btn.classList.remove('rec');if(!got&&out.querySelector('.sp-listen'))out.innerHTML='<span class="sp-err">Máy chưa nghe rõ, em bấm 🎤 và thử lại nhé.</span>'};
       r.start()}).catch(()=>{out.innerHTML='<span class="sp-err">Không tải được bộ chấm điểm.</span>'})};
@@ -2198,6 +2235,84 @@ function bindSync(){
 }
 
 const AUDIO_SET=new Set(/*AUDIO_LIST*/["006e6b0a", "010ab886", "01b9a747", "01c7fe65", "01e9cf50", "0225d101", "038300f1", "049b2cc4", "053adca8", "05d4cc6d", "0616c36d", "070ac1f8", "0748d205", "07a25661", "07b82298", "07d383b4", "08af3294", "090fd35b", "0917292b", "0a0ac6b1", "0cb60a42", "0d66fb1b", "0dea22fa", "0e2ef0e3", "0e77aa07", "0ed8fa33", "0f0b91ec", "0fc7aed3", "1045c164", "12263e9a", "13043c3e", "134385e2", "136f7024", "137ae075", "1500ffbe", "1705defe", "173ffef0", "1769072e", "1853c5ae", "1905e224", "1a0fc3b4", "1cd2051d", "1cf56175", "1db515f6", "1df2bfd3", "1e025023", "1ed0c661", "1ed76401", "1eef7e5a", "1f0251b6", "1f062ec0", "1f468910", "1f73ca60", "1fc01c8b", "21819ae8", "22192bb9", "224d1c8e", "22cc5049", "242d3c5f", "24a24524", "24e479ea", "25025b28", "25063832", "25ca4dde", "25ecaa4a", "26f1fbbc", "271a0938", "273fae71", "27f190f6", "297d00ad", "2a7899c0", "2acdbb34", "2b7a8bb1", "2b9b15a0", "2bbe2cd5", "2bd52d9b", "2ecb45e5", "2f978135", "3243027f", "3330c416", "33b79e8d", "36fc04db", "39a58757", "39c9b98b", "3a4dbc49", "3e5244b5", "3efb3ad1", "3f991ead", "40796cc8", "40c8ca51", "42c8cd77", "4388786e", "44524e27", "452c9fdf", "45524fba", "459bdd71", "45d3d3ca", "46284589", "463f2006", "46fdd7ae", "47d34bb0", "4852877a", "48a38e83", "48e1f8b4", "48fddad4", "493546a8", "49e340e5", "4c5c5de0", "4cdbb5f0", "5132b5ad", "537f7221", "5412fc6c", "550b3cc2", "56cac9d2", "56e2761f", "56f3c59e", "571c25a9", "57de17f2", "581e2d5c", "5851c6e2", "58a459c0", "5902ad04", "59b5dbae", "5adde7c2", "5d0b4114", "5d20f4ee", "5dc1b2d8", "5e5e85fa", "6073cacc", "61247480", "61c236a1", "6312b2a6", "64af3d08", "64baf121", "651b02ed", "65e0f290", "65f321d3", "66a38bd1", "66d8e273", "678dc9f4", "67fafdc2", "68dff7a9", "69cdc2c2", "69df1865", "6a016277", "6a070c50", "6a2482ab", "6a5289f9", "6a61476f", "6b03781e", "6b24843e", "6b9dbd5c", "6bb2561d", "6c2ae1fd", "6c847dd6", "6d62cd58", "6e8480fc", "6ec92aab", "6f409f23", "70a47f88", "70f070e1", "71316770", "71b9ae4e", "72f369f6", "72fe4aa2", "735ab7f5", "73774a87", "742aee95", "7452c3ff", "7531b3c6", "75ea9737", "777d7832", "783c176d", "79e0b2d7", "7ab0b288", "7b61f00e", "7c9c3406", "7dde36e0", "7ef9af9d", "7f432e99", "81e0bf6f", "8485de13", "8494baf1", "860b89e5", "87740831", "877a66df", "89fc4fa8", "8b23ea1b", "8bf0c864", "8d4a3759", "8e53d524", "8e843e5a", "8e961323", "8f3da6a3", "9074f6bb", "9098e9fc", "90a18988", "90cc33ab", "9171405b", "91e23114", "920306bf", "9208842f", "92646ba3", "92745004", "92d2a332", "95c25061", "9873fcd1", "9a0757e0", "9a5ab489", "9af0b2ff", "9c0d7184", "9c523230", "9c5ab7af", "9c62f6ed", "9c863fad", "9d37c720", "9dac5266", "9e0bafad", "9fc7ca41", "a11fddbb", "a2076ced", "a20982b2", "a3035e15", "a37b81e4", "a3a0fbda", "a3cf337f", "a3d4744b", "a49048a2", "a5149d26", "a58fda85", "a5a6957f", "a5b82ecc", "a62c88be", "a730fff1", "a813bb1d", "a848765c", "a8bc7710", "a9a4d943", "aa032c87", "aa291f2b", "aa40c6f0", "abf43dc3", "ac7ff02e", "acac5b2f", "acbcadc4", "ae6c7125", "aedadc61", "af35a192", "b012e2d8", "b11bc638", "b15166be", "b3572a3a", "b4e3d30e", "b4e69f7a", "b524f8bc", "b6342a60", "b74d81c2", "b8183ca8", "b84d33f3", "b8b60087", "b90fc877", "b91bf1d5", "b949ee4a", "b98d5573", "ba767db0", "bd820e1a", "bdfbdc13", "be87945f", "be92363d", "bf5ef681", "c0061a59", "c3394d9c", "c33985c6", "c3e48589", "c4466574", "c4641155", "c53988ec", "c650a77b", "c68ca2ef", "c706f40e", "c7eeb502", "cb13f18f", "cb323bfb", "cbd1859a", "ccc669cf", "cd40e04b", "cde747b5", "cdee990e", "ce4214d7", "ceff64d0", "cfad68cc", "d09cb842", "d1247a05", "d1fffb4e", "d2d299f0", "d2e9db1b", "d32a9c52", "d3a688ae", "d3b73733", "d496126a", "d592b809", "d67024f1", "d69cc1b4", "d6f6db5e", "d7801ea1", "d7bc7166", "d7d9cbd2", "d86a2529", "d8f3a4e2", "d9393bec", "d99cc66d", "d9c9df11", "dc687cbe", "dd039f31", "dd50a8cb", "dd55c40a", "dda52b1f", "de470c6e", "de987ea8", "debf1b6c", "df0374ce", "dfe76c0e", "e014e242", "e0fe39b8", "e20d59ff", "e26d63e0", "e4a53624", "e508c018", "e50e3cfe", "e623b2df", "e7a53add", "eb30c1f5", "eb433202", "eb4d4dad", "ec2037bc", "ec2b36bb", "ec5e5b9f", "ec74d7b0", "ed91503d", "ede16973", "eee16b06", "ef2bb036", "eff64afa", "f00be4a7", "f0302704", "f1079561", "f1c2c962", "f3e5a4c9", "f40e7ff7", "f4e17478", "f52bb9a8", "f5414c20", "f5a25cd6", "f6181138", "f62c35a5", "f6a83ef7", "f7162f66", "f82bbe61", "f8912aa1", "f8e7b639", "f92a46bb", "fa78345a", "fb3a03f5", "fe04c789", "fe23d8a7", "fe59b066", "fe8ed5ac", "fec5ade5", "ff1da773", "ff96c610"]);
+/* ================= BẢO BẢO BUDDY (kawaii mascot with moods) ================= */
+function pandaFace(mood){
+  const O='#4B3A33';
+  const eyeNormal=(x)=>`<circle cx="${x}" cy="54" r="5.5" fill="#fff"/><circle cx="${x+.6}" cy="54.6" r="3.9" fill="#2B2220"/><circle cx="${x+2}" cy="52.6" r="1.5" fill="#fff"/>`;
+  const eyeHappy=(x)=>`<path d="M${x-5} 56 Q${x} 48 ${x+5} 56" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/>`;
+  const eyeHeart=(x)=>`<path d="M${x} 59 C${x-7} 54 ${x-6} 48 ${x-2.5} 49 C${x-1} 49 ${x} 50.5 ${x} 51.5 C${x} 50.5 ${x+1} 49 ${x+2.5} 49 C${x+6} 48 ${x+7} 54 ${x} 59Z" fill="#FF6F8E"/>`;
+  const eyeSad=(x)=>`<circle cx="${x}" cy="55" r="5" fill="#fff"/><circle cx="${x}" cy="56" r="3.6" fill="#2B2220"/><circle cx="${x+1.4}" cy="54.4" r="1.3" fill="#fff"/>`;
+  const eyeWow=(x)=>`<circle cx="${x}" cy="54" r="6.8" fill="#fff"/><circle cx="${x}" cy="54" r="4.6" fill="#2B2220"/><circle cx="${x+1.8}" cy="52" r="1.8" fill="#fff"/><circle cx="${x-1.6}" cy="56.4" r=".9" fill="#fff"/>`;
+  const eyeSleep=(x)=>`<path d="M${x-5} 55 Q${x} 59 ${x+5} 55" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>`;
+  const E={idle:eyeNormal,happy:eyeHappy,cheer:eyeHappy,love:eyeHeart,sad:eyeSad,wow:eyeWow,sleepy:eyeSleep,wink:null}[mood]||eyeNormal;
+  const eyes=mood==='wink'?eyeNormal(44)+eyeHappy(76):E(44)+E(76);
+  const mouth={
+    happy:`<path d="M53 69 Q60 79 67 69 Z" fill="#E2685A" stroke="${O}" stroke-width="2.2" stroke-linejoin="round"/><path d="M56 73 Q60 76 64 73" fill="#FF9EA0"/>`,
+    cheer:`<path d="M52 68 Q60 81 68 68 Z" fill="#E2685A" stroke="${O}" stroke-width="2.2" stroke-linejoin="round"/><path d="M55.5 73 Q60 77 64.5 73" fill="#FF9EA0"/>`,
+    sad:`<path d="M54 73 Q57 69 60 72 Q63 69 66 73" fill="none" stroke="${O}" stroke-width="2.4" stroke-linecap="round"/>`,
+    wow:`<ellipse cx="60" cy="72" rx="4" ry="4.6" fill="#E2685A" stroke="${O}" stroke-width="2.2"/>`,
+    sleepy:`<ellipse cx="60" cy="72" rx="3" ry="2.2" fill="#E2685A" stroke="${O}" stroke-width="1.8"/>`
+  }[mood]||`<path d="M54 69 Q57 73 60 69 Q63 73 66 69" fill="none" stroke="${O}" stroke-width="2.4" stroke-linecap="round"/>`;
+  const extra={
+    sad:`<path d="M37 61 Q35 67 37.5 69 Q40 67 37 61Z" fill="#8FD3F4" stroke="${O}" stroke-width="1.4" class="tear"/>`,
+    love:`<text x="92" y="22" font-size="16" class="float-h">💗</text>`,
+    cheer:`<text x="8" y="24" font-size="15" class="float-h">✨</text><text x="94" y="20" font-size="15" class="float-h d2">✨</text>`,
+    sleepy:`<text x="88" y="26" font-size="14" fill="${O}" font-family="Baloo 2" class="zzz">z</text><text x="98" y="16" font-size="11" fill="${O}" font-family="Baloo 2" class="zzz d2">z</text>`,
+    wow:`<text x="92" y="26" font-size="16" fill="#F4867B" font-family="Baloo 2" font-weight="700">!</text>`
+  }[mood]||'';
+  const armsUp=mood==='cheer'||mood==='love';
+  const arms=armsUp?`<path d="M30 92 C20 84 16 70 22 66 C28 62 34 74 38 84Z" fill="#4A4443" class="arm-up"/><path d="M90 92 C100 84 104 70 98 66 C92 62 86 74 82 84Z" fill="#4A4443" class="arm-up r"/>`
+    :mood==='sad'?`<path d="M34 54 C30 46 38 40 46 44 C50 48 46 56 40 58Z" fill="#4A4443"/><path d="M86 54 C90 46 82 40 74 44 C70 48 74 56 80 58Z" fill="#4A4443"/>`
+    :`<path d="M30 96 C22 100 22 112 32 113 C38 113 40 104 38 98Z" fill="#4A4443"/><path d="M90 96 C98 100 98 112 88 113 C82 113 80 104 82 98Z" fill="#4A4443" class="${mood==='idle'?'wave-arm':''}"/>`;
+  return `<svg viewBox="0 0 120 124" class="bb-svg mood-${mood}" aria-hidden="true">
+  <ellipse cx="60" cy="120" rx="34" ry="4" fill="#7A5C4F" opacity=".15"/>
+  <g stroke="${O}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+   <ellipse cx="44" cy="114" rx="12" ry="7" fill="#4A4443"/><ellipse cx="76" cy="114" rx="12" ry="7" fill="#4A4443"/>
+   <path d="M26 100 C24 80 40 74 60 74 C80 74 96 80 94 100 C92 114 78 117 60 117 C42 117 28 114 26 100Z" fill="#FFFDF8"/>
+   <path d="M40 82 Q60 92 80 82 L79 89 Q60 99 41 89Z" fill="#F4867B" stroke-width="2.4"/>
+   ${mood==='sad'?'':arms}
+   <circle cx="28" cy="24" r="12" fill="#4A4443"/><circle cx="92" cy="24" r="12" fill="#4A4443"/>
+   <path d="M18 54 C17 30 36 16 60 16 C84 16 103 30 102 54 C101 74 84 86 60 86 C36 86 19 74 18 54Z" fill="#FFFDF8"/>
+  </g>
+  <path d="M33 53 C32 43 42 38 49 43 C55 48 54 58 47 62 C40 65 34 60 33 53Z" fill="#4A4443"/><path d="M87 53 C88 43 78 38 71 43 C65 48 66 58 73 62 C80 65 86 60 87 53Z" fill="#4A4443"/>
+  ${eyes}
+  <path d="M56.5 63 Q60 61 63.5 63 Q62 66.5 60 66.5 Q58 66.5 56.5 63Z" fill="${O}"/>
+  ${mouth}
+  <ellipse cx="34" cy="68" rx="6.5" ry="4" fill="#FF9E9E" opacity="${mood==='love'||mood==='happy'||mood==='cheer'?'.85':'.55'}"/><ellipse cx="86" cy="68" rx="6.5" ry="4" fill="#FF9E9E" opacity="${mood==='love'||mood==='happy'||mood==='cheer'?'.85':'.55'}"/>
+  <g transform="translate(86 16) rotate(16)" stroke="${O}" stroke-width="2"><path d="M0 0 C-6 -9 -14 -4 -10 2 C-7 6 -3 4 0 0Z M0 0 C6 -9 14 -4 10 2 C7 6 3 4 0 0Z" fill="#F4867B"/><circle cx="0" cy="1" r="2.6" fill="#FFD27A"/></g>
+  ${mood==='sad'?arms:''}${extra}
+ </svg>`}
+const BB_LINES={
+  ok:[['好棒！','Giỏi quá!'],['对了！','Đúng rồi!'],['真厉害！','Siêu thật!'],['太好了！','Tuyệt vời!'],['加油！','Cố lên nào!']],
+  combo:[['连对！','Đúng liên tiếp luôn!'],['太棒了！','Đỉnh quá đi!'],['你是天才！','Cậu là thiên tài!']],
+  bad:[['没关系！','Không sao đâu!'],['再试试！','Thử lại nhé!'],['慢慢来～','Từ từ thôi~'],['我陪你！','Tớ ở đây với cậu!']],
+  done:[['完成了！','Xong rồi! Giỏi lắm!'],['你真棒！','Cậu giỏi thật đó!']],
+  idle:[['一起学吧！','Học cùng tớ nhé!'],['我饿了…','Tớ đói bụng quá… học xong đi ăn trúc nha'],['你好呀！','Chào cậu nha!']],
+  sleepy:[['好困…','Buồn ngủ quá… mình học tiếp không?']]
+};
+let bbT=null,bbIdle=null,bbHidden=false;
+try{bbHidden=sessionStorage.getItem('bb-hide')==='1'}catch(e){}
+function buddyEl(){let b=document.getElementById('buddy');if(b)return b;
+  b=document.createElement('div');b.id='buddy';b.innerHTML=`<div class="bb-bubble" id="bbBub"></div><button class="bb-body" id="bbBody" aria-label="Gấu trúc Bảo Bảo, bấm để học một từ mới">${pandaFace('idle')}</button><button class="bb-x" id="bbX" aria-label="Ẩn Bảo Bảo">×</button>`;
+  document.body.appendChild(b);
+  document.getElementById('bbBody').onclick=buddyTeach;
+  document.getElementById('bbX').onclick=e=>{e.stopPropagation();bbHidden=true;try{sessionStorage.setItem('bb-hide','1')}catch(x){}b.classList.add('gone')};
+  return b}
+function buddy(mood,line,ms=2600){if(bbHidden)return;const b=buddyEl();if(b.classList.contains('off'))return;
+  const body=document.getElementById('bbBody'),bub=document.getElementById('bbBub');
+  body.innerHTML=pandaFace(mood);b.classList.remove('react','sad','peek');void b.offsetWidth;b.classList.add(mood==='sad'?'sad':'react');
+  if(line){bub.innerHTML=Array.isArray(line)?`<b class="zh">${line[0]}</b><small>${line[1]}</small>`:line;bub.classList.add('show')}
+  clearTimeout(bbT);bbT=setTimeout(()=>{bub.classList.remove('show');body.innerHTML=pandaFace('idle');b.classList.remove('react','sad');b.classList.add('peek')},ms);
+  resetIdle()}
+function buddyTeach(){const w=pick(ALLW);buddy(pick(['wink','happy','love']),`<small>Bảo Bảo dạy cậu nè:</small><b class="zh">${w.ch}</b><small>${w.py} · ${w.vi} ${w.em}</small>`,3800);say(w.ch);hearts(document.getElementById('bbBody'),'💕')}
+function resetIdle(){clearTimeout(bbIdle);bbIdle=setTimeout(()=>{if(!document.hidden)buddy('sleepy',pick(BB_LINES.sleepy),4000)},75000)}
+function hearts(el,ch){if(!el||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const r=el.getBoundingClientRect();const set=ch?[ch]:['💖','✨','💛','🌸','⭐'];
+  for(let i=0;i<7;i++){const h=document.createElement('span');h.className='heart-pop';h.textContent=pick(set);
+    h.style.left=(r.left+r.width/2)+'px';h.style.top=(r.top+r.height/2)+'px';h.style.setProperty('--dx',(Math.random()*140-70)+'px');h.style.setProperty('--dy',(-50-Math.random()*70)+'px');h.style.animationDelay=(i*0.04)+'s';
+    document.body.appendChild(h);setTimeout(()=>h.remove(),1200)}}
+function buddyRoute(h){const b=buddyEl();const off=h==='bia'||(!P.goal);b.classList.toggle('off',off);if(bbHidden)b.classList.add('gone');
+  if(!off&&!bbHidden){b.classList.add('peek');if(h==='home'&&!b.dataset.greeted){b.dataset.greeted='1';setTimeout(()=>{if((location.hash||'#home')==='#home')buddy('wink',pick(BB_LINES.idle),3200)},1400)}}}
+
 /* ================= MISC ================= */
 function confetti(k){const c=$('#confetti');const cols=['#C0392B','#D69A4C','#7F8461','#5C7A78','#F2D3A6'];
   for(let i=0;i<k;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'vw';e.style.background=pick(cols);e.style.animationDuration=(2+Math.random()*2.5)+'s';e.style.animationDelay=Math.random()*.6+'s';c.appendChild(e)}
